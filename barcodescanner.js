@@ -1,3 +1,5 @@
+const Quagga = require('quagga').default;
+
 $(function() {
   var resultCollector = Quagga.ResultCollector.create({
       capture: true,
