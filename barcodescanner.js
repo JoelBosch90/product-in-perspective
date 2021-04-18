@@ -1,5 +1,3 @@
-import Quagga from 'quagga';
-
 $(function() {
   var resultCollector = Quagga.ResultCollector.create({
       capture: true,
