@@ -1,4 +1,4 @@
-const Quagga = require('quagga').default;
+import Quagga from 'quagga';
 
 $(function() {
   var resultCollector = Quagga.ResultCollector.create({
