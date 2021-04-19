@@ -13,13 +13,18 @@ app.use(express.static('public'));
 // Serve QuaggaJS.
 app.use('/quagga', express.static('quaggaJS/dist'));
 
+// Serve jQuery.
 app.use('/jquery', express.static('node_modules/jquery/dist'));
 
 // Serve the barcode scanner at the root page.
 app.get('/', (request, response) => {
   response.sendFile("html/barcodescanner.html", { root: __dirname + '/public' });
-  
 });
+
+// Serve the AR Hit test page.
+app.get('/hit-test', (request, response) => {
+  response.sendFile("html/hit-test.html", { root: __dirname + '/public' });
+})
 
 // Start listening on the designated port.
 app.listen(port, () => {

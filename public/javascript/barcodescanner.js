@@ -204,35 +204,6 @@ $(function() {
                       deviceId: value
                   };
               }
-          },
-          numOfWorkers: 0,
-          decoder: {
-              readers:
-              [
-                {
-                  format: "ean_reader",
-                  config: {}
-                }
-              ],
-              // function(value) {
-              //   console.log("decoder value:", value);
-
-              //     if (value === 'ean_extended') {
-              //         return [{
-              //             format: "ean_reader",
-              //             config: {
-              //                 supplements: [
-              //                     'ean_5_reader', 'ean_2_reader'
-              //                 ]
-              //             }
-              //         }];
-              //     }
-              //     return [{
-              //         format: value + "_reader",
-              //         config: {}
-              //     }];
-              // },
-              multiple: false
           }
       },
       state: {
@@ -249,7 +220,7 @@ $(function() {
               patchSize: "medium",
               halfSample: true
           },
-          numOfWorkers: 2,
+          numOfWorkers: 0,
           frequency: 10,
           decoder: {
               readers : [{
