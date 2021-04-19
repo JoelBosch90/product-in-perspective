@@ -11,7 +11,7 @@ const port = 8000;
 app.use(express.static('public'));
 
 // Serve QuaggaJS.
-app.use('/quagga', express.static('quaggaJS/dist'));
+app.use('/quagga', express.static('node_modules/quagga/dist'));
 
 // Serve jQuery.
 app.use('/jquery', express.static('node_modules/jquery/dist'));
