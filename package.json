@@ -6,8 +6,10 @@
   "dependencies": {
     "express": "^4.17.1",
     "jquery": "^3.6.0",
+    "qs": "^6.10.1",
     "quagga": "^0.12.1",
-    "require": "^2.4.20"
+    "require": "^2.4.20",
+    "aframe": "^1.2.0"
   },
   "devDependencies": {
     "eslint": "^7.24.0"

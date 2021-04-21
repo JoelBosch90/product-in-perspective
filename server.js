@@ -30,7 +30,7 @@ app.get('/', (request, response) => {
 app.get('/hit-test', (request, response) => {
 
   // Serve the AR Hit test page.
-  response.sendFile("html/hit-test.html", { root: __dirname + '/public' });
+  response.sendFile("html/hit-test2.html", { root: __dirname + '/public' });
 })
 
 // Start listening on the designated port.
