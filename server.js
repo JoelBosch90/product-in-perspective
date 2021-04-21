@@ -16,13 +16,20 @@ app.use('/quagga', express.static('node_modules/quagga/dist'));
 // Serve jQuery.
 app.use('/jquery', express.static('node_modules/jquery/dist'));
 
-// Serve the barcode scanner at the root page.
+// Serve Aframe.
+app.use('/aframe', express.static('node_modules/aframe/dist'));
+
+// Process a root page request.
 app.get('/', (request, response) => {
+
+  // Serve the barcode scanner.
   response.sendFile("html/barcodescanner.html", { root: __dirname + '/public' });
 });
 
-// Serve the AR Hit test page.
+// Process a hit test page request.
 app.get('/hit-test', (request, response) => {
+
+  // Serve the AR Hit test page.
   response.sendFile("html/hit-test.html", { root: __dirname + '/public' });
 })
 
