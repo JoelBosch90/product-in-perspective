@@ -86,17 +86,21 @@ class BarcodeScanner {
       // but we should be able to handle that quite well.
       decoder: {
         readers : [
-          { format: "code_128_reader", config: {} },
-          { format: "code_39_reader", config: {} },
-          { format: "code_39_vin_reader", config: {} },
+
+          // These are the most used barcode formats for customer products:
           { format: "ean_reader", config: {} },
           { format: "ean_8_reader", config: {} },
           { format: "upc_reader", config: {} },
           { format: "upc_e_reader", config: {} },
-          { format: "codabar_reader", config: {} },
-          { format: "i2of5_reader", config: {} },
-          { format: "2of5_reader", config: {} },
-          { format: "code_93_reader", config: {} }
+
+          // Optionally, we could expand to also use the following formats:
+          // { format: "code_128_reader", config: {} },
+          // { format: "code_39_reader", config: {} },
+          // { format: "code_39_vin_reader", config: {} },
+          // { format: "codabar_reader", config: {} },
+          // { format: "i2of5_reader", config: {} },
+          // { format: "2of5_reader", config: {} },
+          // { format: "code_93_reader", config: {} },
         ],
 
         // We don't need to detect multiple barcodes simultaneously.
