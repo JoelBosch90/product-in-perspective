@@ -136,6 +136,9 @@ class BarcodeScanner {
 
       // Handle errors with our own error handler.
       if (error) return this._handleError(error);
+
+      // Start Quagga so that we start processing the video feed.
+      Quagga.start();
     });
 
     // Handle cases when Quagga has read a barcode.

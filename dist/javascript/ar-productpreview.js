@@ -137,6 +137,3 @@ selectButton.addEventListener('touchend', selectHandler);
 
 // // Listen for when the augmented reality session ends.
 // arScene.on('end', resetPage);
-
-// Start scanning for products.
-scanner.start();
