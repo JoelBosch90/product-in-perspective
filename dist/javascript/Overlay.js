@@ -18,90 +18,142 @@ class Overlay {
    *  Private variable that stores the event handler object.
    *  @var      {EventHandler}
    */
-   _eventHandler = null;
+  _eventHandler = null;
 
-   /**
-    *  Private variable that stores a reference to the container element in the
-    *  DOM.
-    *  @var      {Element}
-    */
-   _container = null;
+  /**
+   *  Private variable that stores a reference to the container element in the
+   *  DOM.
+   *  @var      {Element}
+   */
+  _container = null;
 
-   /**
-    *  Class constructor.
-    *  @param    {Element}   parent    The parent element on which the
-    *                                  overlay interface will be installed.
-    */
-   constructor(parent) {
+  /**
+   *  Private variable that stores a reference to the container positioned at
+   *  the top of the overlay.
+   *  @var      {Element}
+   */
+  _top = null;
 
-     // Create an event handler object to handle all events.
-     this._eventHandler = new EventHandler();
+  /**
+   *  Private variable that stores a reference to the container positioned at
+   *  the bottom of the overlay.
+   *  @var      {Element}
+   */
+  _bottom = null;
 
-     // Create a container for the overlay.
-     this._container = document.createElement("div");
+  /**
+   *  Class constructor.
+   *  @param    {Element}   parent    The parent element on which the
+   *                                  overlay interface will be installed.
+   */
+  constructor(parent) {
 
-     // Add the styling class to the container element.
-     this._container.classList.add("overlay");
+    // Create an event handler object to handle all events.
+    this._eventHandler = new EventHandler();
 
-     this._container.textContent = "Hello World!";
+    // Create a container for the overlay.
+    this._container = document.createElement("div");
+    this._container.classList.add("overlay");
 
-     // Add the overlay to the parent container.
-     parent.appendChild(this._container);
-   }
+    // Create a container for the top elements.
+    this._top = document.createElement("div");
+    this._top.classList.add("overlay-top");
+    this._container.appendChild(this._top);
 
-   /**
-    *  Method to show the overlay interface.
-    *  @returns  {Overlay}
-    */
-   show() {
+    // Create a container for the bottom elements.
+    this._bottom = document.createElement("div");
+    this._bottom.classList.add("overlay-bottom");
+    this._container.appendChild(this._bottom);
 
-     // Make sure we're not hiding the overlay interface.
-     this._container.hidden = false;
+    // Add the overlay to the parent container.
+    parent.appendChild(this._container);
+  }
 
-     // Allow chaining.
-     return this;
-   }
+  /**
+   *  Method for adding an element to the overlay.
+   *  @param    {string}    type      What kind of element should this be? All
+   *                                  valid HTML elements are accepted.
+   *  @param    {object}    options   Object with options to initialize the
+   *                                  button.
+   *    @property {string}    text      Text to use as button context. Elements
+   *                                    have no text by default.
+   *    @property {string}    location  Where should this button be added? Valid
+   *                                    options are 'top' and 'bottom'. 'bottom'
+   *                                    is the default option.
+   *  @returns  {Element}
+   */
+  add(type, options = {}) {
 
-   /**
-    *  Method to hide the overlay interface.
-    *  @returns  {Overlay}
-    */
-   hide() {
+    // Create the new DOM element.
+    const element = document.createElement(type);
 
-     // Make sure we're hiding the overlay interface.
-     this._container.hidden = true;
+    // If text was provided, we should add it to the element.
+    if (options.text) element.textContent = options.text;
 
-     // Allow chaining.
-     return this;
-   }
+    // If the 'top' location was specified, we should add this element to the
+    // top of the overlay.
+    if (options.location == 'top') this._top.appendChild(element);
 
-   /**
-    *  Method for installing event handlers.
-    *  @param    {...any}    args
-    *  @returns  {Overlay}
-    */
-   on(...args) {
+    // Otherwise, we'll add the element to the bottom of the overlay.
+    else this._bottom.appendChild(element);
 
-     // Pass everything to the event handler.
-     this._eventHandler.on(...args);
+    // Finally, return the element.
+    return element;
+  }
 
-     // Allow chaining.
-     return this;
-   }
+  /**
+   *  Method to show the overlay interface.
+   *  @returns  {Overlay}
+   */
+  show() {
 
-   /**
-    *  Method for removing event handlers.
-    *  @param    {...any}    args
-    *  @returns  {Overlay}
-    */
+    // Make sure we're not hiding the overlay interface.
+    this._container.hidden = false;
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Method to hide the overlay interface.
+   *  @returns  {Overlay}
+   */
+  hide() {
+
+    // Make sure we're hiding the overlay interface.
+    this._container.hidden = true;
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Method for installing event handlers.
+   *  @param    {...any}    args
+   *  @returns  {Overlay}
+   */
+  on(...args) {
+
+    // Pass everything to the event handler.
+    this._eventHandler.on(...args);
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Method for removing event handlers.
+   *  @param    {...any}    args
+   *  @returns  {Overlay}
+   */
    off(...args) {
 
-     // Pass everything to the event handler.
-     this._eventHandler.off(...args);
+    // Pass everything to the event handler.
+    this._eventHandler.off(...args);
 
-     // Allow chaining.
-     return this;
-   }
+    // Allow chaining.
+    return this;
+  }
 }
 
 // Export the Overlay class so it can be imported elsewhere.

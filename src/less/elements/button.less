@@ -1,0 +1,114 @@
+/**
+ *  Button
+ *    This file installs some basic styling on all buttons in the general
+ *    application.
+ */
+
+// Apply button styles to submit input elements as well.
+button,
+input[type="submit"]
+{
+  // We want the font-size of our buttons to be just as large as normal text.
+  font-size: inherit;
+
+  // Install the information colour as the default background colour for the
+  // button.
+  background-color: var(--information-color);
+
+  // Give the button some padding to increase the clickable area.
+  padding: .25em .75em;
+
+  // By default browser may add a border to a button; our buttons do not need
+  // borders.
+  border: none;
+
+  // Use slightly rounded corners to make the buttons look friendlier.
+  border-radius: .25em;
+
+  // Use the hand cursor to show users that buttons can be interacted with.
+  cursor: pointer;
+
+  // Allow the button to transition back from focus and hover transitions.
+  transition: filter var(--animation-quick),
+              background-color var(--animation-quick);
+
+  // When using the button in a standalone case it may be useful as a block
+  // element.
+  &.block {
+    // Make the button a block element.
+    display: block;
+
+    // Give the button some vertical margins.
+    margin-top: .5em;
+    margin-bottom: .5em;
+  }
+
+  // Buttons can be used to submit, confirm or save current settings.
+  &.confirm, &[type="submit"] {
+    // Use the confirmation colour to show users that this button is used to
+    // confirm something. It should stand out in the interface.
+    background-color: var(--confirmation-color);
+  }
+
+  // Buttons can be used to remove or undo something.
+  &.remove {
+    // Warn the user of the risk inherent in using this button.
+    background-color: var(--danger-color);
+  }
+
+  // Buttons can be used to cancel current unsaved settings.
+  &.cancel {
+    // This button should have a fairly neutral colour and not draw too much
+    // attention.
+    background-color: var(--border-color);
+  }
+
+  // Show the user when this button is disabled.
+  &:disabled {
+    // The button does not need to draw attention. Use the filter to set the
+    // opacity so that we are unhindered by any regular opacity the element
+    // might have.
+    filter: opacity(30%);
+
+    // Use the cursor to clearly show that this element cannot be interacted
+    // with.
+    cursor: not-allowed;
+
+    // Use a transition effect to give the disabled effect a quick and smooth
+    // animation.
+    transition: filter var(--animation-quick);
+  }
+
+  // Show the user when this button is selected.
+  &:focus {
+    // Show that this is the active element with the background-color.
+    background-color: var(--active-background);
+
+    // Use a transition effect to give the focus effect a quick and smooth
+    // animation.
+    transition: background-color var(--animation-quick);
+
+    // We are using our own clear way to show focus so we don't need the browser
+    // default.
+    outline: none;
+  }
+
+  // Add on hover effects only when the the button is not disabled.
+  &:not(:disabled):hover {
+    // Show a subtle effect to show this button is an interactive element. Use
+    // the filter to set the opacity so that we are unhindered by any regular
+    // opacity the element might have.
+    filter: opacity(65%);
+
+    // Use a transition effect to give the focus effect a quick and smooth
+    // animation.
+    transition: filter var(--animation-quick);
+  }
+
+  // Select buttons that are preceeded by another button.
+  & + button {
+    // In case two buttons are next to each other they should have some space in
+    // between.
+    margin-left: .5em;
+  }
+}

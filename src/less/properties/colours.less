@@ -1,0 +1,46 @@
+/**
+ *  Colours
+ *    This file contains the base of all the colours that are used throughout
+ *    the application. They are declared as CSS variables on the root of the
+ *    document so that they can be used and overwritten on every single element
+ *    or class.
+ */
+
+// Declaring these CSS variables on the root of the document guarantees access
+// throughout the application.
+:root {
+  // By default, the base background should be very light to provide a clear
+  // and neutral canvas for the rest of the application.
+  --background: #FFFFFF;
+
+  // By default, the base font should be very dark to provide constrast on the
+  // light default background.
+  --color: #080708;
+
+  // This is the primary branding colour for the application.
+  --primary-accent: #3B60E4;
+
+  // This is the secondary branding colour for the application.
+  --secondary-accent: #AA6373;
+
+  // The border colour should be clearly visible without drawing attention.
+  --border-color: #CCC;
+
+  // This colour should tell the user that an element will link to new
+  // information.
+  --information-color: var(--primary-accent);
+
+  // This colour should tell the user that an element is used to confirm or save
+  // the current settings.
+  --confirmation-color: #06A77D;
+
+  // This colour should tell the user to pay attention as this element
+  // represents a risk, for example when removing something.
+  --danger-color: #D64045;
+
+  // This colour should tell the user that text is activated.
+  --active-color: #E09F3E;
+
+  // This colour should tell the user that an element is activated.
+  --active-background: #E09F3E;
+}

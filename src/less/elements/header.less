@@ -1,0 +1,74 @@
+/**
+ *  Header
+ *    This file installs some basic styling on all headers in the general
+ *    application.
+ */
+
+// Common styling between different headers.
+h1, h2, h3, h4 {
+  // Headers are used to separate text in which case they correspond to the
+  // text below, thus they should have a larger margin from the top than from
+  // the bottom.
+  margin-top: .6em;
+  margin-bottom: .3em;
+
+  // If headers wrap to multiple lines, they should be fairly compact.
+  line-height: 1em;
+
+  // Install the basic text font.
+  font-family: var(--text-font);
+
+  // Make our headers nice and light.
+  font-weight: 300;
+
+  // Install the basic font colour.
+  color: var(--color);
+}
+
+// The first order headers are used as big title in the application. They should
+// be big and draw a lot of attention.
+h1 {
+  // Install the basic header font.
+  font-family: var(--header-font);
+
+  // Install the primary colour.
+  color: var(--primary-accent);
+
+  // Significantly increase the size of our first order headers.
+  font-size: 2.5em;
+}
+
+// The second order headers are used as chapter headers in the applications.
+// They should still draw a lot of attention, although not as much as a first
+// order headers.
+h2 {
+  // Install the basic header font.
+  font-family: var(--header-font);
+
+  // Install the primary colour.
+  color: var(--secondary-accent);
+
+  // Significantly increase the size of our first order headers.
+  font-size: 1.75em;
+}
+
+// The third order headers are used as paragraph titles and should still clearly
+// separate texts, but they should not draw too much attention.
+h3 {
+  // Make these headers stand out a little with a greater size.
+  font-size: 1.25em;
+
+  // Make these headers thick to clearly differentiate from text.
+  font-weight: 700;
+}
+
+// The fourth order headers are used to head the smallest elements on the page
+// and thus should only stand out among normal text.
+h4 {
+
+  // Make these headers only slightly larger than normal text.
+  font-size: 1.15em;
+
+  // Make these headers thick to clearly differentiate from text.
+  font-weight: 700;
+}

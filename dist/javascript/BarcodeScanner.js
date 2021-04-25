@@ -216,6 +216,16 @@ class BarcodeScanner {
   }
 
   /**
+   *  Method to expose the Overlay object.
+   *  @returns  {Overlay}
+   */
+  overlay() {
+
+    // Expose the overlay element.
+    return this._overlay;
+  }
+
+  /**
    *  Method to start scanning.
    *  @returns  {BarcodeScanner}
    */
