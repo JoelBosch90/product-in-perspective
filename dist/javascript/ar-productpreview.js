@@ -73,7 +73,7 @@ scanner.on('scanned', data => {
   if (!data.code in products) return;
 
   // No need to process if we've already registered this product.
-  if (data.code == products.last.code) return;
+  if (products.last && data.code == products.last.code) return;
 
   // Update the last product.
   products.last = products[data.code];
