@@ -3,22 +3,15 @@ import { EventHandler } from "/javascript/EventHandler.js"
 
 /**
  *  The definition of the Overlay class that can be used to create an overlay
- *  interface for a full screen video format. It can be used to add a title, a
- *  title description, buttons, and a button description to act as an interface.
- *
- *  This class can trigger custom events for click actions on buttons.
+ *  interface for a full screen video format. It can be used to any number of
+ *  HTML elements to an overlay layout that is divided in a 'top' and 'bottom'
+ *  part.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
 class Overlay {
-
-  /**
-   *  Private variable that stores the event handler object.
-   *  @var      {EventHandler}
-   */
-  _eventHandler = null;
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -47,9 +40,6 @@ class Overlay {
    *                                  overlay interface will be installed.
    */
   constructor(parent) {
-
-    // Create an event handler object to handle all events.
-    this._eventHandler = new EventHandler();
 
     // Create a container for the overlay.
     this._container = document.createElement("div");
@@ -122,34 +112,6 @@ class Overlay {
 
     // Make sure we're hiding the overlay interface.
     this._container.hidden = true;
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method for installing event handlers.
-   *  @param    {...any}    args
-   *  @returns  {Overlay}
-   */
-  on(...args) {
-
-    // Pass everything to the event handler.
-    this._eventHandler.on(...args);
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method for removing event handlers.
-   *  @param    {...any}    args
-   *  @returns  {Overlay}
-   */
-   off(...args) {
-
-    // Pass everything to the event handler.
-    this._eventHandler.off(...args);
 
     // Allow chaining.
     return this;

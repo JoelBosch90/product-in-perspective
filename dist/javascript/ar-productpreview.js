@@ -6,6 +6,8 @@
 
 // Import dependencies.
 import { BarcodeScanner } from "/javascript/BarcodeScanner.js"
+import { ArScene } from "/javascript/ArScene.js"
+import { debounce } from "/javascript/debounce.js"
 
 /**
  *  This is the container for the entire application. Because we want to use the
@@ -20,21 +22,27 @@ const products = {
   // These are the products that we can currently recognize. This is a
   // placeholder while we do not yet have a database set up.
   96181072: {
-    name: "Eat Natural: protein packed with salted caramel and peanuts",
-    class: 0
+    name:     "Eat Natural: protein packed with salted caramel and peanuts",
+    category: 0
   },
   96187159: {
-    name: "Eat Natural: simply vegan peanuts, coconut and chocolate",
-    class: 1
+    name:     "Eat Natural: simply vegan peanuts, coconut and chocolate",
+    category: 1
   },
   96103890: {
-    name: "Eat Natural: protein packed with peanuts and chocolate",
-    class: 2
+    name:     "Eat Natural: protein packed with peanuts and chocolate",
+    category: 2
   },
 
   // This is the last product that was scanned.
   last: null
 }
+
+// /**
+//  *  Create an augmented reality session object.
+//  *  @var      {ArScene}
+//  */
+// const arScene = new ArScene(container);
 
 /**
  *  Create a barcode scanner object. We want to pass our container element so
@@ -58,16 +66,20 @@ scannerOverlay.add("p", {
   location: "top"
 });
 
-// Add a product description to the overlay.
-const productDescription = scannerOverlay.add("p");
+// Add a paragraph for showing messages to the user.
+const messageBus = scannerOverlay.add("p");
 
 // Add a select button to the overlay.
-scannerOverlay.add("button", {
+const selectButton = scannerOverlay.add("button", {
   text:     "Select product"
 });
 
-// Listen to when the barcode scanner reads barcodes.
-scanner.on('scanned', data => {
+/**
+ *  Helper function for updating a product.
+ *  @param  {object}      data      Update object.
+ *    @property {integer}   code      Product barcode.
+ */
+const updateProduct = data =>  {
 
   // If we cannot recognize this product, we can't do anything.
   if (!data.code in products) return;
@@ -77,7 +89,54 @@ scanner.on('scanned', data => {
 
   // Update the last product.
   products.last = products[data.code];
+  products.last.code = data.code;
 
-  // Update the product description.
-  productDescription.textContent = products.last.name;
-});
+  // Show the user the product name of the selected product.
+  messageBus.textContent = products.last.name;
+}
+
+/**
+ *  Helper function for selecting a product.
+ *  @param  {Event}     event
+ */
+const selectProduct = event =>  {
+
+  // If we don't have a product yet, we should tell the user that he needs to
+  // scan one before he can select it.
+  if (!products.last) messageBus.textContent = "First scan a product to select.";
+
+  // If we do have a product, we need to immediately stop and hide the scanner.
+  scanner.stop().hide();
+
+  // // Start and show the augmented reality session instead.
+  // arScene.select(products.last.category).start().show();
+}
+
+// Listen to when the barcode scanner reads barcodes.
+scanner.on('scanned', updateProduct);
+
+// Debounce the select handler.
+const selectHandler = debounce(selectProduct, 500);
+
+// Listen to when a the user tries to select a product.
+selectButton.addEventListener('click', selectHandler);
+selectButton.addEventListener('touchend', selectHandler);
+
+// /**
+//  *  Helper function for resetting the page to the original state.
+//  *  @param  {Event}     event
+//  */
+//  const resetPage = event => {
+
+//   // Make sure that the augmented reality session is stopped and hidden.
+//   arScene.stop().hide();
+
+//   // Make sure that the barcode scanner is active and visible.
+//   scanner.start().show();
+// }
+
+// // Listen for when the augmented reality session ends.
+// arScene.on('end', resetPage);
+
+// Start scanning for products.
+scanner.start();

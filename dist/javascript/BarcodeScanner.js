@@ -22,10 +22,11 @@ class BarcodeScanner {
   _lastFound = null;
 
   /**
-   *  Private variable that stores the event handler object.
+   *  Private variable that stores the event handler object that can handle all
+   *  events.
    *  @var      {EventHandler}
    */
-  _eventHandler = null;
+  _eventHandler = new EventHandler();
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -47,9 +48,6 @@ class BarcodeScanner {
    *                                  installed.
    */
   constructor(parent) {
-
-    // Create an event handler object to handle all events.
-    this._eventHandler = new EventHandler();
 
     // Initialize the interface for the barcode scanner. It should return a
     // container for the video element that Quagga creates.
@@ -138,9 +136,6 @@ class BarcodeScanner {
 
       // Handle errors with our own error handler.
       if (error) return this._handleError(error);
-
-      // Start scanning.
-      this.start();
     });
 
     // Handle cases when Quagga has read a barcode.
