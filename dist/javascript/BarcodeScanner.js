@@ -92,9 +92,9 @@ class BarcodeScanner {
           { format: "ean_8_reader", config: {} },
           { format: "upc_reader", config: {} },
           { format: "upc_e_reader", config: {} },
+          { format: "code_128_reader", config: {} },
 
           // Optionally, we could expand to also use the following formats:
-          // { format: "code_128_reader", config: {} },
           // { format: "code_39_reader", config: {} },
           // { format: "code_39_vin_reader", config: {} },
           // { format: "codabar_reader", config: {} },

@@ -69,17 +69,15 @@ scannerOverlay.add("button", {
 // Listen to when the barcode scanner reads barcodes.
 scanner.on('scanned', data => {
 
-  console.log('data', data);
+  // If we cannot recognize this product, we can't do anything.
+  if (!data.code in products) return;
 
-  // If we recognize the product, register it.
-  if (data.code in products) {
+  // No need to process if we've already registered this product.
+  if (data.code == products.last.code) return;
 
-    // Update the last product.
-    products.last = products[data.code];
+  // Update the last product.
+  products.last = products[data.code];
 
-    // Update the product description.
-    productDescription.textContent = products.last.name;
-
-    console.log('lastProduct', products.last);
-  }
+  // Update the product description.
+  productDescription.textContent = products.last.name;
 });
