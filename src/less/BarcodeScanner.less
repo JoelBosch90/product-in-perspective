@@ -1,0 +1,50 @@
+/**
+ *  Main styling for the BarcodeScanner class.
+ */
+.barcodescanner
+{
+  // Occupy all available space.
+  width: 100%;
+  height: 100%;
+
+  // We want to position the overlay absolutely relative to this container.
+  position: relative;
+
+  // Target the video container.
+  .barcodescanner-video
+  {
+    // Occupy all available horizontal space.
+    width: 100%;
+    height: 100%;
+
+    // Don't allow the video to overflow this container. We don't want any
+    // scrollbars.
+    overflow: hidden;
+
+    // Target the video element.
+    > video
+    {
+      // We want to use the video as a background for the overlay, so we need it
+      // to strech over the entire parent element.
+      width: 100%;
+      height: 100%;
+
+      // We don't want to distort the video feed. It is better not to show some
+      // of it.
+      object-fit: cover;
+    }
+  }
+
+  // Target the overlay container.
+  .barcodescanner-overlay
+  {
+    // Make sure we display the overlay on top of the video container.
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    // Occupy all available space.
+    width: 100%;
+    height: 100%;
+  }
+}
