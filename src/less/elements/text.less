@@ -6,8 +6,6 @@
 // Install these properties on the body of the application and have them
 // propagate down to other elements.
 body {
-  // Decide how wide normal text should be.
-  --text-width-max: 30em;
 
   // Install the basic text font.
   font-family: var(--text-font);
@@ -23,7 +21,7 @@ body {
   //
   // NOTA BENE: As a lot of the application is built on font-size, this will
   // scale most of the application.
-  font-size: 2em;
+  font-size: 1em;
 }
 
 // Target comment text containers.
@@ -36,10 +34,6 @@ p, span, label {
 
   // Show the users where we break long words.
   hyphens: auto;
-
-  // Lines of text that are too wide are hard to read so we should limit the
-  // width.
-  max-width: var(--text-width-max);
 }
 
 .text-center {

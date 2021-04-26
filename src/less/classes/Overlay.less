@@ -9,13 +9,9 @@
   --background: rgba(0, 0, 0, .4);
   --color: white;
 
-  // Target overlay buttons. We need to make sure that they work well against
-  // any background.
-  button
-  {
-    // Use the default font colour.
-    color: var(--color);
-  }
+  // Target overlay buttons and headers. We need to make sure that they work
+  // well against our dark transparent background.
+  button, h2 { color: var(--color); }
 
   // Occupy all available space.
   width: 100%;
@@ -45,18 +41,8 @@
     // Take up all available width.
     width: 100%;
 
-    // Use FlexBox to create a layout.
-    display: flex;
-
-    // Create a vertical layout.
-    flex-direction: column;
-
-    // Make sure this is always a single column layout.
-    flex-wrap: nowrap;
-
-    // We want to center all flex elements around the vertical axis so that we
-    // keep the relevant interface elements close to the center of the screen.
-    align-items: center;
+    // Align text to the middle.
+    text-align: center;
 
     // We do not want to hit the edges of the screen.
     padding: 2rem;
@@ -74,4 +60,13 @@
       display: none;
     }
   }
+}
+
+// Target all fullscreen elements.
+*:fullscreen, *:-webkit-full-screen, *:-moz-full-screen
+{
+  // Some browsers may add a black background for fullscreen items. But that
+  // will really mess with our overlay in augmented reality mode so we want to
+  // disable that here.
+  background-color: transparent;
 }

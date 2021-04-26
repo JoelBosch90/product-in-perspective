@@ -1,6 +1,6 @@
 // Import dependencies.
-import { EventHandler } from "/javascript/EventHandler.js"
-import { Overlay } from "/javascript/Overlay.js"
+import { EventHandler } from "/javascript/EventHandler.js";
+import { Overlay } from "/javascript/Overlay.js";
 
 /**
  *  The definition of the BarcodeScanner class that can be used to scan barcodes
@@ -42,6 +42,18 @@ class BarcodeScanner {
   _overlay = null;
 
   /**
+   *  Private variable that keeps track of the Quagga settings.
+   *  @var      {object}    state     A state object to initialize Quagga.
+   *    @property {object}    inputStream
+   *    @property {object}    locator
+   *    @property {integer}   numOfWorkers
+   *    @property {integer}   frequency
+   *    @property {object}    decoder
+   *    @property {boolean}   locate
+   */
+  _state = null;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element on which the
    *                                  barcode scanner interface will be
@@ -53,8 +65,8 @@ class BarcodeScanner {
     // container for the video element that Quagga creates.
     const videoContainer = this._initInterface(parent);
 
-    // Initialize Quagga.
-    this._initQuagga({
+    // Store the Quagga state.
+    this._state = {
       inputStream: {
 
         // We need the video stream for this class.
@@ -116,7 +128,10 @@ class BarcodeScanner {
         patchSize: "medium",
         halfSample: true
       }
-    });
+    };
+
+    // Initialize Quagga.
+    this._initQuagga();
   }
 
   /**
@@ -131,15 +146,8 @@ class BarcodeScanner {
    */
   _initQuagga(state) {
 
-    // Initialize the Quagga object.
-    Quagga.init(state, (error) => {
-
-      // Handle errors with our own error handler.
-      if (error) return this._handleError(error);
-
-      // Start Quagga so that we start processing the video feed.
-      Quagga.start();
-    });
+    // Initialize the barcode scanner.
+    this.start();
 
     // Handle cases when Quagga has read a barcode.
     Quagga.onDetected(result => {
@@ -233,8 +241,15 @@ class BarcodeScanner {
    */
   start() {
 
-    // Start Quagga so that we start processing the video feed.
-    Quagga.start();
+    // Initialize the Quagga object.
+    Quagga.init(this._state, (error) => {
+
+      // Handle errors with our own error handler.
+      if (error) return this._handleError(error);
+
+      // Start Quagga so that we start processing the video feed.
+      Quagga.start();
+    });
 
     // Allow chaining.
     return this;

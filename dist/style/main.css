@@ -106,7 +106,7 @@ body {
  */
 button,
 input[type="submit"] {
-  font-size: inherit;
+  font-size: 1.25em;
   background-color: var(--information-color);
   padding: 0.25em 0.75em;
   border: none;
@@ -194,11 +194,10 @@ h4 {
  *    This file installs some basic styling on text in the general application.
  */
 body {
-  --text-width-max: 30em;
   font-family: var(--text-font);
   color: var(--color);
   line-height: var(--line-height);
-  font-size: 2em;
+  font-size: 1em;
 }
 p,
 span,
@@ -206,7 +205,6 @@ label {
   color: var(--color);
   word-break: break-word;
   hyphens: auto;
-  max-width: var(--text-width-max);
 }
 .text-center {
   display: flex;
@@ -219,36 +217,24 @@ label {
  *  This is the main import file to gather the styles for all classes.
  */
 /**
- *  Main styling for the Overlay class.
+ *  Main styling for the ArScene class.
  */
-.overlay {
-  --background: rgba(0, 0, 0, 0.4);
-  --color: white;
+.arscene {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
+  position: relative;
 }
-.overlay button {
-  color: var(--color);
-}
-.overlay .overlay-top,
-.overlay .overlay-bottom {
+.arscene .arscene-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
-  padding: 2rem;
-  box-sizing: border-box;
-  background-color: var(--background);
+  height: 100%;
+  user-select: none;
+  pointer-events: none;
 }
-.overlay .overlay-top > :empty,
-.overlay .overlay-bottom > :empty {
-  display: none;
+.arscene .arscene-overlay button {
+  pointer-events: auto;
 }
 /**
  *  Main styling for the BarcodeScanner class.
@@ -274,6 +260,41 @@ label {
   top: 0;
   width: 100%;
   height: 100%;
+}
+/**
+ *  Main styling for the Overlay class.
+ */
+.overlay {
+  --background: rgba(0, 0, 0, 0.4);
+  --color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.overlay button,
+.overlay h2 {
+  color: var(--color);
+}
+.overlay .overlay-top,
+.overlay .overlay-bottom {
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  background-color: var(--background);
+}
+.overlay .overlay-top > :empty,
+.overlay .overlay-bottom > :empty {
+  display: none;
+}
+*:fullscreen,
+*:-webkit-full-screen,
+*:-moz-full-screen {
+  background-color: transparent;
 }
 /**
  *  This is the main import file to gather the styles for all pages.

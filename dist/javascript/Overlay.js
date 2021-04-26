@@ -1,6 +1,3 @@
-// Import dependencies.
-import { EventHandler } from "/javascript/EventHandler.js"
-
 /**
  *  The definition of the Overlay class that can be used to create an overlay
  *  interface for a full screen video format. It can be used to any number of
@@ -46,12 +43,12 @@ class Overlay {
     this._container.classList.add("overlay");
 
     // Create a container for the top elements.
-    this._top = document.createElement("div");
+    this._top = document.createElement("section");
     this._top.classList.add("overlay-top");
     this._container.appendChild(this._top);
 
     // Create a container for the bottom elements.
-    this._bottom = document.createElement("div");
+    this._bottom = document.createElement("section");
     this._bottom.classList.add("overlay-bottom");
     this._container.appendChild(this._bottom);
 

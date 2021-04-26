@@ -5,9 +5,9 @@
  */
 
 // Import dependencies.
-import { BarcodeScanner } from "/javascript/BarcodeScanner.js"
-import { ArScene } from "/javascript/ArScene.js"
-import { debounce } from "/javascript/debounce.js"
+import { BarcodeScanner } from "/javascript/BarcodeScanner.js";
+import { ArScene } from "/javascript/ArScene.js";
+import { debounce } from "/javascript/debounce.js";
 
 /**
  *  This is the container for the entire application. Because we want to use the
@@ -38,11 +38,11 @@ const products = {
   last: null
 }
 
-// /**
-//  *  Create an augmented reality session object.
-//  *  @var      {ArScene}
-//  */
-// const arScene = new ArScene(container);
+/**
+ *  Create an augmented reality session object.
+ *  @var      {ArScene}
+ */
+const arScene = new ArScene(container);
 
 /**
  *  Create a barcode scanner object. We want to pass our container element so
@@ -55,12 +55,12 @@ const scanner = new BarcodeScanner(container);
 const scannerOverlay = scanner.overlay();
 
 // Add a title to the overlay.
-scannerOverlay.add("h1", {
-  text:     "How much plastic?",
+scannerOverlay.add("h2", {
+  text:     "Which product?",
   location: "top"
 });
 
-// Add a description to the overlay.
+// Add an instruction to the overlay.
 scannerOverlay.add("p", {
   text:     "Select a product after scanning a barcode.",
   location: "top"
@@ -82,7 +82,7 @@ const selectButton = scannerOverlay.add("button", {
 const updateProduct = data =>  {
 
   // If we cannot recognize this product, we can't do anything.
-  if (!data.code in products) return;
+  if (!(data.code in products)) return;
 
   // No need to process if we've already registered this product.
   if (products.last && data.code == products.last.code) return;
@@ -108,8 +108,8 @@ const selectProduct = event =>  {
   // If we do have a product, we need to immediately stop and hide the scanner.
   scanner.stop().hide();
 
-  // // Start and show the augmented reality session instead.
-  // arScene.select(products.last.category).start().show();
+  // Start and show the augmented reality session instead.
+  arScene.select(products.last.category);
 }
 
 // Listen to when the barcode scanner reads barcodes.
@@ -122,18 +122,15 @@ const selectHandler = debounce(selectProduct, 500);
 selectButton.addEventListener('click', selectHandler);
 selectButton.addEventListener('touchend', selectHandler);
 
-// /**
-//  *  Helper function for resetting the page to the original state.
-//  *  @param  {Event}     event
-//  */
-//  const resetPage = event => {
+/**
+ *  Helper function for resetting the page to the original state.
+ *  @param  {Event}     event
+ */
+const resetPage = event => {
 
-//   // Make sure that the augmented reality session is stopped and hidden.
-//   arScene.stop().hide();
+  // Make sure that the barcode scanner is active and visible.
+  scanner.start().show();
+}
 
-//   // Make sure that the barcode scanner is active and visible.
-//   scanner.start().show();
-// }
-
-// // Listen for when the augmented reality session ends.
-// arScene.on('end', resetPage);
+// Listen for when the augmented reality session ends.
+arScene.on('end', resetPage);
