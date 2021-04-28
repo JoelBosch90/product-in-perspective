@@ -6,7 +6,7 @@
 const express = require('express');
 
 // Set the hostname to use.
-const HOST = 'joelbosch.nl';
+// const HOST = 'joelbosch.nl';
 
 // Set the port to use.
 const PORT = 8000;
@@ -63,8 +63,8 @@ app.get('/hoop', (request, response) => {
 })
 
 // Start listening on the designated port.
-app.listen(PORT, HOST, () => {
+app.listen(PORT, () => {
 
   // Announce the listening port in the command console.
-  console.log(`Example app listening on port ${HOST}:${PORT}!`)
+  console.log(`Example app listening on port ${PORT}!`)
 });
