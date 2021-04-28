@@ -220,7 +220,7 @@ class ArScene {
     plane.setAttribute("rotation", "-90 0 0");
     plane.setAttribute("width", "0.2");
     plane.setAttribute("height", "0.2");
-    plane.setAttribute("src", "/images/arrow.png");
+    plane.setAttribute("src", "/images/arrowTransparent.png");
     plane.setAttribute("material", "transparent:true;");
 
     // Add the plane to the reticle.

@@ -103,7 +103,7 @@ const selectProduct = event =>  {
 
   // If we don't have a product yet, we should tell the user that he needs to
   // scan one before he can select it.
-  if (!products.last) messageBus.textContent = "First scan a product to select.";
+  if (!products.last) return messageBus.textContent = "First scan a product to select.";
 
   // If we do have a product, we need to immediately stop and hide the scanner.
   scanner.stop().hide();

@@ -16,12 +16,6 @@ import { Overlay } from "/javascript/Overlay.js";
 class BarcodeScanner {
 
   /**
-   *  Private variable that stores the last valid barcode that was found.
-   *  @var      {integer}
-   */
-  _lastFound = null;
-
-  /**
    *  Private variable that stores the event handler object that can handle all
    *  events.
    *  @var      {EventHandler}
@@ -86,7 +80,7 @@ class BarcodeScanner {
       },
 
       // Increasing workers might help performance on devices that have suffient
-      // cores. We assume that this device will he used on mobile devices
+      // cores. We assume that this device will be used on mobile devices
       // mostly, so we don't assume multiple cores.
       numOfWorkers: 0,
       frequency: 10,
@@ -144,7 +138,7 @@ class BarcodeScanner {
    *    @property {object}    decoder
    *    @property {boolean}   locate
    */
-  _initQuagga(state) {
+  _initQuagga() {
 
     // Initialize the barcode scanner.
     this.start();
@@ -237,12 +231,19 @@ class BarcodeScanner {
 
   /**
    *  Method to start scanning.
+   *  @var      {object}    state     A state object to initialize Quagga.
+   *    @property {object}    inputStream
+   *    @property {object}    locator
+   *    @property {integer}   numOfWorkers
+   *    @property {integer}   frequency
+   *    @property {object}    decoder
+   *    @property {boolean}   locate
    *  @returns  {BarcodeScanner}
    */
-  start() {
+  start(state = this._state) {
 
     // Initialize the Quagga object.
-    Quagga.init(this._state, (error) => {
+    Quagga.init(state, (error) => {
 
       // Handle errors with our own error handler.
       if (error) return this._handleError(error);
