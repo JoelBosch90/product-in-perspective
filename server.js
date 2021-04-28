@@ -5,11 +5,14 @@
 // Load dependencies.
 const express = require('express');
 
-// Get the express application object.
-const app = express();
+// Set the hostname to use.
+const HOST = 'joelbosch.nl';
 
 // Set the port to use.
-const port = 8000;
+const PORT = 8000;
+
+// Get the express application object.
+const app = express();
 
 // Serve the static files.
 app.use(express.static('dist'));
@@ -60,8 +63,8 @@ app.get('/hoop', (request, response) => {
 })
 
 // Start listening on the designated port.
-app.listen(port, () => {
+app.listen(PORT, HOST, () => {
 
   // Announce the listening port in the command console.
-  console.log(`Example app listening on port ${port}!`)
+  console.log(`Example app listening on port ${HOST}:${PORT}!`)
 });
