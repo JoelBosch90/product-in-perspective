@@ -4,9 +4,8 @@
 
 // Load dependencies.
 const express = require('express');
-
-// Set the hostname to use.
-// const HOST = 'joelbosch.nl';
+const https = require('https');
+const fs = require('fs');
 
 // Set the port to use.
 const PORT = 8000;
@@ -63,7 +62,11 @@ app.get('/hoop', (request, response) => {
 })
 
 // Start listening on the designated port.
-app.listen(PORT, () => {
+https.createServer({
+    key: fs.readFileSync('./.certificates/key.pem'),
+    cert: fs.readFileSync('./.certificates/cert.pem'),
+    passphrase: 'ÉSg9u[0(UGGE'
+  }, app).listen(PORT, () => {
 
   // Announce the listening port in the command console.
   console.log(`Example app listening on port ${PORT}!`)
