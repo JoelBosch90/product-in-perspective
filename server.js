@@ -63,8 +63,8 @@ app.get('/hoop', (request, response) => {
 
 // Start listening on the designated port.
 https.createServer({
-    key: fs.readFileSync('./.certificates/key.pem'),
-    cert: fs.readFileSync('./.certificates/cert.pem'),
+    key:        fs.readFileSync('./.certificates/key.pem'),
+    cert:       fs.readFileSync('./.certificates/cert.pem'),
     passphrase: 'ÉSg9u[0(UGGE'
   }, app).listen(PORT, () => {
 
