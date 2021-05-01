@@ -221,7 +221,7 @@ class BarcodeScanner {
     // Create an error message to show the user.
     const errorMessage = document.createElement("h1");
     errorMessage.classList.add("barcodescanner-error");
-    errorMessage.textContent = error;
+    errorMessage.textContent = "Error: could not access camera";
 
     // Clear all current elements from the container.
     while(this._container.firstChild) this._container.removeChild(this._container.firstChild);
