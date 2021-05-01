@@ -202,7 +202,7 @@ class ArScene {
     // Create an error message to show the user.
     const errorMessage = document.createElement("h1");
     errorMessage.classList.add("arscene-error");
-    errorMessage.textContent = "Error: could not enter AR mode";
+    errorMessage.textContent = message;
 
     // Clear all current elements from the container.
     while(this._container.firstChild) this._container.removeChild(this._container.firstChild);

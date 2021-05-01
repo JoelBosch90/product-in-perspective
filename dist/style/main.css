@@ -221,6 +221,9 @@ label {
  *  Main styling for the ArScene class.
  */
 .arscene {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
   height: 100%;
   position: relative;
@@ -236,6 +239,9 @@ label {
 }
 .arscene .arscene-overlay button {
   pointer-events: auto;
+}
+.arscene .arscene-error {
+  text-align: center;
 }
 /**
  *  Main styling for the BarcodeScanner class.
