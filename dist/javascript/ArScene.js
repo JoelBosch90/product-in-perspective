@@ -252,35 +252,38 @@ class ArScene {
   _insertObject(scene) {
 
     // Create the model asset.
-    const model = document.createElement("a-asset-item");
-    model.setAttribute("src", "/models/yougurt_pack_01-obj.obj");
-    model.id = "arscene-model";
+    // const model = document.createElement("a-asset-item");
+    // model.setAttribute("src", "/models/plasticbottleNOBRAND.obj");
+    // model.id = "arscene-model";
 
     // Create the material asset.
-    const material = document.createElement("a-asset-item");
-    material.setAttribute("src", "/models/yougurt_pack_01-obj.mtl");
-    material.id = "arscene-material";
+    // const material = document.createElement("a-asset-item");
+    // material.setAttribute("src", "/models/yougurt_pack_01-obj.mtl");
+    // material.id = "arscene-material";
 
     // Add it to the list of assets.
-    const assets = document.createElement("a-assets");
-    assets.appendChild(model);
-    assets.appendChild(material);
+    // const assets = document.createElement("a-assets");
+    // assets.appendChild(model);
+    // assets.appendChild(material);
 
     // Create an Aframe box element.
     this._object = document.createElement("a-obj-model");
-    this._reticle.classList.add("arscene-object");
-    this._object.setAttribute("src", "#arscene-model");
-    this._object.setAttribute("mtl", "#arscene-material");
+    this._object.classList.add("arscene-object");
+    this._object.setAttribute("src", "/models/plasticbottleNOBRAND.obj");
+    // this._object.setAttribute("mtl", "#arscene-material");
     this._object.setAttribute("visible", "true");
     this._object.setAttribute("position", "0 0 0");
     this._object.setAttribute("rotation", "0 0 0");
-    this._object.setAttribute("width", "0.2");
-    this._object.setAttribute("height", "0.5");
-    this._object.setAttribute("depth", "0.2");
+    this._object.setAttribute("width", "0.1");
+    this._object.setAttribute("height", "0.3");
+    this._object.setAttribute("depth", "0.1");
+    this._object.setAttribute("static-body");
 
     // Add the assets and the object to the scene.
-    scene.appendChild(assets);
+    // scene.appendChild(assets);
     scene.appendChild(this._object);
+
+    console.log('object placed', this._object.getAttribute("position"));
   }
 
   /**
@@ -415,7 +418,10 @@ class ArScene {
     // We can copy the orientation of the reticle to place the object in the
     // scene.
     this._object.setAttribute("position", this._reticle.getAttribute("position"));
-    this._object.setAttribute("rotation", this._reticle.getAttribute("rotation"));
+    // this._object.setAttribute("rotation", this._reticle.getAttribute("rotation"));
+
+    console.log('reticle', this._reticle.getAttribute("position"));
+    console.log('object', this._object.getAttribute("position"));
 
     // Make sure the object is visible.
     this._object.setAttribute('visible', 'true');
@@ -434,21 +440,21 @@ class ArScene {
    */
   select(category) {
 
-    // Define the categories we can represent.
-    const categories = {
-      0: { size: 0.2, color: 'red' },
-      1: { size: 0.5, color: 'yellow' },
-      2: { size: 1.0, color: 'blue'}
-    }
+    // // Define the categories we can represent.
+    // const categories = {
+    //   0: { size: 0.2, color: 'red' },
+    //   1: { size: 0.5, color: 'yellow' },
+    //   2: { size: 1.0, color: 'blue'}
+    // }
 
-    // Get the appropriate properties for this category.
-    const properties = categories[category];
+    // // Get the appropriate properties for this category.
+    // const properties = categories[category];
 
-    // Update the object.
-    this._object.setAttribute("width", properties.size);
-    this._object.setAttribute("height", properties.size);
-    this._object.setAttribute("depth", properties.size);
-    this._object.setAttribute("color", properties.color);
+    // // Update the object.
+    // this._object.setAttribute("width", properties.size);
+    // this._object.setAttribute("height", properties.size);
+    // this._object.setAttribute("depth", properties.size);
+    // this._object.setAttribute("color", properties.color);
 
     // Immediately enter the augmented reality mode. This could fail, for
     // example if WebXR is not available or the user has not given permission.
