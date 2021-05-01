@@ -240,19 +240,37 @@ class ArScene {
    */
   _insertObject(scene) {
 
+    // Create the model asset.
+    const model = document.createElement("a-asset-item");
+    model.setAttribute("src", "/models/yougurt_pack_01-obj.obj");
+    model.id = "arscene-model";
+
+    // Create the material asset.
+    const material = document.createElement("a-asset-item");
+    material.setAttribute("src", "/models/yougurt_pack_01-obj.mtl");
+    material.id = "arscene-material";
+
+    // Add it to the list of assets.
+    const assets = document.createElement("a-assets");
+    assets.appendChild(model);
+    assets.appendChild(material);
+
     // Create an Aframe box element.
-    this._object = document.createElement("a-box");
+    this._object = document.createElement("a-obj-model");
     this._reticle.classList.add("arscene-object");
+    this._object.setAttribute("src", "#arscene-model");
+    this._object.setAttribute("mtl", "#arscene-material");
     this._object.setAttribute("visible", "false");
     this._object.setAttribute("position", "0 0 0");
     this._object.setAttribute("rotation", "0 0 0");
-    this._object.setAttribute("width", "0.5");
-    this._object.setAttribute("height", "0.5");
-    this._object.setAttribute("depth", "0.5");
-    this._object.setAttribute("color", "pink");
-    this._object.setAttribute("static-body");
+    // this._object.setAttribute("width", "0.5");
+    // this._object.setAttribute("height", "0.5");
+    // this._object.setAttribute("depth", "0.5");
+    // this._object.setAttribute("color", "pink");
+    // this._object.setAttribute("static-body");
 
-    // Add the object to the scene.
+    // Add the assets and the object to the scene.
+    scene.appendChild(assets);
     scene.appendChild(this._object);
   }
 

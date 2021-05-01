@@ -4,6 +4,7 @@
 
 // Load dependencies.
 const express = require('express');
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
 
@@ -61,13 +62,17 @@ app.get('/hoop', (request, response) => {
   response.sendFile("html/hoop-test.html", { root: __dirname + '/dist' });
 })
 
-// Start listening on the designated port.
-https.createServer({
-    key:        fs.readFileSync('./.certificates/key.pem'),
-    cert:       fs.readFileSync('./.certificates/cert.pem'),
-    passphrase: 'ÉSg9u[0(UGGE'
-  }, app).listen(PORT, () => {
-
-  // Announce the listening port in the command console.
-  console.log(`Example app listening on port ${PORT}!`)
+http.createServer(app).listen(PORT, () => {
+  console.log(`Listening on port ${PORT}.`);
 });
+
+// // Start listening on the designated port.
+// https.createServer({
+//     key:        fs.readFileSync('./.certificates/key.pem'),
+//     cert:       fs.readFileSync('./.certificates/cert.pem'),
+//     passphrase: 'ÉSg9u[0(UGGE'
+//   }, app).listen(PORT, () => {
+
+//   // Announce the listening port in the command console.
+//   console.log(`Example app listening on port ${PORT}!`)
+// });
