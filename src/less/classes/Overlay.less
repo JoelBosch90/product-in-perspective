@@ -35,6 +35,9 @@
   // keep the relevant interface elements close to the center of the screen.
   align-items: center;
 
+  // Make sure the user's clicks pass through the overlay.
+  pointer-events: none;
+
   // Target the individual containers.
   .overlay-top, .overlay-bottom
   {
@@ -52,6 +55,10 @@
 
     // Set a background to make our text more readable.
     background-color: var(--background);
+
+    // We don't want the user to be able to click through this part of the
+    // overlay.
+    pointer-events: auto;
 
     // Target all empty elements inside the overlay groups.
     > :empty

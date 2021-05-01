@@ -293,6 +293,7 @@ label {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  pointer-events: none;
 }
 .overlay button,
 .overlay h2 {
@@ -305,6 +306,7 @@ label {
   padding: 2rem;
   box-sizing: border-box;
   background-color: var(--background);
+  pointer-events: auto;
 }
 .overlay .overlay-top > :empty,
 .overlay .overlay-bottom > :empty {
