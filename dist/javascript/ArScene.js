@@ -261,7 +261,6 @@ class ArScene {
     this._object.setAttribute("height", "0.5");
     this._object.setAttribute("depth", "0.5");
     this._object.setAttribute("color", "pink");
-    this._object.setAttribute("static-body");
 
     // Add the object to the scene.
     scene.appendChild(this._object);
@@ -399,13 +398,14 @@ class ArScene {
     // We can copy the position of the reticle to place the object in the scene.
     this._object.setAttribute("position", this._reticle.getAttribute("position"));
 
-    const upVector = new THREE.Vector3(0, 1, 0);
-    const tempVector = new THREE.Vector3();
-    const tempQuaternion = new THREE.Quaternion();
-    tempVector.set(0, 0 ,-1);
-    tempVector.applyQuaternion(this._reticle.object3D.quaternion);
-    tempQuaternion.setFromUnitVectors(tempVector, upVector);
-    this._object.object3D.quaternion.multiplyQuaternions(tempQuaternion, this._reticle.object3D.quaternion);
+    // @TODO simplify this. Source: https://medium.com/samsung-internet-dev/making-an-ar-game-with-aframe-529e03ae90cb
+    // const upVector = new THREE.Vector3(0, 1, 0);
+    // const tempVector = new THREE.Vector3();
+    // const tempQuaternion = new THREE.Quaternion();
+    // tempVector.set(0, 0 ,-1);
+    // tempVector.applyQuaternion(this._reticle.object3D.quaternion);
+    // tempQuaternion.setFromUnitVectors(tempVector, upVector);
+    // this._object.object3D.quaternion.multiplyQuaternions(tempQuaternion, this._reticle.object3D.quaternion);
 
     // Make sure the object is visible.
     this._object.setAttribute('visible', 'true');
