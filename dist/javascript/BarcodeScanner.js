@@ -287,7 +287,7 @@ class BarcodeScanner {
   show() {
 
     // Make sure we're not hiding the barcode scanner's interface.
-    this._container.hidden = false;
+    this._container.classList.remove("hidden");
 
     // Allow chaining.
     return this;
@@ -300,7 +300,7 @@ class BarcodeScanner {
   hide() {
 
     // Make sure we're hiding the barcode scanner's interface.
-    this._container.hidden = true;
+    this._container.classList.add("hidden");
 
     // Allow chaining.
     return this;

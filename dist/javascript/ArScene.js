@@ -475,7 +475,7 @@ class ArScene {
   show() {
 
     // Make sure we're not hiding the scene
-    this._container.hidden = false;
+    this._container.classList.remove("hidden");
 
     // Allow chaining.
     return this;
@@ -488,7 +488,7 @@ class ArScene {
   hide() {
 
     // Make sure we're hiding the scene.
-    this._container.hidden = true;
+    this._container.classList.add("hidden");
 
     // Allow chaining.
     return this;
