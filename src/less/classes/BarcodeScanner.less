@@ -3,6 +3,12 @@
  */
 .barcodescanner
 {
+  // Use Flexbox to make sure we always align content to the center of the
+  // parent container.
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
   // Occupy all available space.
   width: 100%;
   height: 100%;
@@ -46,5 +52,19 @@
     // Occupy all available space.
     width: 100%;
     height: 100%;
+  }
+
+  // Target the error message.
+  .barcodescanner-error
+  {
+    // Make sure we show the text in the center of the parent container.
+    text-align: center;
+  }
+
+  // Add a class to hide the scanner.
+  &.hidden
+  {
+    // Don't display the container.
+    display: none;
   }
 }

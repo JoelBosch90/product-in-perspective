@@ -198,6 +198,17 @@ class ArScene {
 
     // Stop the session.
     this.stop();
+
+    // Create an error message to show the user.
+    const errorMessage = document.createElement("h1");
+    errorMessage.classList.add("arscene-error");
+    errorMessage.textContent = message;
+
+    // Clear all current elements from the container.
+    while(this._container.firstChild) this._container.removeChild(this._container.firstChild);
+
+    // Append the error message.
+    this._container.appendChild(errorMessage);
   }
 
   /**
@@ -267,7 +278,6 @@ class ArScene {
     // this._object.setAttribute("height", "0.5");
     // this._object.setAttribute("depth", "0.5");
     // this._object.setAttribute("color", "pink");
-    // this._object.setAttribute("static-body");
 
     // Add the assets and the object to the scene.
     scene.appendChild(assets);
@@ -406,14 +416,6 @@ class ArScene {
     // We can copy the position of the reticle to place the object in the scene.
     this._object.setAttribute("position", this._reticle.getAttribute("position"));
 
-    const upVector = new THREE.Vector3(0, 1, 0);
-    const tempVector = new THREE.Vector3();
-    const tempQuaternion = new THREE.Quaternion();
-    tempVector.set(0, 0 ,-1);
-    tempVector.applyQuaternion(this._reticle.object3D.quaternion);
-    tempQuaternion.setFromUnitVectors(tempVector, upVector);
-    this._object.object3D.quaternion.multiplyQuaternions(tempQuaternion, this._reticle.object3D.quaternion);
-
     // Make sure the object is visible.
     this._object.setAttribute('visible', 'true');
 
@@ -447,8 +449,10 @@ class ArScene {
     this._object.setAttribute("depth", properties.size);
     this._object.setAttribute("color", properties.color);
 
-    // Immediately enter the augmented reality mode.
-    this._scene.enterAR();
+    // Immediately enter the augmented reality mode. This could fail, for
+    // example if WebXR is not available or the user has not given permission.
+    try { this._scene.enterAR(); }
+    catch (error) { this._handleError(error); }
 
     // Now we can show our scene.
     this.show();
@@ -480,7 +484,7 @@ class ArScene {
   show() {
 
     // Make sure we're not hiding the scene
-    this._container.hidden = false;
+    this._container.classList.remove("hidden");
 
     // Allow chaining.
     return this;
@@ -493,7 +497,7 @@ class ArScene {
   hide() {
 
     // Make sure we're hiding the scene.
-    this._container.hidden = true;
+    this._container.classList.add("hidden");
 
     // Allow chaining.
     return this;

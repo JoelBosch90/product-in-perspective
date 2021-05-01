@@ -217,6 +217,17 @@ class BarcodeScanner {
 
     // Log the error to the browser console.
     console.error(error);
+
+    // Create an error message to show the user.
+    const errorMessage = document.createElement("h1");
+    errorMessage.classList.add("barcodescanner-error");
+    errorMessage.textContent = "Error: could not access camera";
+
+    // Clear all current elements from the container.
+    while(this._container.firstChild) this._container.removeChild(this._container.firstChild);
+
+    // Append the error message.
+    this._container.appendChild(errorMessage);
   }
 
   /**
@@ -276,7 +287,7 @@ class BarcodeScanner {
   show() {
 
     // Make sure we're not hiding the barcode scanner's interface.
-    this._container.hidden = false;
+    this._container.classList.remove("hidden");
 
     // Allow chaining.
     return this;
@@ -289,7 +300,7 @@ class BarcodeScanner {
   hide() {
 
     // Make sure we're hiding the barcode scanner's interface.
-    this._container.hidden = true;
+    this._container.classList.add("hidden");
 
     // Allow chaining.
     return this;
