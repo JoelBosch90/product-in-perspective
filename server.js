@@ -59,6 +59,7 @@ app.get('/hoop', (request, response) => {
   response.sendFile("html/hoop-test.html", { root: __dirname + '/dist' });
 })
 
-// Start listening to the server port and announce the proper port in the console.
+// Start listening to the server port and announce the proper port in the
+// console.
 app.listen(PORT, () => void console.log(`Hosting at ${PORT}.`));
 
