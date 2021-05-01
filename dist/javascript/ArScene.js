@@ -198,6 +198,17 @@ class ArScene {
 
     // Stop the session.
     this.stop();
+
+    // Create an error message to show the user.
+    const errorMessage = document.createElement("h1");
+    errorMessage.classList.add("arscene-error");
+    errorMessage.textContent = "Error: could not enter AR mode";
+
+    // Clear all current elements from the container.
+    while(this._container.firstChild) this._container.removeChild(this._container.firstChild);
+
+    // Append the error message.
+    this._container.appendChild(errorMessage);
   }
 
   /**
@@ -429,8 +440,10 @@ class ArScene {
     this._object.setAttribute("depth", properties.size);
     this._object.setAttribute("color", properties.color);
 
-    // Immediately enter the augmented reality mode.
-    this._scene.enterAR();
+    // Immediately enter the augmented reality mode. This could fail, for
+    // example if WebXR is not available or the user has not given permission.
+    try { this._scene.enterAR(); }
+    catch (error) { this._handleError(error); }
 
     // Now we can show our scene.
     this.show();
