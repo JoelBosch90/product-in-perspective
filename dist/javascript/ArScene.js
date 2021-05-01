@@ -271,13 +271,12 @@ class ArScene {
     this._reticle.classList.add("arscene-object");
     this._object.setAttribute("src", "#arscene-model");
     this._object.setAttribute("mtl", "#arscene-material");
-    this._object.setAttribute("visible", "false");
+    this._object.setAttribute("visible", "true");
     this._object.setAttribute("position", "0 0 0");
     this._object.setAttribute("rotation", "0 0 0");
-    // this._object.setAttribute("width", "0.5");
-    // this._object.setAttribute("height", "0.5");
-    // this._object.setAttribute("depth", "0.5");
-    // this._object.setAttribute("color", "pink");
+    this._object.setAttribute("width", "0.2");
+    this._object.setAttribute("height", "0.5");
+    this._object.setAttribute("depth", "0.2");
 
     // Add the assets and the object to the scene.
     scene.appendChild(assets);
@@ -413,8 +412,10 @@ class ArScene {
     // We don't need the hit test on the reticle for the viewing mode.
     this._reticle.setAttribute('ar-hit-test', 'doHitTest:false');
 
-    // We can copy the position of the reticle to place the object in the scene.
+    // We can copy the orientation of the reticle to place the object in the
+    // scene.
     this._object.setAttribute("position", this._reticle.getAttribute("position"));
+    this._object.setAttribute("rotation", this._reticle.getAttribute("rotation"));
 
     // Make sure the object is visible.
     this._object.setAttribute('visible', 'true');
