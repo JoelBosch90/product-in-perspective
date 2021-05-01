@@ -278,7 +278,7 @@ class ArScene {
     // Create an Aframe camera element. To add the overlay to the scene, we can
     // create an interface in a camera object that we can mount the overlay to.
     const camera = document.createElement("a-camera");
-    this._interface.setAttribute("look-controls", "touchEnabled: false");
+    camera.setAttribute("look-controls", "touchEnabled: false");
 
     // Create an Aframe entity element for the interface.
     this._interface = document.createElement("a-entity");
