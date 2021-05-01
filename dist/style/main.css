@@ -243,6 +243,9 @@ label {
 .arscene .arscene-error {
   text-align: center;
 }
+.arscene.hidden {
+  display: none;
+}
 /**
  *  Main styling for the BarcodeScanner class.
  */
@@ -273,6 +276,9 @@ label {
 }
 .barcodescanner .barcodescanner-error {
   text-align: center;
+}
+.barcodescanner.hidden {
+  display: none;
 }
 /**
  *  Main styling for the Overlay class.
