@@ -52,6 +52,11 @@ class Overlay {
     this._bottom.classList.add("overlay-bottom");
     this._container.appendChild(this._bottom);
 
+    this._top.addEventListener('touchstart', event => void event.stopPropagation());
+    this._top.addEventListener('mousedown', event => void event.stopPropagation());
+    this._bottom.addEventListener('touchstart', event => void event.stopPropagation());
+    this._bottom.addEventListener('mousedown', event => void event.stopPropagation());
+
     // Add the overlay to the parent container.
     parent.appendChild(this._container);
   }
