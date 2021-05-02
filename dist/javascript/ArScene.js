@@ -252,25 +252,18 @@ class ArScene {
   _insertObject(scene) {
 
     // Create the model asset.
-    // const model = document.createElement("a-asset-item");
-    // model.setAttribute("src", "/models/plasticbottleNOBRAND.obj");
-    // model.id = "arscene-model";
-
-    // Create the material asset.
-    // const material = document.createElement("a-asset-item");
-    // material.setAttribute("src", "/models/yougurt_pack_01-obj.mtl");
-    // material.id = "arscene-material";
+    const model = document.createElement("a-asset-item");
+    model.setAttribute("src", "/models/plasticbottleNOBRAND.obj");
+    model.id = "arscene-model";
 
     // Add it to the list of assets.
-    // const assets = document.createElement("a-assets");
-    // assets.appendChild(model);
-    // assets.appendChild(material);
+    const assets = document.createElement("a-assets");
+    assets.appendChild(model);
 
     // Create an Aframe box element.
     this._object = document.createElement("a-obj-model");
     this._object.classList.add("arscene-object");
-    this._object.setAttribute("src", "/models/plasticbottleNOBRAND.obj");
-    // this._object.setAttribute("mtl", "#arscene-material");
+    this._object.setAttribute("src", "#arscene-model");
     this._object.setAttribute("visible", "true");
     this._object.setAttribute("position", "0 0 0");
     this._object.setAttribute("rotation", "0 0 0");
@@ -281,9 +274,8 @@ class ArScene {
 
     // Add the assets and the object to the scene.
     // scene.appendChild(assets);
+    scene.appendChild(assets);
     scene.appendChild(this._object);
-
-    console.log('object placed', this._object.getAttribute("position"));
   }
 
   /**
