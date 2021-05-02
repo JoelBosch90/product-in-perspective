@@ -228,7 +228,6 @@ class ArScene {
 
     // Create an Aframe plane element.
     const plane = document.createElement("a-plane");
-    plane.setAttribute("rotation", "-90 0 0");
     plane.setAttribute("width", "0.2");
     plane.setAttribute("height", "0.2");
     plane.setAttribute("src", "/images/arrowTransparent.png");
@@ -264,9 +263,8 @@ class ArScene {
     this._object = document.createElement("a-obj-model");
     this._object.classList.add("arscene-object");
     this._object.setAttribute("src", "#arscene-model");
-    this._object.setAttribute("visible", "true");
+    this._object.setAttribute("visible", "false");
     this._object.setAttribute("position", "0 0 0");
-    this._object.setAttribute("rotation", "0 0 0");
     this._object.setAttribute("width", "0.1");
     this._object.setAttribute("height", "0.3");
     this._object.setAttribute("depth", "0.1");
