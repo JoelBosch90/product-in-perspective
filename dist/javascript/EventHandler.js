@@ -35,11 +35,15 @@ class EventHandler {
    *  @param    {string}    event       Name of the event.
    *  @param    {object}    data        Data to be passed to the callbacks for
    *                                    this event.
+   *  @returns  {EventHandler}
    */
   trigger(event, data) {
 
     // Execute each registered callback function for this event.
     if (this._triggers[event]) this._triggers[event].forEach(listener => void listener(data));
+
+    // Allow chaining;
+    return this;
   }
 
   /**
@@ -48,6 +52,7 @@ class EventHandler {
    *  @param    {string}    event       Name of the event.
    *  @param    {function}  listener    Function that should be called when
    *                                    the event happens.
+   *  @returns  {EventHandler}
    */
   on(event, listener) {
 
@@ -56,6 +61,9 @@ class EventHandler {
 
     // Add this callback to the list for this event.
     this._triggers[event].push(listener);
+
+    // Allow chaining;
+    return this;
   }
 
   /**
@@ -64,6 +72,7 @@ class EventHandler {
    *  @param    {string}    event       Name of the event.
    *  @param    {function}  listener    Function that should be called when
    *                                    the event happens.
+   *  @returns  {EventHandler}
    */
   off(event, listener) {
 
@@ -74,6 +83,22 @@ class EventHandler {
     // If callbacks are registered for this event, make sure that this callback
     // is filtered from that array.
     this._triggers[event] = this._triggers[event].filter(item => item !== listener);
+
+    // Allow chaining;
+    return this;
+  }
+
+  /**
+   *  Method to remove this object and clean up after itself.
+   *  @returns  {EventHandler}
+   */
+  remove() {
+
+    // Reset the triggers object.
+    delete this._triggers;
+
+    // Allow chaining;
+    return this;
   }
 }
 

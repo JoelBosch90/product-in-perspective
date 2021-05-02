@@ -56,11 +56,17 @@ class ArScene {
   _object = null;
 
   /**
+   *  Private variable that stores a reference to the Overlay object.
+   *  @var      {Overlay}
+   */
+  _overlay = null;
+
+  /**
    *  Private variable that stores a reference to the container that houses the
    *  overlay.
    *  @var      {Element}
    */
-  _overlay = null;
+  _overlayContainer = null;
 
   /**
    *  Private variable that stores a reference to the container that houses the
@@ -175,10 +181,10 @@ class ArScene {
     const domOverlay = !!(this._scene.xrSession.domOverlayState && this._scene.xrSession.domOverlayState.type);
 
     // Mount the overlay in the augmented reality session.
-    this._overlay.setAttribute('text', 'value', 'Overlay: ' + domOverlay);
+    this._overlayContainer.setAttribute('text', 'value', 'Overlay: ' + domOverlay);
 
     // Make sure the overlay is visible.
-    this._overlay.setAttribute('visible', 'true');
+    this._overlayContainer.setAttribute('visible', 'true');
 
     // Make sure the augmented reality scene is visible.
     this._scene.setAttribute('visible', 'true');
@@ -343,20 +349,20 @@ class ArScene {
   _initOverlay(parent) {
 
     // Create a container for the overlay element.
-    this._overlay = document.createElement("div");
-    this._overlay.classList.add("arscene-overlay");
+    this._overlayContainer = document.createElement("div");
+    this._overlayContainer.classList.add("arscene-overlay");
 
     // Create an overlay object.
-    const overlay = new Overlay(this._overlay);
+    this._overlay = new Overlay(this._overlayContainer);
 
     // Add a title to the overlay.
-    overlay.add("h2", { location: "top" });
+    this._overlay.add("h2", { location: "top" });
 
     // Add a description to the overlay.
-    this._instructions = overlay.add("p", { location: "top" });
+    this._instructions = this._overlay.add("p", { location: "top" });
 
     // Add a proceed button to the overlay.
-    this._proceedButton = overlay.add("button");
+    this._proceedButton = this._overlay.add("button");
 
     // Add event listeners to this button with a debounced callback.
     const proceedHandler = debounce(() => void this.proceed(), 500);
@@ -364,7 +370,7 @@ class ArScene {
     this._proceedButton.addEventListener('touchstart', proceedHandler);
 
     // Add an stop button to the overlay.
-    this._stopButton = overlay.add("button", { text: "Exit" });
+    this._stopButton = this._overlay.add("button", { text: "Exit" });
 
     // Add event listeners to this button with a debounced callback. We want
     // this to just end the XR session. The event listener on the session will
@@ -374,27 +380,7 @@ class ArScene {
     this._stopButton.addEventListener('touchstart', stopHandler);
 
     // Add the overlay container to the parent container.
-    parent.appendChild(this._overlay);
-  }
-
-  /**
-   *  Method for proceeding to the next step.
-   *  @returns  {ArScene}
-   */
-  proceed() {
-
-    // How we need to proceed depends on the mode we're currently in.
-    switch (this._mode)
-    {
-      // If we're placing, we can view next.
-      case "placing": this._viewingMode(); break;
-
-      // If we're viewing, we can go back to placing.
-      case "viewing": this._placingMode(); break;
-    }
-
-    // Allow chaining.
-    return this;
+    parent.appendChild(this._overlayContainer);
   }
 
   /**
@@ -450,6 +436,26 @@ class ArScene {
 
     // Update the text for the instructions.
     this._instructions.textContent = "Take a moment to judge the size of that!";
+  }
+
+  /**
+   *  Method for proceeding to the next step.
+   *  @returns  {ArScene}
+   */
+  proceed() {
+
+    // How we need to proceed depends on the mode we're currently in.
+    switch (this._mode)
+    {
+      // If we're placing, we can view next.
+      case "placing": this._viewingMode(); break;
+
+      // If we're viewing, we can go back to placing.
+      case "viewing": this._placingMode(); break;
+    }
+
+    // Allow chaining.
+    return this;
   }
 
   /**
@@ -552,6 +558,34 @@ class ArScene {
 
     // Pass everything to the event handler.
     this._eventHandler.off(...args);
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Method to remove this object and clean up after itself.
+   *  @returns  {ArScene}
+   */
+  remove() {
+
+    // Stop the session.
+    this.stop();
+
+    // Remove the other objects we've used.
+    this._eventHandler.remove();
+    this._overlay.remove();
+
+    // Remove all DOM elements we've stored.
+    this._container.remove();
+    this._scene.remove();
+    this._reticle.remove();
+    this._object.remove();
+    this._overlayContainer.remove();
+    this._interface.remove();
+    this._proceedButton.remove();
+    this._stopButton.remove();
+    this._instructions.remove();
 
     // Allow chaining.
     return this;

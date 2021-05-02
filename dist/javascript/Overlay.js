@@ -113,6 +113,23 @@ class Overlay {
     // Allow chaining.
     return this;
   }
+
+  /**
+   *  Method to remove this object and clean up after itself.
+   *  @returns  {Overlay}
+   */
+  remove() {
+
+    // We didn't use any event listeners or other classes, so we can simply
+    // remove the container from the DOM. But we do need to remove all
+    // references to objects.
+    this._container.remove();
+    this._top.remove();
+    this._bottom.remove();
+
+    // Allow chaining.
+    return this;
+  }
 }
 
 // Export the Overlay class so it can be imported elsewhere.

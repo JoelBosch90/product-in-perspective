@@ -209,10 +209,10 @@ AFRAME.registerComponent("ar-hit-test", {
 });
 
 AFRAME.registerPrimitive('a-hit-test', {
-    defaultComponents: {
-        'ar-hit-test': {}
-    },
-    mappings: {
-        target: 'ar-hit-test.target',
-    }
+  defaultComponents: {
+    'ar-hit-test': {}
+  },
+  mappings: {
+    target: 'ar-hit-test.target',
+  }
 });

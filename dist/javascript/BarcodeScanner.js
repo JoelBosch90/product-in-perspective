@@ -333,6 +333,26 @@ class BarcodeScanner {
     // Allow chaining.
     return this;
   }
+
+  /**
+   *  Method to remove this object and clean up after itself.
+   *  @returns  {BarcodeScanner}
+   */
+  remove() {
+
+    // Delete the state.
+    delete this._state;
+
+    // Remove class objects we used.
+    this._eventHandler.remove();
+    this._overlay.remove();
+
+    // Remove all DOM elements we've stored.
+    this._container.remove();
+
+    // Allow chaining.
+    return this;
+  }
 }
 
 // Export the BarcodeScanner class so it can be imported elsewhere.
