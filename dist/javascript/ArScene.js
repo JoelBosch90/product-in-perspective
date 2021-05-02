@@ -223,13 +223,25 @@ class ArScene {
     // Create an Aframe entity element.
     this._reticle = document.createElement("a-entity");
     this._reticle.classList.add("arscene-reticle");
+
+    // We want to do our hit test on this reticle.
     this._reticle.setAttribute("ar-hit-test", "doHitTest:false");
+
+    // The reticle will become visible when te hit test succeeded.
     this._reticle.setAttribute("visible", "false");
 
     // Create an Aframe plane element.
     const plane = document.createElement("a-plane");
+
+    // We need the plane to be flat on the ground, so we rotate by 90 degrees.
+    plane.setAttribute("rotation", "-90 0 0");
+
+    // We need to give it some modest dimensions. The reticle should be easy to
+    // spot and use, but should not hide the environment.
     plane.setAttribute("width", "0.2");
     plane.setAttribute("height", "0.2");
+
+    // Determ what the reticle looks like. We want to make sure
     plane.setAttribute("src", "/images/arrowTransparent.png");
     plane.setAttribute("material", "transparent:true;");
 
@@ -241,38 +253,58 @@ class ArScene {
   }
 
   /**
-   *  Private method for adding an object in an Aframe scene.
+   *  Private method for loading the assets in the scene.
    *  @param    {Element}   scene   The Aframe scene to which the object is
    *                                added.
    *
-   *  @TODO     Load relevant 3D objects that represent the appropriate amount
-   *            of plastic waste.
+   *  @TODO     Get the assets from an API call.
+   */
+  _loadAssets(scene) {
+
+    // Create an element for the list of assets.
+    const assets = document.createElement("a-assets");
+
+    // Add a model to the list of assets.
+    const model = document.createElement("a-asset-item");
+
+    // Set the correct source for the model. Ideally, this is a GTLF model.
+    model.setAttribute("src", "/models/plasticbottleNOBRAND.obj");
+
+    // Add the ID by which the model is identified and by which we can use it in
+    // the object in the scene.
+    model.id = "arscene-model";
+
+    // Add the model to the assets.
+    assets.appendChild(model);
+
+    // Add the assets to the scene.
+    scene.appendChild(assets);
+  }
+
+  /**
+   *  Private method for adding an object in an Aframe scene.
+   *  @param    {Element}   scene   The Aframe scene to which the object is
+   *                                added.
    */
   _insertObject(scene) {
 
-    // Create the model asset.
-    const model = document.createElement("a-asset-item");
-    model.setAttribute("src", "/models/plasticbottleNOBRAND.obj");
-    model.id = "arscene-model";
-
-    // Add it to the list of assets.
-    const assets = document.createElement("a-assets");
-    assets.appendChild(model);
+    // First, load the assets.
+    this._loadAssets(scene);
 
     // Create an Aframe box element.
     this._object = document.createElement("a-obj-model");
     this._object.classList.add("arscene-object");
+
+    // Attach a relevant default model with sensible dimensions.
     this._object.setAttribute("src", "#arscene-model");
-    this._object.setAttribute("visible", "false");
-    this._object.setAttribute("position", "0 0 0");
     this._object.setAttribute("width", "0.1");
     this._object.setAttribute("height", "0.3");
     this._object.setAttribute("depth", "0.1");
-    this._object.setAttribute("static-body");
 
-    // Add the assets and the object to the scene.
-    // scene.appendChild(assets);
-    scene.appendChild(assets);
+    // It should be hidden until it is placed in the scene by the user.
+    this._object.setAttribute("visible", "false");
+
+    // Add the object to the scene.
     scene.appendChild(this._object);
   }
 
@@ -376,9 +408,6 @@ class ArScene {
 
     // We need the hit test on the reticlee.
     this._reticle.setAttribute('ar-hit-test', 'doHitTest:true');
-
-    // Make sure the reticle is visible.
-    this._reticle.setAttribute('visible', 'true');
 
     // Make sure the 3D object is not visible.
     this._object.setAttribute('visible', 'false');
