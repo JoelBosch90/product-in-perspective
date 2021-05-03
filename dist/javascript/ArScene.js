@@ -2,6 +2,7 @@
 import { EventHandler } from "/javascript/EventHandler.js";
 import { Overlay } from "/javascript/Overlay.js";
 import { debounce } from "/javascript/debounce.js";
+import { Reticle} from "/javascript/ArScene/reticle.js";
 
 /**
  *  The definition of the ArScene class that can be used to create an an
@@ -47,7 +48,7 @@ class ArScene {
 
   /**
    *  Private variable that stores a reference to the Aframe reticle.
-   *  @var      {Element}
+   *  @var      {Reticle}
    */
   _reticle = null;
 
@@ -121,7 +122,7 @@ class ArScene {
     this._container.classList.add("arscene");
 
     // Create the overlay in this container.
-    this._initOverlay(this._container);
+    this._createOverlay(this._container);
 
     // Create the scene in this container.
     this._initScene(this._container);
@@ -160,7 +161,7 @@ class ArScene {
     this._insertObject(this._scene);
 
     // Add the overlay to the scene.
-    this._insertOverlay(this._scene);
+    this._addOverlayToScene(this._scene);
 
     // Add an event listener to the scene to detect when the user has exited the
     // scene.
@@ -215,41 +216,43 @@ class ArScene {
    *  Private method for adding a reticle in an Aframe scene.
    *  @param    {Element}   scene   The Aframe scene to which the reticle is
    *                                added.
-   *
-   *  @TODO     Use a better reticle.
    */
   _insertReticle(scene) {
 
-    // Create an Aframe entity element.
-    this._reticle = document.createElement("a-entity");
-    this._reticle.classList.add("arscene-reticle");
+    // Append the reticle to the scene.
+    this._reticle = new Reticle(scene);
 
-    // We want to do our hit test on this reticle.
-    this._reticle.setAttribute("ar-hit-test", "doHitTest:false");
+    // // Create an Aframe reticle element. This is the functional element that
+    // // will be doing the hit tests so that it can detect surfaces.
+    // this._reticle = document.createElement("a-reticle");
+    // this._reticle.classList.add("arscene-reticle");
 
-    // The reticle will become visible when te hit test succeeded.
-    this._reticle.setAttribute("visible", "false");
+    // // We don't need to start hit testing right away and the reticle should be
+    // // hidden by default.
+    // this._reticle.setAttribute("testing", "false");
+    // this._reticle.setAttribute("visible", "false");
 
-    // Create an Aframe plane element.
-    const plane = document.createElement("a-plane");
+    // // Create an Aframe plane element that will be the visible part of the
+    // // reticle. It will server as a hit marker.
+    // const marker = document.createElement("a-plane");
 
-    // We need the plane to be flat on the ground, so we rotate by 90 degrees.
-    plane.setAttribute("rotation", "-90 0 0");
+    // // We need the marker to be flat on the ground, so we rotate by 90 degrees.
+    // marker.setAttribute("rotation", "-90 0 0");
 
-    // We need to give it some modest dimensions. The reticle should be easy to
-    // spot and use, but should not hide the environment.
-    plane.setAttribute("width", "0.2");
-    plane.setAttribute("height", "0.2");
+    // // We need to give it some modest dimensions. The reticle should be easy to
+    // // spot and use, but should not hide the environment.
+    // marker.setAttribute("width", "0.2");
+    // marker.setAttribute("height", "0.2");
 
-    // Determ what the reticle looks like. We want to make sure
-    plane.setAttribute("src", "/images/arrowTransparent.png");
-    plane.setAttribute("material", "transparent:true;");
+    // // Determine what the reticle looks like.
+    // marker.setAttribute("src", "/images/arrowTransparent.png");
+    // marker.setAttribute("material", "transparent:true;");
 
-    // Add the plane to the reticle.
-    this._reticle.appendChild(plane);
+    // // Add the marker to the reticle.
+    // this._reticle.appendChild(marker);
 
-    // Add the reticle to the scene.
-    scene.appendChild(this._reticle);
+    // // Add the reticle to the scene.
+    // scene.appendChild(this._reticle);
   }
 
   /**
@@ -326,7 +329,7 @@ class ArScene {
    *  @param    {Element}   scene   The Aframe scene to which the interface is
    *                                added.
    */
-  _insertOverlay(scene) {
+  _addOverlayToScene(scene) {
 
     // Create an Aframe camera element. To add the overlay to the scene, we can
     // create an interface in a camera object that we can mount the overlay to.
@@ -351,7 +354,7 @@ class ArScene {
    *  @param    {Element}   parent    The parent element on which the overlay
    *                                  will be installed.
    */
-  _initOverlay(parent) {
+  _createOverlay(parent) {
 
     // Create a container for the overlay element.
     this._overlayContainer = document.createElement("div");
@@ -397,8 +400,8 @@ class ArScene {
     // Change the mode.
     this._mode = "placing";
 
-    // We need the hit test on the reticlee.
-    this._reticle.setAttribute('ar-hit-test', 'doHitTest:true');
+    // We need the reticle to show.
+    this._reticle.show();
 
     // Make sure the 3D object is not visible.
     this._object.setAttribute('visible', 'false');
@@ -419,18 +422,17 @@ class ArScene {
     // Change the mode.
     this._mode = "viewing";
 
-    // Make sure the reticle is not visible.
-    this._reticle.setAttribute('visible', 'false');
+    // We need to hide the reticle.
+    this._reticle.hide();
 
-    // We don't need the hit test on the reticle for the viewing mode.
-    this._reticle.setAttribute('ar-hit-test', 'doHitTest:false');
+    console.log('object', this._object);
 
     // We can copy the orientation of the reticle to place the object in the
     // scene.
-    this._object.setAttribute("position", this._reticle.getAttribute("position"));
-    this._object.setAttribute("rotation", this._reticle.getAttribute("rotation"));
+    this._object.setAttribute("position", this._reticle.position());
+    this._object.setAttribute("rotation", this._reticle.rotation());
 
-    console.log('reticle', this._reticle.getAttribute("position"));
+    console.log('reticle', this._reticle.position());
     console.log('object', this._object.getAttribute("position"));
 
     // Make sure the object is visible.
@@ -520,6 +522,10 @@ class ArScene {
     // Hide this object.
     this.hide();
 
+    // Also hide the reticle. This will make sure that it is no longer running
+    // hit tests in the background.
+    this._reticle.hide();
+
     // Trigger the end event.
     this._eventHandler.trigger('end');
 
@@ -593,11 +599,11 @@ class ArScene {
     // Remove the other objects we've used.
     this._eventHandler.remove();
     this._overlay.remove();
+    this._reticle.remove();
 
     // Remove all DOM elements we've stored.
     this._container.remove();
     this._scene.remove();
-    this._reticle.remove();
     this._object.remove();
     this._overlayContainer.remove();
     this._interface.remove();

@@ -9,7 +9,7 @@
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class HitTest {
+ class HitTest {
 
   /**
    *  Private variable that stores the renderer.
@@ -47,8 +47,6 @@ class HitTest {
    *                                        target ray space.
    */
   constructor(renderer, options) {
-
-    console.log("HitTest::constructor");
 
     // Store the XR renderer.
     this._renderer = renderer;
@@ -104,8 +102,6 @@ class HitTest {
    */
   doHit(frame) {
 
-    console.log("HitTest::doHit");
-
     // If we're not in an active session, we cannot do a hit test.
     if (!this._renderer.xr.isPresenting) return;
 
@@ -138,7 +134,7 @@ class HitTest {
     const results = frame.getHitTestResults(this._hitTestSource);
 
     // If we didn't get any results, we should return false.
-    if (results.length <= 0) return false;
+    if (!results.length) return false;
 
     // Get the pose of the first result of the hit test. This should be the one
     // closest to the viewer and thus most likely to be the most relevant one.
@@ -163,6 +159,7 @@ class HitTest {
    *                                            test was unsuccessful.
    */
   _transientHitTest(frame, referenceSpace) {
+    console.log("::_transientHitTest");
 
     // Get the transient input hit test results for this frame.
     const results = frame.getHitTestResultsForTransientInput(this._hitTestSource);
