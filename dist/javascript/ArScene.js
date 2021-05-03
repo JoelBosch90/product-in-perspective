@@ -1,8 +1,8 @@
 // Import dependencies.
 import { EventHandler } from "/javascript/EventHandler.js";
 import { Overlay } from "/javascript/Overlay.js";
+import { Reticle} from "/javascript/ArScene/Reticle.js";
 import { debounce } from "/javascript/debounce.js";
-import { Reticle} from "/javascript/ArScene/reticle.js";
 
 /**
  *  The definition of the ArScene class that can be used to create an an
@@ -425,15 +425,15 @@ class ArScene {
     // We need to hide the reticle.
     this._reticle.hide();
 
-    console.log('object', this._object);
+    // console.log('object', this._object);
 
     // We can copy the orientation of the reticle to place the object in the
     // scene.
     this._object.setAttribute("position", this._reticle.position());
     this._object.setAttribute("rotation", this._reticle.rotation());
 
-    console.log('reticle', this._reticle.position());
-    console.log('object', this._object.getAttribute("position"));
+    // console.log('reticle', this._reticle.position());
+    // console.log('object', this._object.getAttribute("position"));
 
     // Make sure the object is visible.
     this._object.setAttribute('visible', 'true');
