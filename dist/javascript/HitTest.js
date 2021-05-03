@@ -55,10 +55,10 @@ class HitTest {
     this._options = options;
 
     // Make sure we reset the hit test source every time the session ends.
-    this._renderer.xr.addEventListener("sessionend", this._resetHitTestSource);
+    this._renderer.xr.addEventListener("sessionend", () => void this._resetHitTestSource());
 
     // Make sure we start whenever the session starts.
-    this._renderer.xr.addEventListener("sessionstart", this._startSession)
+    this._renderer.xr.addEventListener("sessionstart", () => void this._startSession())
 
     // If the WebXR session has already started, we should immediately start the
     // hit test session.
@@ -82,7 +82,7 @@ class HitTest {
   async _startSession() {
 
     // Store the current WebXR session.
-    this._session = this.renderer.xr.getSession();
+    this._session = this._renderer.xr.getSession();
 
     // If we have a ray space, use that to get the source for the hit test.
     if (this._options.space) return this._hitTestSource = await this._session.requestHitTestSource(this._options);
@@ -115,7 +115,8 @@ class HitTest {
     // If we have a profile, we'll need to do a transient hit test.
     if (this._options.profile) return this._transientHitTest(frame, referenceSpace);
 
-    return this._doNormalHit(frame, referenceSpace);
+    // Otherwise, we can do a normal hit test.
+    return this._hitTest(frame, referenceSpace);
   }
 
   /**
