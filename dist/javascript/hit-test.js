@@ -22,71 +22,71 @@ AFRAME.registerComponent("occlusion-material", {
   },
 });
 
+import { HitTest } from "/javascript/HitTest.js";
+// class HitTest {
+//   constructor(renderer, options) {
 
-class HitTest {
-  constructor(renderer, options) {
+//     this.renderer = renderer;
+//     this.xrHitTestSource = null;
 
-    this.renderer = renderer;
-    this.xrHitTestSource = null;
+//     renderer.xr.addEventListener("sessionend", () => this.xrHitTestSource = null);
+//     renderer.xr.addEventListener("sessionstart", () => this.sessionStart(options));
 
-    renderer.xr.addEventListener("sessionend", () => this.xrHitTestSource = null);
-    renderer.xr.addEventListener("sessionstart", () => this.sessionStart(options));
+//     if (this.renderer.xr.isPresenting) {
+//       this.sessionStart(options)
+//     }
+//   }
 
-    if (this.renderer.xr.isPresenting) {
-      this.sessionStart(options)
-    }
-  }
+//   async sessionStart(options) {
+//     this.session = this.renderer.xr.getSession();
 
-  async sessionStart(options) {
-    this.session = this.renderer.xr.getSession();
+//     if (options.space) {
+//       this.space = options.space;
+//       this.xrHitTestSource = await this.session.requestHitTestSource(options);
+//     } else if ( options.profile ) {
+//       this.transient = true;
+//       this.xrHitTestSource = await this.session.requestHitTestSourceForTransientInput(options);
+//     }
+//   }
 
-    if (options.space) {
-      this.space = options.space;
-      this.xrHitTestSource = await this.session.requestHitTestSource(options);
-    } else if ( options.profile ) {
-      this.transient = true;
-      this.xrHitTestSource = await this.session.requestHitTestSourceForTransientInput(options);
-    }
-  }
+//   doHit(frame) {
+//     if (!this.renderer.xr.isPresenting) return;
+//     const refSpace = this.renderer.xr.getReferenceSpace();
+//     const xrViewerPose = frame.getViewerPose(refSpace);
 
-  doHit(frame) {
-    if (!this.renderer.xr.isPresenting) return;
-    const refSpace = this.renderer.xr.getReferenceSpace();
-    const xrViewerPose = frame.getViewerPose(refSpace);
+//     if (this.xrHitTestSource && xrViewerPose) {
 
-    if (this.xrHitTestSource && xrViewerPose) {
-
-      if (this.transient) {
-        const hitTestResults = frame.getHitTestResultsForTransientInput(this.xrHitTestSource);
-        if (hitTestResults.length > 0) {
-          const results = hitTestResults[0].results;
-          if (results.length > 0) {
-            const pose = results[0].getPose(refSpace);
-            return {
-              inputSpace: hitTestResults[0].inputSource.targetRaySpace,
-              pose
-            };
-          } else {
-            return false
-          }
-        } else {
-          return false;
-        }
-      } else {
-        const hitTestResults = frame.getHitTestResults(this.xrHitTestSource);
-        if (hitTestResults.length > 0) {
-          const pose = hitTestResults[0].getPose(refSpace);
-          return {
-            pose,
-            inputSpace: this.space
-          };
-        } else {
-          return false;
-        }
-      }
-    }
-  }
-}
+//       if (this.transient) {
+//         const hitTestResults = frame.getHitTestResultsForTransientInput(this.xrHitTestSource);
+//         if (hitTestResults.length > 0) {
+//           const results = hitTestResults[0].results;
+//           if (results.length > 0) {
+//             const pose = results[0].getPose(refSpace);
+//             return {
+//               inputSpace: hitTestResults[0].inputSource.targetRaySpace,
+//               pose
+//             };
+//           } else {
+//             return false
+//           }
+//         } else {
+//           return false;
+//         }
+//       } else {
+//         const hitTestResults = frame.getHitTestResults(this.xrHitTestSource);
+//         if (hitTestResults.length > 0) {
+//           const pose = hitTestResults[0].getPose(refSpace);
+//           return {
+//             pose,
+//             inputSpace: this.space
+//           };
+//         } else {
+//           return false;
+//         }
+//       }
+//     }
+//   }
+// }
 
 // Usage
 // Needs the master version of AFrame and the hit-test optional feature

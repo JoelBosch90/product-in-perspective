@@ -218,12 +218,22 @@ label {
  *  This is the main import file to gather the styles for all classes.
  */
 /**
+ *  Main styling for the Apology class.
+ */
+.apology {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.apology h1 {
+  text-align: center;
+}
+/**
  *  Main styling for the ArScene class.
  */
 .arscene {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   width: 100%;
   height: 100%;
   position: relative;
@@ -240,9 +250,6 @@ label {
 .arscene .arscene-overlay button {
   pointer-events: auto;
 }
-.arscene .arscene-error {
-  text-align: center;
-}
 .arscene.hidden {
   display: none;
 }
@@ -250,9 +257,6 @@ label {
  *  Main styling for the BarcodeScanner class.
  */
 .barcodescanner {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   width: 100%;
   height: 100%;
   position: relative;
@@ -274,9 +278,6 @@ label {
   width: 100%;
   height: 100%;
 }
-.barcodescanner .barcodescanner-error {
-  text-align: center;
-}
 .barcodescanner.hidden {
   display: none;
 }
@@ -293,7 +294,6 @@ label {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  pointer-events: none;
 }
 .overlay button,
 .overlay h2 {
@@ -306,7 +306,6 @@ label {
   padding: 2rem;
   box-sizing: border-box;
   background-color: var(--background);
-  pointer-events: auto;
 }
 .overlay .overlay-top > :empty,
 .overlay .overlay-bottom > :empty {

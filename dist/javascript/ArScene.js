@@ -9,6 +9,8 @@ import { debounce } from "/javascript/debounce.js";
  *
  *  @event      end           Triggered when the augmented reality session has
  *                            ended.
+ *  @event      error         Triggered when an unrecoverable error has
+ *                            occurred.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
@@ -199,22 +201,8 @@ class ArScene {
    */
   _handleError(message) {
 
-    // Log the error to the console.
-    console.error(message);
-
-    // Stop the session.
-    this.stop();
-
-    // Create an error message to show the user.
-    const errorMessage = document.createElement("h1");
-    errorMessage.classList.add("arscene-error");
-    errorMessage.textContent = message;
-
-    // Clear all current elements from the container.
-    while(this._container.firstChild) this._container.removeChild(this._container.firstChild);
-
-    // Append the error message.
-    this._container.appendChild(errorMessage);
+    // Trigger the error event.
+    this._eventHandler.trigger("error", message);
   }
 
   /**

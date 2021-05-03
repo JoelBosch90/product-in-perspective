@@ -7,6 +7,7 @@
 // Import dependencies.
 import { BarcodeScanner } from "/javascript/BarcodeScanner.js";
 import { ArScene } from "/javascript/ArScene.js";
+import { Apology } from "/javascript/Apology.js";
 import { debounce } from "/javascript/debounce.js";
 
 /**
@@ -44,12 +45,35 @@ const products = {
  */
 const arScene = new ArScene(container);
 
+// Listen for errors from the ArScene object.
+arScene.on("error", errorMessage => {
+
+  // These are unrecoverable errors, so we can remove the scene.
+  arScene.remove();
+
+  // We should show the apologoy to the user.
+  new Apology(container, errorMessage);
+})
+
 /**
  *  Create a barcode scanner object. We want to pass our container element so
  *  that it can create
  *  @var      {BarcodeScanner}
  */
 const scanner = new BarcodeScanner(container);
+
+// Listen for errors from the BarcodeScanner object.
+scanner.on("error", errorMessage => {
+
+  // These are unrecoverable errors, so we can remove the scene.
+  scanner.remove();
+
+  // We should show the apology to the user. The barcode scanner's error
+  // messages are not always easy to understand, so instead we show the user the
+  // easiest, most common error.
+  new Apology(container, "Error: could not access camera");
+})
+
 
 // Get the overlay of the barcode scanner, so that we can configure it here.
 const scannerOverlay = scanner.overlay();

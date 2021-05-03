@@ -8,6 +8,8 @@ import { Overlay } from "/javascript/Overlay.js";
  *
  *  @event      scanned       Triggered when a detected barcode could be read.
  *                            Provides the barcode's product number.
+ *  @event      error         Triggered when an unrecoverable error has
+ *                            occurred.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
@@ -215,19 +217,8 @@ class BarcodeScanner {
    */
   _handleError(error) {
 
-    // Log the error to the browser console.
-    console.error(error);
-
-    // Create an error message to show the user.
-    const errorMessage = document.createElement("h1");
-    errorMessage.classList.add("barcodescanner-error");
-    errorMessage.textContent = "Error: could not access camera";
-
-    // Clear all current elements from the container.
-    while(this._container.firstChild) this._container.removeChild(this._container.firstChild);
-
-    // Append the error message.
-    this._container.appendChild(errorMessage);
+    // Trigger the error event.
+    this._eventHandler.trigger("error", error);
   }
 
   /**
