@@ -144,7 +144,13 @@ class ArScene {
     this._scene = document.createElement("a-scene");
     this._scene.classList.add("arscene-scene");
     this._scene.setAttribute("visible", "false");
+
+    // Disable the custom UI that Aframe adds onto the scene. We should provide
+    // our own button for entering AR.
     this._scene.setAttribute("vr-mode-ui", "enabled: false");
+
+    // Make sure we can have access to the hit test feature, attach the overlay,
+    // and initialize the AR session at the user's feet.
     this._scene.setAttribute("webxr", "optionalFeatures: hit-test, local-floor, dom-overlay; overlayElement: .arscene-overlay;");
 
     // Add a reticle to the scene.
@@ -282,21 +288,32 @@ class ArScene {
    */
   _insertObject(scene) {
 
-    // First, load the assets.
-    this._loadAssets(scene);
-
-    // Create an Aframe box element.
-    this._object = document.createElement("a-obj-model");
+    this._object = document.createElement("a-box");
     this._object.classList.add("arscene-object");
-
-    // Attach a relevant default model with sensible dimensions.
-    this._object.setAttribute("src", "#arscene-model");
-    this._object.setAttribute("width", "0.1");
-    this._object.setAttribute("height", "0.3");
-    this._object.setAttribute("depth", "0.1");
-
-    // It should be hidden until it is placed in the scene by the user.
     this._object.setAttribute("visible", "false");
+    this._object.setAttribute("position", "0 0 0");
+    this._object.setAttribute("rotation", "0 0 0");
+    this._object.setAttribute("width", "0.5");
+    this._object.setAttribute("height", "0.5");
+    this._object.setAttribute("depth", "0.5");
+    this._object.setAttribute("color", "pink");
+    this._object.setAttribute("static-body");
+
+    // // First, load the assets.
+    // this._loadAssets(scene);
+
+    // // Create an Aframe box element.
+    // this._object = document.createElement("a-obj-model");
+    // this._object.classList.add("arscene-object");
+
+    // // Attach a relevant default model with sensible dimensions.
+    // this._object.setAttribute("src", "#arscene-model");
+    // this._object.setAttribute("width", "0.1");
+    // this._object.setAttribute("height", "0.3");
+    // this._object.setAttribute("depth", "0.1");
+
+    // // It should be hidden until it is placed in the scene by the user.
+    // this._object.setAttribute("visible", "false");
 
     // Add the object to the scene.
     scene.appendChild(this._object);
@@ -411,7 +428,7 @@ class ArScene {
     // We can copy the orientation of the reticle to place the object in the
     // scene.
     this._object.setAttribute("position", this._reticle.getAttribute("position"));
-    // this._object.setAttribute("rotation", this._reticle.getAttribute("rotation"));
+    this._object.setAttribute("rotation", this._reticle.getAttribute("rotation"));
 
     console.log('reticle', this._reticle.getAttribute("position"));
     console.log('object', this._object.getAttribute("position"));
@@ -424,6 +441,20 @@ class ArScene {
 
     // Update the text for the instructions.
     this._instructions.textContent = "Take a moment to judge the size of that!";
+  }
+
+  /**
+   *  Method for starting the augmented reality session.
+   */
+  _startAR() {
+
+    // Immediately enter the augmented reality mode. This could fail, for
+    // example if WebXR is not available or the user has not given permission.
+    try { this._scene.enterAR(); }
+    catch (error) { this._handleError(error); }
+
+    // Now we can show our scene.
+    this.show();
   }
 
   /**
@@ -469,13 +500,12 @@ class ArScene {
     // this._object.setAttribute("depth", properties.size);
     // this._object.setAttribute("color", properties.color);
 
-    // Immediately enter the augmented reality mode. This could fail, for
-    // example if WebXR is not available or the user has not given permission.
-    try { this._scene.enterAR(); }
-    catch (error) { this._handleError(error); }
+    // Check to see if the renderer has already started. If so, we can
+    // immediately start the augmented reality session.
+    if (this._scene.renderStarted) this._startAR();
 
-    // Now we can show our scene.
-    this.show();
+    // Otherwise, we need to wait for the scene element to load first.
+    else this._scene.addEventListener("loaded", () => void this._startAR());
 
     // Allow chaining.
     return this;

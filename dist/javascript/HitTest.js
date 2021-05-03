@@ -46,7 +46,7 @@ class HitTest {
    *    @property   {XRSpace}     space     WebXR reference space object for the
    *                                        target ray space.
    */
-   constructor(renderer, options) {
+  constructor(renderer, options) {
 
     // Store the XR renderer.
     this._renderer = renderer;
@@ -55,14 +55,14 @@ class HitTest {
     this._options = options;
 
     // Make sure we reset the hit test source every time the session ends.
-    this._renderer.xr.addEventListener("sessionend", () => void this._resetHitTestSource());
+    this._renderer.xr.addEventListener("sessionend", () => this._resetHitTestSource());
 
     // Make sure we start whenever the session starts.
-    this._renderer.xr.addEventListener("sessionstart", () => void this._startSession())
+    this._renderer.xr.addEventListener("sessionstart", () => this._onSessionStart());
 
     // If the WebXR session has already started, we should immediately start the
     // hit test session.
-    if (this._renderer.xr.isPresenting) this._startSession();
+    if (this._renderer.xr.isPresenting) this._onSessionStart();
   }
 
   /**
@@ -79,7 +79,7 @@ class HitTest {
    *  Event listener for when the WebXR session starts.
    *  @returns  {XRHitTestSource}
    */
-  async _startSession() {
+  async _onSessionStart() {
 
     // Store the current WebXR session.
     this._session = this._renderer.xr.getSession();
@@ -134,7 +134,7 @@ class HitTest {
     const results = frame.getHitTestResults(this._hitTestSource);
 
     // If we didn't get any results, we should return false.
-    if (!results.length) return false;
+    if (results.length <= 0) return false;
 
     // Get the pose of the first result of the hit test. This should be the one
     // closest to the viewer and thus most likely to be the most relevant one.
@@ -148,7 +148,6 @@ class HitTest {
       inputSpace: this._options.space
     }
   }
-
 
   /**
    *  Private method to do a hit test for a transient input.

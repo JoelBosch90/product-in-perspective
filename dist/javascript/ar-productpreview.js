@@ -158,3 +158,6 @@ const resetPage = event => {
 
 // Listen for when the augmented reality session ends.
 arScene.on('end', resetPage);
+
+// SHORTCUT FOR TESTING PURPOSES.
+updateProduct({ code: 96181072 });
