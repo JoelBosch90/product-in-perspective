@@ -155,7 +155,7 @@ class ArScene {
     this._scene.setAttribute("webxr", "optionalFeatures: hit-test, local-floor, dom-overlay; overlayElement: .arscene-overlay;");
 
     // Add a reticle to the scene.
-    this._insertReticle(this._scene);
+    this._reticle = new Reticle(scene);
 
     // Add a 3D object to the scene.
     this._insertObject(this._scene);
@@ -210,49 +210,6 @@ class ArScene {
 
     // Trigger the error event.
     this._eventHandler.trigger("error", message);
-  }
-
-  /**
-   *  Private method for adding a reticle in an Aframe scene.
-   *  @param    {Element}   scene   The Aframe scene to which the reticle is
-   *                                added.
-   */
-  _insertReticle(scene) {
-
-    // Append the reticle to the scene.
-    this._reticle = new Reticle(scene);
-
-    // // Create an Aframe reticle element. This is the functional element that
-    // // will be doing the hit tests so that it can detect surfaces.
-    // this._reticle = document.createElement("a-reticle");
-    // this._reticle.classList.add("arscene-reticle");
-
-    // // We don't need to start hit testing right away and the reticle should be
-    // // hidden by default.
-    // this._reticle.setAttribute("testing", "false");
-    // this._reticle.setAttribute("visible", "false");
-
-    // // Create an Aframe plane element that will be the visible part of the
-    // // reticle. It will server as a hit marker.
-    // const marker = document.createElement("a-plane");
-
-    // // We need the marker to be flat on the ground, so we rotate by 90 degrees.
-    // marker.setAttribute("rotation", "-90 0 0");
-
-    // // We need to give it some modest dimensions. The reticle should be easy to
-    // // spot and use, but should not hide the environment.
-    // marker.setAttribute("width", "0.2");
-    // marker.setAttribute("height", "0.2");
-
-    // // Determine what the reticle looks like.
-    // marker.setAttribute("src", "/images/arrowTransparent.png");
-    // marker.setAttribute("material", "transparent:true;");
-
-    // // Add the marker to the reticle.
-    // this._reticle.appendChild(marker);
-
-    // // Add the reticle to the scene.
-    // scene.appendChild(this._reticle);
   }
 
   /**

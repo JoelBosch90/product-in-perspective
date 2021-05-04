@@ -160,4 +160,4 @@ const resetPage = event => {
 arScene.on('end', resetPage);
 
 // SHORTCUT FOR TESTING PURPOSES.
-updateProduct({ code: 96181072 });
+// updateProduct({ code: 96181072 });
