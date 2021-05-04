@@ -17,9 +17,6 @@ app.use(express.static('dist'));
 // Serve QuaggaJS.
 app.use('/quagga', express.static('node_modules/quagga/dist'));
 
-// Serve jQuery.
-app.use('/jquery', express.static('node_modules/jquery/dist'));
-
 // Serve Aframe.
 app.use('/aframe', express.static('node_modules/aframe/dist'));
 
