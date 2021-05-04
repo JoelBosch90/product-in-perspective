@@ -16,18 +16,16 @@
  *  Javascript classes.
  */
 class EventHandler {
-
   /**
    *  Private variable for event triggers.
    *  @var      object
    */
   _triggers = {};
-
   /**
    *  Class constructor.
    */
-  constructor() {}
 
+  constructor() {}
   /**
    *  Method for triggering an event. This method will execute all callback
    *  functions that are registered in the _triggers variable and optionally
@@ -37,15 +35,14 @@ class EventHandler {
    *                                    this event.
    *  @returns  {EventHandler}
    */
+
+
   trigger(event, data) {
-
     // Execute each registered callback function for this event.
-    if (this._triggers[event]) this._triggers[event].forEach(listener => void listener(data));
+    if (this._triggers[event]) this._triggers[event].forEach(listener => void listener(data)); // Allow chaining;
 
-    // Allow chaining;
     return this;
   }
-
   /**
    *  Method for storing event listeners per event. It will store the callbacks
    *  in separate arrays per event so that they can be triggered separately.
@@ -54,18 +51,17 @@ class EventHandler {
    *                                    the event happens.
    *  @returns  {EventHandler}
    */
+
+
   on(event, listener) {
-
     // If no listeners exist for this event, create an array to house them.
-    if (this._triggers[event] == undefined) this._triggers[event] = [];
+    if (this._triggers[event] == undefined) this._triggers[event] = []; // Add this callback to the list for this event.
 
-    // Add this callback to the list for this event.
-    this._triggers[event].push(listener);
+    this._triggers[event].push(listener); // Allow chaining;
 
-    // Allow chaining;
+
     return this;
   }
-
   /**
    *  Method for removing event listeners per event. It will remove the callback
    *  from the array of callbacks that is currently stored for this event.
@@ -74,33 +70,32 @@ class EventHandler {
    *                                    the event happens.
    *  @returns  {EventHandler}
    */
-  off(event, listener) {
 
+
+  off(event, listener) {
     // If there are no callbacks registered for this event, there is no need to
     // remove one.
-    if (this._triggers[event] == undefined) return;
-
-    // If callbacks are registered for this event, make sure that this callback
+    if (this._triggers[event] == undefined) return; // If callbacks are registered for this event, make sure that this callback
     // is filtered from that array.
-    this._triggers[event] = this._triggers[event].filter(item => item !== listener);
 
-    // Allow chaining;
+    this._triggers[event] = this._triggers[event].filter(item => item !== listener); // Allow chaining;
+
     return this;
   }
-
   /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {EventHandler}
    */
+
+
   remove() {
-
     // Reset the triggers object.
-    delete this._triggers;
+    delete this._triggers; // Allow chaining;
 
-    // Allow chaining;
     return this;
   }
-}
 
-// Export the EventHandler class so it can be imported elsewhere.
+} // Export the EventHandler class so it can be imported elsewhere.
+
+
 export { EventHandler };

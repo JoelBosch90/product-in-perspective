@@ -130,5 +130,5 @@ dmypy.json
 # No need to copy over all node modules.
 node_modules
 
-# Ignore the certificates.
-.certificates/
+# Ignore the models directory.
+# dist/models/

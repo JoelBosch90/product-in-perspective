@@ -9,53 +9,55 @@
  *  Javascript classes.
  */
 class Overlay {
-
   /**
    *  Private variable that stores a reference to the container element in the
    *  DOM.
    *  @var      {Element}
    */
   _container = null;
-
   /**
    *  Private variable that stores a reference to the container positioned at
    *  the top of the overlay.
    *  @var      {Element}
    */
-  _top = null;
 
+  _top = null;
   /**
    *  Private variable that stores a reference to the container positioned at
    *  the bottom of the overlay.
    *  @var      {Element}
    */
-  _bottom = null;
 
+  _bottom = null;
   /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element on which the
    *                                  overlay interface will be installed.
    */
-  constructor(parent) {
 
+  constructor(parent) {
     // Create a container for the overlay.
     this._container = document.createElement("div");
-    this._container.classList.add("overlay");
 
-    // Create a container for the top elements.
+    this._container.classList.add("overlay"); // Create a container for the top elements.
+
+
     this._top = document.createElement("section");
+
     this._top.classList.add("overlay-top");
-    this._container.appendChild(this._top);
 
-    // Create a container for the bottom elements.
+    this._container.appendChild(this._top); // Create a container for the bottom elements.
+
+
     this._bottom = document.createElement("section");
-    this._bottom.classList.add("overlay-bottom");
-    this._container.appendChild(this._bottom);
 
-    // Add the overlay to the parent container.
+    this._bottom.classList.add("overlay-bottom");
+
+    this._container.appendChild(this._bottom); // Add the overlay to the parent container.
+
+
     parent.appendChild(this._container);
   }
-
   /**
    *  Method for adding an element to the overlay.
    *  @param    {string}    type      What kind of element should this be? All
@@ -69,68 +71,65 @@ class Overlay {
    *                                    is the default option.
    *  @returns  {Element}
    */
+
+
   add(type, options = {}) {
-
     // Create the new DOM element.
-    const element = document.createElement(type);
+    const element = document.createElement(type); // If text was provided, we should add it to the element.
 
-    // If text was provided, we should add it to the element.
-    if (options.text) element.textContent = options.text;
-
-    // If the 'top' location was specified, we should add this element to the
+    if (options.text) element.textContent = options.text; // If the 'top' location was specified, we should add this element to the
     // top of the overlay.
-    if (options.location == 'top') this._top.appendChild(element);
 
-    // Otherwise, we'll add the element to the bottom of the overlay.
-    else this._bottom.appendChild(element);
+    if (options.location == 'top') this._top.appendChild(element); // Otherwise, we'll add the element to the bottom of the overlay.
+    else this._bottom.appendChild(element); // Finally, return the element.
 
-    // Finally, return the element.
     return element;
   }
-
   /**
    *  Method to show the overlay interface.
    *  @returns  {Overlay}
    */
+
+
   show() {
-
     // Make sure we're not hiding the overlay interface.
-    this._container.hidden = false;
+    this._container.hidden = false; // Allow chaining.
 
-    // Allow chaining.
     return this;
   }
-
   /**
    *  Method to hide the overlay interface.
    *  @returns  {Overlay}
    */
+
+
   hide() {
-
     // Make sure we're hiding the overlay interface.
-    this._container.hidden = true;
+    this._container.hidden = true; // Allow chaining.
 
-    // Allow chaining.
     return this;
   }
-
   /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {Overlay}
    */
-  remove() {
 
+
+  remove() {
     // We didn't use any event listeners or other classes, so we can simply
     // remove the container from the DOM. But we do need to remove all
     // references to objects.
     this._container.remove();
-    this._top.remove();
-    this._bottom.remove();
 
-    // Allow chaining.
+    this._top.remove();
+
+    this._bottom.remove(); // Allow chaining.
+
+
     return this;
   }
-}
 
-// Export the Overlay class so it can be imported elsewhere.
+} // Export the Overlay class so it can be imported elsewhere.
+
+
 export { Overlay };
