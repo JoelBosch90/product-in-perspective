@@ -155,7 +155,7 @@ class ArScene {
     this._scene.setAttribute("webxr", "optionalFeatures: hit-test, local-floor, dom-overlay; overlayElement: .arscene-overlay;");
 
     // Add a reticle to the scene.
-    this._reticle = new Reticle(scene);
+    this._reticle = new Reticle(this._scene);
 
     // Add a 3D object to the scene.
     this._insertObject(this._scene);
