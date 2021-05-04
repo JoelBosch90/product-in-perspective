@@ -429,8 +429,6 @@ class ArScene {
    *  @param    {integer}     category    Number indicating the object category.
    *  @returns  {ArScene}
    */
-
-
   select(category) {
     // // Define the categories we can represent.
     // const categories = {
