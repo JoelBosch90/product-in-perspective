@@ -4,16 +4,12 @@
  *  and switches between them.
  */
 // Import dependencies.
-import { BarcodeScanner } from "/javascript/BarcodeScanner.js";
-import { ArScene } from "/javascript/ArScene.js";
-import { Apology } from "/javascript/Apology.js";
-import { debounce } from "/javascript/debounce.js";
+
 /**
  *  This is the container for the entire application. Because we want to use the
  *  full page, we can simply use the document's body element.
  *  @var      {Element}
  */
-
 const container = document.body; // Create a tempory dictionary for products.
 
 const products = {

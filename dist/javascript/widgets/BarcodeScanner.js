@@ -1,6 +1,6 @@
 // Import dependencies.
-import { EventHandler } from "/javascript/EventHandler.js";
-import { Overlay } from "/javascript/Overlay.js";
+import { EventHandler } from "/javascript/widgets/EventHandler.js";
+import { Overlay } from "/javascript/widgets/Overlay.js";
 /**
  *  The definition of the BarcodeScanner class that can be used to scan barcodes
  *  from the device camera.

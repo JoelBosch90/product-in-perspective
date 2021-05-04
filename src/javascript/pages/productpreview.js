@@ -5,10 +5,10 @@
  */
 
 // Import dependencies.
-import { BarcodeScanner } from "/javascript/BarcodeScanner.js";
-import { ArScene } from "/javascript/ArScene.js";
-import { Apology } from "/javascript/Apology.js";
-import { debounce } from "/javascript/debounce.js";
+import { BarcodeScanner } from "/javascript/widgets/BarcodeScanner.js";
+import { ArScene } from "/javascript/widgets/ArScene.js";
+import { Apology } from "/javascript/widgets/Apology.js";
+import { debounce } from "/javascript/tools/debounce.js";
 
 /**
  *  This is the container for the entire application. Because we want to use the

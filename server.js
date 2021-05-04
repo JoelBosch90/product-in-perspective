@@ -23,39 +23,17 @@ app.use('/aframe', express.static('node_modules/aframe/dist'));
 // Process a root page request.
 app.get('/', (request, response) => {
 
-  // Serve the main index file containing the default app.
-  response.sendFile("html/ar-productpreview.html", { root: __dirname + '/dist' });
+  // Serve the product preview file containing the default app.
+  response.sendFile("html/productpreview.html", { root: __dirname + '/dist' });
 });
 
-// Process a root page request.
-app.get('/ar-scene', (request, response) => {
+// Process an admin login page request.
+app.get('/admin', (request, response) => {
 
-  // Serve the old AR scene file.
-  response.sendFile("html/ar-scene.html", { root: __dirname + '/dist' });
+  // Serve the admin file containing the admin environment
+  response.sendFile("html/admin.html", { root: __dirname + '/dist' });
 });
-
-
-// Process a barcode scanner test page request.
-app.get('/barcodescanner', (request, response) => {
-
-  // Serve the AR Hit test page.
-  response.sendFile("html/barcodescanner.html", { root: __dirname + '/dist' });
-})
-
-// Process a hit test page request.
-app.get('/hit', (request, response) => {
-
-  // Serve the AR Hit test page.
-  response.sendFile("html/hit-test.html", { root: __dirname + '/dist' });
-})
-
-// Process a hoop test page request.
-app.get('/hoop', (request, response) => {
-
-  // Serve the basketball example test page.
-  response.sendFile("html/hoop-test.html", { root: __dirname + '/dist' });
-})
 
 // Start listening to the server port and announce the proper port in the
 // console.
-app.listen(PORT, () => void console.log(`Hosting at ${PORT}.`));
+app.listen(PORT, () => void console.log(`Hosting at localhost:${PORT}.`));
