@@ -237,6 +237,8 @@ class ArScene {
     // timeout.
 
     assets.setAttribute("timeout", "5000"); // Add the 3D model to the list of assets.
+    // Currently using this example:
+    // https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/Duck
 
     const model = document.createElement("a-asset-item");
     model.setAttribute("src", "/models/duck/Duck.gltf");
@@ -254,16 +256,6 @@ class ArScene {
 
 
   _insertObject(scene) {
-    // this._object = document.createElement("a-box");
-    // this._object.classList.add("arscene-object");
-    // this._object.setAttribute("visible", "false");
-    // this._object.setAttribute("position", "0 0 0");
-    // this._object.setAttribute("rotation", "0 0 0");
-    // this._object.setAttribute("width", "0.5");
-    // this._object.setAttribute("height", "0.5");
-    // this._object.setAttribute("depth", "0.5");
-    // this._object.setAttribute("color", "pink");
-    // this._object.setAttribute("static-body");
     // First, load the assets.
     this._loadAssets(scene); // Create an Aframe box element.
 
@@ -275,10 +267,7 @@ class ArScene {
 
     this._object.setAttribute("src", "#arscene-model");
 
-    this._object.setAttribute("scale", "0.1 0.1 0.1"); // this._object.setAttribute("width", "0.1");
-    // this._object.setAttribute("height", "0.3");
-    // this._object.setAttribute("depth", "0.1");
-    // It should be hidden until it is placed in the scene by the user.
+    this._object.setAttribute("scale", "0.1 0.1 0.1"); // It should be hidden until it is placed in the scene by the user.
 
 
     this._object.setAttribute("visible", "false"); // Add the object to the scene.
@@ -394,16 +383,13 @@ class ArScene {
     // Change the mode.
     this._mode = "viewing"; // We need to hide the reticle.
 
-    this._reticle.hide(); // console.log('object', this._object);
-    // We can copy the orientation of the reticle to place the object in the
+    this._reticle.hide(); // We can copy the orientation of the reticle to place the object in the
     // scene.
 
 
     this._object.setAttribute("position", this._reticle.position());
 
-    this._object.setAttribute("rotation", this._reticle.rotation()); // console.log('reticle', this._reticle.position());
-    // console.log('object', this._object.getAttribute("position"));
-    // Make sure the object is visible.
+    this._object.setAttribute("rotation", this._reticle.rotation()); // Make sure the object is visible.
 
 
     this._object.setAttribute('visible', 'true'); // Update the text on the proceed button.
