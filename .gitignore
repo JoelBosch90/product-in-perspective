@@ -131,4 +131,4 @@ dmypy.json
 node_modules
 
 # Ignore the models directory.
-dist/models/
+# dist/models/

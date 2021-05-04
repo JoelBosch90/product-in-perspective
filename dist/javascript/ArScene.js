@@ -239,7 +239,7 @@ class ArScene {
     assets.setAttribute("timeout", "5000"); // Add the 3D model to the list of assets.
 
     const model = document.createElement("a-asset-item");
-    model.setAttribute("src", "/models/mayanRelic/scene.gltf");
+    model.setAttribute("src", "/models/duck/Duck.gltf");
     model.id = "arscene-model"; // Add all assets to the list.
 
     assets.appendChild(model); // Add the assets to the scene.
@@ -254,38 +254,34 @@ class ArScene {
 
 
   _insertObject(scene) {
-    this._object = document.createElement("a-box");
-
-    this._object.classList.add("arscene-object");
-
-    this._object.setAttribute("visible", "false");
-
-    this._object.setAttribute("position", "0 0 0");
-
-    this._object.setAttribute("rotation", "0 0 0");
-
-    this._object.setAttribute("width", "0.5");
-
-    this._object.setAttribute("height", "0.5");
-
-    this._object.setAttribute("depth", "0.5");
-
-    this._object.setAttribute("color", "pink");
-
-    this._object.setAttribute("static-body"); // // First, load the assets.
-    // this._loadAssets(scene);
-    // // Create an Aframe box element.
-    // this._object = document.createElement("a-gltf-model");
+    // this._object = document.createElement("a-box");
     // this._object.classList.add("arscene-object");
-    // // Attach a relevant default model with sensible dimensions.
-    // this._object.setAttribute("src", "#arscene-model");
-    // // this._object.setAttribute("scale", "0.01 0.01 0.01");
-    // // this._object.setAttribute("width", "0.1");
-    // // this._object.setAttribute("height", "0.3");
-    // // this._object.setAttribute("depth", "0.1");
-    // // It should be hidden until it is placed in the scene by the user.
     // this._object.setAttribute("visible", "false");
-    // Add the object to the scene.
+    // this._object.setAttribute("position", "0 0 0");
+    // this._object.setAttribute("rotation", "0 0 0");
+    // this._object.setAttribute("width", "0.5");
+    // this._object.setAttribute("height", "0.5");
+    // this._object.setAttribute("depth", "0.5");
+    // this._object.setAttribute("color", "pink");
+    // this._object.setAttribute("static-body");
+    // First, load the assets.
+    this._loadAssets(scene); // Create an Aframe box element.
+
+
+    this._object = document.createElement("a-gltf-model");
+
+    this._object.classList.add("arscene-object"); // Attach a relevant default model with sensible dimensions.
+
+
+    this._object.setAttribute("src", "#arscene-model");
+
+    this._object.setAttribute("scale", "0.1 0.1 0.1"); // this._object.setAttribute("width", "0.1");
+    // this._object.setAttribute("height", "0.3");
+    // this._object.setAttribute("depth", "0.1");
+    // It should be hidden until it is placed in the scene by the user.
+
+
+    this._object.setAttribute("visible", "false"); // Add the object to the scene.
 
 
     scene.appendChild(this._object);
