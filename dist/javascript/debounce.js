@@ -8,34 +8,28 @@
  *                                too pass before the function is called.
  *  @returns  function
  */
- const debounce = (func, delay) => {
-
+const debounce = (func, delay) => {
   // Set a timer.
-  let timer;
+  let timer; // Return the debounced function.
 
-  // Return the debounced function.
-  return function() {
-
+  return function () {
     // Keep track of the context and the arguments that should be passed to the
     // function when it is executed.
     const context = this;
-    const args = arguments;
+    const args = arguments; // Create a function that executes once the timer runs out.
 
-    // Create a function that executes once the timer runs out.
     const later = () => {
-
       // Reset the timer.
-      timer = null;
+      timer = null; // Execute the function.
 
-      // Execute the function.
       func.apply(context, args);
-    }
+    }; // Reset the delay on the timer the debouncing function is called.
 
-    // Reset the delay on the timer the debouncing function is called.
+
     clearTimeout(timer);
     timer = setTimeout(later, delay);
   };
-}
+}; // Export the debounce function.
 
-// Export the debounce function.
+
 export { debounce };
