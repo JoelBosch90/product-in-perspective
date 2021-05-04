@@ -443,21 +443,21 @@ class ArScene {
    */
   select(category) {
 
-    // // Define the categories we can represent.
-    // const categories = {
-    //   0: { size: 0.2, color: 'red' },
-    //   1: { size: 0.5, color: 'yellow' },
-    //   2: { size: 1.0, color: 'blue'}
-    // }
+    // Define the categories we can represent.
+    const categories = {
+      0: { size: 0.2, color: 'red' },
+      1: { size: 0.5, color: 'yellow' },
+      2: { size: 1.0, color: 'blue'}
+    }
 
-    // // Get the appropriate properties for this category.
-    // const properties = categories[category];
+    // Get the appropriate properties for this category.
+    const properties = categories[category];
 
-    // // Update the object.
-    // this._object.setAttribute("width", properties.size);
-    // this._object.setAttribute("height", properties.size);
-    // this._object.setAttribute("depth", properties.size);
-    // this._object.setAttribute("color", properties.color);
+    // Update the object.
+    this._object.setAttribute("width", properties.size);
+    this._object.setAttribute("height", properties.size);
+    this._object.setAttribute("depth", properties.size);
+    this._object.setAttribute("color", properties.color);
 
     // Check to see if the renderer has already started. If so, we can
     // immediately start the augmented reality session.
