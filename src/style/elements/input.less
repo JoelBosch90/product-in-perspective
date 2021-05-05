@@ -56,13 +56,14 @@ textarea {
   // take precedence over the focus effect.
   &:not(:disabled):not(:focus):hover {
 
-    // Show a lower opacity on hover. Use the filter to set the opacity so that
-    // we are unhindered by any regular opacity the element might have.
-    filter: opacity(55%);
+    // Show a dark colour on hover. The colour of the border is a good fit.
+    // Sadly, we cannot use opacity here as we want the same on hover effect for
+    // the label and these two will clearly overlap if either is not opaque.
+    background-color: var(--border-color);
 
     // Use a transition effect to give the hover effect a quick and smooth
     // animation.
-    transition: filter var(--animation-quick);
+    transition: background-color var(--animation-quick);
   }
 
   // Show the user when this input has been selected.
@@ -103,6 +104,16 @@ textarea {
   }
 }
 
+// Target only select elements.
+select {
+
+  // Line height works differently for select elements. That is why we
+  // calculate the height separate for those elements based off of
+  // line-height, plus two 1px borders and two .25em paddings. That should
+  // make the select elements exactly as high as other inputs.
+  height: calc(var(--line-height) + .5em + 2px);
+}
+
 // Target the input-field.
 .input-field {
 
@@ -118,7 +129,6 @@ textarea {
   input[type="password"],
   input[type="email"],
   input[type="number"],
-  input[type="file"],
   textarea {
 
     // Use as much horizontal space as possible by default.
@@ -248,13 +258,25 @@ textarea {
     }
 
     // Target the label when the input is hovered on.
-    &:not(:disabled):not(:focus):hover + label span {
+    &:not(:disabled):not(:focus):hover + label {
 
-      // Match the hovered input border-color.
-      opacity: 0.55;
+      // Show a dark colour on hover. The colour of the border is a good fit.
+      // Sadly, we cannot use opacity here as we want the same on hover effect
+      // for the label and these two will clearly overlap if either is not
+      // opaque.
+      background-color: var(--border-color);
 
-      // When animating the label, we want to use these animations.
-      transition: opacity var(--animation-quick);
+      // Use a transition effect to give the hover effect a quick and smooth
+      // animation.
+      transition: background-color var(--animation-quick);
+
+      // Target the span that houses the text for the label.
+      span {
+
+        // Switch to the default colour for the text, because otherwise it'll be
+        // unreadable.
+        color: var(--color);
+      }
     }
 
     // Target the label when the input has been disabled.

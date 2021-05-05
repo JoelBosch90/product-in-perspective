@@ -26,7 +26,7 @@
   --color: #080708;
   --primary-accent: #3B60E4;
   --secondary-accent: #AA6373;
-  --border-color: #CCC;
+  --border-color: #888888;
   --information-color: var(--primary-accent);
   --confirmation-color: #06A77D;
   --danger-color: #D64045;
@@ -117,16 +117,26 @@ a:hover {
  */
 body {
   margin: 0;
-  background-color: black;
+  background-color: var(--color);
 }
 /**
  *  Button
  *    This file installs some basic styling on all buttons in the general
  *    application.
  */
+input[type="file"] {
+  display: none;
+}
+input[type="file"] + label {
+  text-align: center;
+}
 button,
-input[type="submit"] {
+input[type="submit"],
+input[type="file"] + label {
+  display: block;
   font-size: 1.25em;
+  color: var(--color);
+  font-family: var(--text-font);
   background-color: var(--information-color);
   padding: 0.25em 0.75em;
   border: none;
@@ -135,44 +145,56 @@ input[type="submit"] {
   transition: filter var(--animation-quick), background-color var(--animation-quick);
 }
 button.block,
-input[type="submit"].block {
+input[type="submit"].block,
+input[type="file"] + label.block {
   display: block;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
 button.confirm,
 input[type="submit"].confirm,
+input[type="file"] + label.confirm,
 button[type="submit"],
-input[type="submit"][type="submit"] {
+input[type="submit"][type="submit"],
+input[type="file"] + label[type="submit"] {
   background-color: var(--confirmation-color);
 }
 button.remove,
-input[type="submit"].remove {
+input[type="submit"].remove,
+input[type="file"] + label.remove {
   background-color: var(--danger-color);
 }
 button.cancel,
-input[type="submit"].cancel {
+input[type="submit"].cancel,
+input[type="file"] + label.cancel {
   background-color: var(--border-color);
 }
 button:disabled,
-input[type="submit"]:disabled {
+input[type="submit"]:disabled,
+input[type="file"] + label:disabled {
   filter: opacity(30%);
   cursor: not-allowed;
   transition: filter var(--animation-quick);
 }
 button:focus,
-input[type="submit"]:focus {
+input[type="submit"]:focus,
+input[type="file"] + label:focus {
   background-color: var(--active-background);
   transition: background-color var(--animation-quick);
   outline: none;
 }
 button:not(:disabled):hover,
-input[type="submit"]:not(:disabled):hover {
+input[type="submit"]:not(:disabled):hover,
+input[type="file"] + label:not(:disabled):hover {
   filter: opacity(65%);
   transition: filter var(--animation-quick);
 }
-button + button,
-input[type="submit"] + button {
+button:not(label) + button,
+input[type="submit"]:not(label) + button,
+input[type="file"] + label:not(label) + button,
+button:not(label) + input[type="submit"],
+input[type="submit"]:not(label) + input[type="submit"],
+input[type="file"] + label:not(label) + input[type="submit"] {
   margin-left: 0.5em;
 }
 /**
@@ -278,8 +300,8 @@ textarea.block {
 input:not(:disabled):not(:focus):hover,
 select:not(:disabled):not(:focus):hover,
 textarea:not(:disabled):not(:focus):hover {
-  filter: opacity(55%);
-  transition: filter var(--animation-quick);
+  background-color: var(--border-color);
+  transition: background-color var(--animation-quick);
 }
 input:focus,
 select:focus,
@@ -296,6 +318,9 @@ textarea:disabled {
   cursor: not-allowed;
   transition: filter var(--animation-quick);
 }
+select {
+  height: calc(var(--line-height) + 0.5em + 2px);
+}
 .input-field {
   width: 100%;
   position: relative;
@@ -304,7 +329,6 @@ textarea:disabled {
 .input-field input[type="password"],
 .input-field input[type="email"],
 .input-field input[type="number"],
-.input-field input[type="file"],
 .input-field textarea {
   width: 100%;
   padding: 0.25em 0.75em;
@@ -314,7 +338,6 @@ textarea:disabled {
 .input-field input[type="password"]::placeholder,
 .input-field input[type="email"]::placeholder,
 .input-field input[type="number"]::placeholder,
-.input-field input[type="file"]::placeholder,
 .input-field textarea::placeholder {
   color: transparent;
 }
@@ -322,7 +345,6 @@ textarea:disabled {
 .input-field input[type="password"] + label,
 .input-field input[type="email"] + label,
 .input-field input[type="number"] + label,
-.input-field input[type="file"] + label,
 .input-field textarea + label {
   position: absolute;
   top: 1em;
@@ -344,13 +366,11 @@ textarea:disabled {
 .input-field input[type="password"]:focus + label,
 .input-field input[type="email"]:focus + label,
 .input-field input[type="number"]:focus + label,
-.input-field input[type="file"]:focus + label,
 .input-field textarea:focus + label,
 .input-field input[type="text"]:not(:placeholder-shown) + label,
 .input-field input[type="password"]:not(:placeholder-shown) + label,
 .input-field input[type="email"]:not(:placeholder-shown) + label,
 .input-field input[type="number"]:not(:placeholder-shown) + label,
-.input-field input[type="file"]:not(:placeholder-shown) + label,
 .input-field textarea:not(:placeholder-shown) + label {
   transform: translate(0, -60%) scale(0.8);
   background-color: var(--background);
@@ -362,13 +382,11 @@ textarea:disabled {
 .input-field input[type="password"]:focus + label span,
 .input-field input[type="email"]:focus + label span,
 .input-field input[type="number"]:focus + label span,
-.input-field input[type="file"]:focus + label span,
 .input-field textarea:focus + label span,
 .input-field input[type="text"]:not(:placeholder-shown) + label span,
 .input-field input[type="password"]:not(:placeholder-shown) + label span,
 .input-field input[type="email"]:not(:placeholder-shown) + label span,
 .input-field input[type="number"]:not(:placeholder-shown) + label span,
-.input-field input[type="file"]:not(:placeholder-shown) + label span,
 .input-field textarea:not(:placeholder-shown) + label span {
   opacity: 1;
   color: var(--border-color);
@@ -378,24 +396,28 @@ textarea:disabled {
 .input-field input[type="password"]:focus + label span,
 .input-field input[type="email"]:focus + label span,
 .input-field input[type="number"]:focus + label span,
-.input-field input[type="file"]:focus + label span,
 .input-field textarea:focus + label span {
   color: var(--active-color);
+}
+.input-field input[type="text"]:not(:disabled):not(:focus):hover + label,
+.input-field input[type="password"]:not(:disabled):not(:focus):hover + label,
+.input-field input[type="email"]:not(:disabled):not(:focus):hover + label,
+.input-field input[type="number"]:not(:disabled):not(:focus):hover + label,
+.input-field textarea:not(:disabled):not(:focus):hover + label {
+  background-color: var(--border-color);
+  transition: background-color var(--animation-quick);
 }
 .input-field input[type="text"]:not(:disabled):not(:focus):hover + label span,
 .input-field input[type="password"]:not(:disabled):not(:focus):hover + label span,
 .input-field input[type="email"]:not(:disabled):not(:focus):hover + label span,
 .input-field input[type="number"]:not(:disabled):not(:focus):hover + label span,
-.input-field input[type="file"]:not(:disabled):not(:focus):hover + label span,
 .input-field textarea:not(:disabled):not(:focus):hover + label span {
-  opacity: 0.55;
-  transition: opacity var(--animation-quick);
+  color: var(--color);
 }
 .input-field input[type="text"]:disabled + label span,
 .input-field input[type="password"]:disabled + label span,
 .input-field input[type="email"]:disabled + label span,
 .input-field input[type="number"]:disabled + label span,
-.input-field input[type="file"]:disabled + label span,
 .input-field textarea:disabled + label span {
   cursor: not-allowed;
   opacity: 0.25;

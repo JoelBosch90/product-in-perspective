@@ -243,7 +243,7 @@ const createModel = new Form(container, {
     {
       name:   "model",
       options:  {
-        label:  "Model",
+        label:  "Upload model ...",
         type:   "file",
       },
     },
@@ -281,7 +281,7 @@ const createProduct = new Form(container, {
     {
       name:   "model",
       options:  {
-        label:  "Model",
+        label:  "Select model ...",
         type:   "select",
         options: [
           {

@@ -4,12 +4,40 @@
  *    application.
  */
 
+
+// Target file inputs specifically. We use the label to style the input as a
+// normal button.
+input[type="file"] {
+
+  // We can simply hide the input element itself as we'll style only the
+  // label.
+  display: none;
+
+  // Target the label for this input (it should always be directly after the
+  // input in the DOM).
+  & + label {
+
+    // Center the text like in a button.
+    text-align: center;
+  }
+}
+
 // Apply button styles to submit input elements as well.
 button,
-input[type="submit"]
-{
+input[type="submit"],
+input[type="file"] + label {
+
+  // By default, buttons should be block elements.
+  display: block;
+
   // We want large buttons.
   font-size: 1.25em;
+
+  // Use the default text colour.
+  color: var(--color);
+
+  // Make sure we use the default text font.
+  font-family: var(--text-font);
 
   // Install the information colour as the default background colour for the
   // button.
@@ -35,6 +63,7 @@ input[type="submit"]
   // When using the button in a standalone case it may be useful as a block
   // element.
   &.block {
+
     // Make the button a block element.
     display: block;
 
@@ -45,6 +74,7 @@ input[type="submit"]
 
   // Buttons can be used to submit, confirm or save current settings.
   &.confirm, &[type="submit"] {
+
     // Use the confirmation colour to show users that this button is used to
     // confirm something. It should stand out in the interface.
     background-color: var(--confirmation-color);
@@ -52,12 +82,14 @@ input[type="submit"]
 
   // Buttons can be used to remove or undo something.
   &.remove {
+
     // Warn the user of the risk inherent in using this button.
     background-color: var(--danger-color);
   }
 
   // Buttons can be used to cancel current unsaved settings.
   &.cancel {
+
     // This button should have a fairly neutral colour and not draw too much
     // attention.
     background-color: var(--border-color);
@@ -65,6 +97,7 @@ input[type="submit"]
 
   // Show the user when this button is disabled.
   &:disabled {
+
     // The button does not need to draw attention. Use the filter to set the
     // opacity so that we are unhindered by any regular opacity the element
     // might have.
@@ -81,6 +114,7 @@ input[type="submit"]
 
   // Show the user when this button is selected.
   &:focus {
+
     // Show that this is the active element with the background-color.
     background-color: var(--active-background);
 
@@ -95,6 +129,7 @@ input[type="submit"]
 
   // Add on hover effects only when the the button is not disabled.
   &:not(:disabled):hover {
+
     // Show a subtle effect to show this button is an interactive element. Use
     // the filter to set the opacity so that we are unhindered by any regular
     // opacity the element might have.
@@ -105,8 +140,12 @@ input[type="submit"]
     transition: filter var(--animation-quick);
   }
 
-  // Select buttons that are preceeded by another button.
-  & + button {
+  // Select buttons that are preceeded by another button. We should exclude this
+  // behaviour for file inputs as they are really used as inputs instead of
+  // buttons.
+  &:not(label) + button,
+  &:not(label) + input[type="submit"] {
+
     // In case two buttons are next to each other they should have some space in
     // between.
     margin-left: .5em;

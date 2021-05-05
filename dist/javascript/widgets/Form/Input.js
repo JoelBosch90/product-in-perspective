@@ -39,15 +39,7 @@ class FormInput extends BaseElement {
 
   constructor(parent, options = {}) {
     // First call the constructor of the base class.
-    super(); // Create a container for the input element.
-
-    this._container = document.createElement("div");
-
-    this._container.classList.add("input-field"); // Use the label for the on hover title.
-
-
-    this._container.setAttribute("title", options.label); // Depending on the input type, we may need to create a different element.
-
+    super(); // Depending on the input type, we may need to create a different element.
 
     switch (options.type) {
       // Should we create a texarea element?
@@ -55,8 +47,12 @@ class FormInput extends BaseElement {
         this._createTextarea(parent, options);
 
         break;
-      // Should we create an upload button?
-      // case "upload": this._createUploadButton(parent, options); break;
+      // Should we create an file upload button?
+
+      case "file":
+        this._createFileButton(parent, options);
+
+        break;
       // Should we create a select element?
 
       case "select":
@@ -87,7 +83,15 @@ class FormInput extends BaseElement {
 
 
   _createInput = (parent, options) => {
-    // Create the input element.
+    // Create a container for the input element.
+    this._container = document.createElement("div");
+
+    this._container.classList.add("input-field"); // Use the label for the on hover title.
+
+
+    this._container.setAttribute("title", options.label); // Create the input element.
+
+
     this._input = document.createElement("input");
     this._input.id = this._id;
     this._input.name = options.name;
@@ -131,10 +135,20 @@ class FormInput extends BaseElement {
    */
 
   _createTextarea = (parent, options) => {
-    // Create the input element.
+    // Create a container for the input element.
+    this._container = document.createElement("div");
+
+    this._container.classList.add("input-field"); // Use the label for the on hover title.
+
+
+    this._container.setAttribute("title", options.label); // Create the input element.
+
+
     this._input = document.createElement("textarea");
     this._input.id = this._id;
     this._input.name = options.name;
+
+    this._input.setAttribute("type", options.type);
 
     this._input.setAttribute("placeholder", options.label); // Create the label element.
 
@@ -158,6 +172,44 @@ class FormInput extends BaseElement {
     parent.appendChild(this._container);
   };
   /**
+   *  Private method for creating a file upload button.
+   *  @param    {Element}   parent    The parent element to which the input
+   *                                  element will be added.
+   *  @param    {object}    options   Optional parameters for the element that
+   *                                  is added to the form.
+   *    @property   {string}  name      Registration name of the input. This is
+   *                                    also used in the API call and should
+   *                                    uniquely identify the input.
+   *    @property   {string}  type      This is the type of the input that is
+   *                                    added.
+   *    @property   {string}  label     This is the label of the element that
+   *                                    will be shown to the user.
+   */
+
+  _createFileButton = (parent, options) => {
+    // Create the input element.
+    this._input = document.createElement("input");
+    this._input.id = this._id;
+    this._input.name = options.name;
+
+    this._input.setAttribute("type", options.type); // Create the label element.
+
+
+    this._label = document.createElement("label");
+
+    this._label.setAttribute("for", this._id); // Add a text element to the label.
+
+
+    const labelText = document.createElement("span");
+    labelText.textContent = options.label;
+
+    this._label.appendChild(labelText); // Add the input element and the label directly to the parent element.
+
+
+    parent.appendChild(this._input);
+    parent.appendChild(this._label);
+  };
+  /**
    *  Private method for creating a select element.
    *  @param    {Element}   parent    The parent element to which the select
    *                                  element will be added.
@@ -167,6 +219,8 @@ class FormInput extends BaseElement {
    *                                    should uniquely identify the select.
    *    @property   {array}   options   An array of options to add to the select
    *                                    element.
+   *    @property   {string}  label     This is the label of the element that
+   *                                    will be shown to the user.
    */
 
   _createSelect = (parent, options) => {
@@ -186,8 +240,7 @@ class FormInput extends BaseElement {
     this._input.remove(); // Remove all DOM elements.
 
 
-    this._label.remove(); // Call the original remove method. This also removes the container.
-
+    if (this._label) this._label.remove(); // Call the original remove method. This also removes the container.
 
     super.remove(); // Allow chaining.
 

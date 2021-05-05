@@ -23,6 +23,8 @@ class FormSelect extends BaseElement {
    *                                  is added to the form.
    *    @property   {string}  name      Registration name of the select. This
    *                                    should uniquely identify the select.
+   *    @property   {string}  label     This is the label of the element that
+   *                                    will be shown to the user.
    *    @property   {array}   options   An array of options to add to the select
    *                                    element.
    */
@@ -32,9 +34,21 @@ class FormSelect extends BaseElement {
     super(); // Create a container for the select element.
 
     this._container = document.createElement("select");
-    if (options.name) this._container.name = options.name; // Add all the options we get.
+    if (options.name) this._container.name = options.name; // Should we set a label?
 
-    if (options.options) for (const option of options.options) this.addOption(option.value, option.label); // Add the input element to the parent element.
+    if (options.label) {
+      // Add the label as a disabled option to get a placeholder value.
+      const label = this.addOption(options.label); // Make sure this is the one that's selected by default.
+
+      label.selected = true; // Make sure it cannot be selected.
+
+      label.disabled = true; // Make sure it is hidden in the dropdown menu.
+
+      label.hidden = true;
+    } // Add all the options we get.
+
+
+    if (options.options) for (const option of options.options) this.addOption(option.label, option.value); // Add the input element to the parent element.
 
     parent.appendChild(this._container);
   }
@@ -48,9 +62,9 @@ class FormSelect extends BaseElement {
    */
 
 
-  addOption = (value, label) => {
-    // We cannot add an option without a value or a label.
-    if (!value || !label) return; // Create the option element.
+  addOption = (label, value) => {
+    // We cannot add an option without a label.
+    if (!label) return; // Create the option element.
 
     const option = document.createElement("option");
     option.value = value;
