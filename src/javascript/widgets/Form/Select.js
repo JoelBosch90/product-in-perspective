@@ -1,5 +1,5 @@
 // Import dependencies.
-import { FormElement } from "/javascript/widgets/Form/Element.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 
 /**
  *  The definition of the Select class that can be used to create select
@@ -9,7 +9,7 @@ import { FormElement } from "/javascript/widgets/Form/Element.js";
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class FormSelect extends FormElement {
+class FormSelect extends BaseElement {
 
   /**
    *  Arrayfor keeping track of the options in the select element.

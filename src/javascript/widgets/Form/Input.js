@@ -1,5 +1,5 @@
 // Import dependencies.
-import { FormElement } from "/javascript/widgets/Form/Element.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { FormSelect } from "/javascript/widgets/Form/Select.js";
 import { v4 as uuidv4 } from "https://jspm.dev/uuid";
 
@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "https://jspm.dev/uuid";
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class FormInput extends FormElement {
+class FormInput extends BaseElement {
 
   /**
    *  To link an input and a label together, we need to have a unique ID. One

@@ -1,5 +1,5 @@
 // Import dependencies.
-import { FormElement } from "/javascript/widgets/Form/Element.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 /**
  *  The definition of the Select class that can be used to create select
  *  elements for in a form.
@@ -9,7 +9,7 @@ import { FormElement } from "/javascript/widgets/Form/Element.js";
  *  Javascript classes.
  */
 
-class FormSelect extends FormElement {
+class FormSelect extends BaseElement {
   /**
    *  Arrayfor keeping track of the options in the select element.
    *  @var      {array}

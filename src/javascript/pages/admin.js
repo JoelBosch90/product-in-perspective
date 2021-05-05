@@ -300,9 +300,13 @@ const createProduct = new Form(container, {
       },
     },
   ],
+  buttons: [
+    {
+      name:   "submit",
+      options: {
+        label:  "Create model",
+        type:   "submit",
+      },
+    },
+  ],
 });
-
-const submitProduct = createProduct.addButton( "submit", {
-  label:  "Create model",
-  type:   "submit",
-}).on("click", console.log);

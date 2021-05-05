@@ -1,5 +1,5 @@
 // Import dependencies.
-import { EventHandler } from "/javascript/widgets/EventHandler.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overlay } from "/javascript/widgets/Overlay.js";
 import { Reticle } from "/javascript/widgets/ArScene/Reticle.js";
 import { debounce } from "/javascript/tools/debounce.js";
@@ -19,26 +19,13 @@ import { debounce } from "/javascript/tools/debounce.js";
  *  Javascript classes.
  */
 
-class ArScene {
-  /**
-   *  Private variable that stores the event handler object.
-   *  @var      {EventHandler}
-   */
-  _eventHandler = new EventHandler();
-  /**
-   *  Private variable that stores a reference to the container element in the
-   *  DOM.
-   *  @var      {Element}
-   */
-
-  _container = null;
+class ArScene extends BaseElement {
   /**
    *  Private variable that keeps track of the current mode of the scene. We
    *  always start out in inactive mode.
    *  Valid values are: "inactive", "placing", and "viewing"
    *  @var      {string}
    */
-
   _mode = "inactive";
   /**
    *  Private variable that stores a reference to the Aframe scene.
@@ -103,8 +90,8 @@ class ArScene {
    */
 
   constructor(parent) {
-    // Create an event handler object to handle all events.
-    this._eventHandler = new EventHandler(); // Initialize the interface.
+    // Call the base class constructor.
+    super(); // Initialize the interface.
 
     this._initInterface(parent);
   }
@@ -184,7 +171,7 @@ class ArScene {
     this._scene.addEventListener("enter-vr", () => void this._activateScene()); // Announce that the scene has finished loading.
 
 
-    this._eventHandler.trigger("loaded");
+    this.trigger("loaded");
   };
   /**
    *  Method to activate the augmented reality scene.
@@ -216,7 +203,7 @@ class ArScene {
 
   _handleError = message => {
     // Trigger the error event.
-    this._eventHandler.trigger("error", message);
+    this.trigger("error", message);
   };
   /**
    *  Private method for loading the assets in the scene.
@@ -457,58 +444,7 @@ class ArScene {
     this._reticle.hide(); // Trigger the end event.
 
 
-    this._eventHandler.trigger('end'); // Allow chaining.
-
-
-    return this;
-  };
-  /**
-   *  Method to show the scene.
-   *  @returns  {ArScene}
-   */
-
-  show = () => {
-    // Make sure we're not hiding the scene
-    this._container.classList.remove("hidden"); // Allow chaining.
-
-
-    return this;
-  };
-  /**
-   *  Method to hide the scene.
-   *  @returns  {ArScene}
-   */
-
-  hide = () => {
-    // Make sure we're hiding the scene.
-    this._container.classList.add("hidden"); // Allow chaining.
-
-
-    return this;
-  };
-  /**
-   *  Method for installing event handlers.
-   *  @param    {...any}    args
-   *  @returns  {ArScene}
-   */
-
-  on = (...args) => {
-    // Pass everything to the event handler.
-    this._eventHandler.on(...args); // Allow chaining.
-
-
-    return this;
-  };
-  /**
-   *  Method for removing event handlers.
-   *  @param    {...any}    args
-   *  @returns  {ArScene}
-   */
-
-  off = (...args) => {
-    // Pass everything to the event handler.
-    this._eventHandler.off(...args); // Allow chaining.
-
+    this.trigger('end'); // Allow chaining.
 
     return this;
   };
@@ -521,14 +457,10 @@ class ArScene {
     // Stop the session.
     this.stop(); // Remove the other objects we've used.
 
-    this._eventHandler.remove();
-
     this._overlay.remove();
 
     this._reticle.remove(); // Remove all DOM elements we've stored.
 
-
-    this._container.remove();
 
     this._scene.remove();
 
@@ -542,8 +474,10 @@ class ArScene {
 
     this._stopButton.remove();
 
-    this._instructions.remove(); // Allow chaining.
+    this._instructions.remove(); // Call the original remove method.
 
+
+    super.remove(); // Allow chaining.
 
     return this;
   };

@@ -1,3 +1,6 @@
+// Import dependencies.
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
+
 /**
  *  The definition of the Overlay class that can be used to create an overlay
  *  interface for a full screen video format. It can be used to any number of
@@ -8,14 +11,7 @@
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class Overlay {
-
-  /**
-   *  Private variable that stores a reference to the container element in the
-   *  DOM.
-   *  @var      {Element}
-   */
-  _container = null;
+class Overlay extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the container positioned at
@@ -37,6 +33,9 @@ class Overlay {
    *                                  overlay interface will be installed.
    */
   constructor(parent) {
+
+    // Call the base class constructor.
+    super();
 
     // Create a container for the overlay.
     this._container = document.createElement("div");
@@ -89,43 +88,17 @@ class Overlay {
   }
 
   /**
-   *  Method to show the overlay interface.
-   *  @returns  {Overlay}
-   */
-  show = () => {
-
-    // Make sure we're not hiding the overlay interface.
-    this._container.hidden = false;
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method to hide the overlay interface.
-   *  @returns  {Overlay}
-   */
-  hide = () => {
-
-    // Make sure we're hiding the overlay interface.
-    this._container.hidden = true;
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {Overlay}
    */
   remove = () => {
 
-    // We didn't use any event listeners or other classes, so we can simply
-    // remove the container from the DOM. But we do need to remove all
-    // references to objects.
-    this._container.remove();
+    // Remove all additional references to DOM elements we've stored.
     this._top.remove();
     this._bottom.remove();
+
+    // Call the original remove method.
+    super.remove();
 
     // Allow chaining.
     return this;

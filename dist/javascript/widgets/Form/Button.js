@@ -1,5 +1,5 @@
 // Import dependencies.
-import { FormElement } from "/javascript/widgets/Form/Element.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 /**
  *  The definition of the Button class that can be used to create button
  *  elements.
@@ -11,7 +11,7 @@ import { FormElement } from "/javascript/widgets/Form/Element.js";
  *  Javascript classes.
  */
 
-class FormButton extends FormElement {
+class FormButton extends BaseElement {
   /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element to which the button

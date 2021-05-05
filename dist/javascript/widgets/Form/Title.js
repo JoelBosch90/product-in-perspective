@@ -1,5 +1,5 @@
 // Import dependencies.
-import { FormElement } from "/javascript/widgets/Form/Element.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 /**
  *  The definition of the Title class that can be used to add a title to a form.
  *
@@ -8,7 +8,7 @@ import { FormElement } from "/javascript/widgets/Form/Element.js";
  *  Javascript classes.
  */
 
-class FormTitle extends FormElement {
+class FormTitle extends BaseElement {
   /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element to which the input

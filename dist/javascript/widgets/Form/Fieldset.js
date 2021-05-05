@@ -1,5 +1,5 @@
 // Import dependencies.
-import { FormElement } from "/javascript/widgets/Form/Element.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { FormInput } from "/javascript/widgets/Form/Input.js";
 import { FormButton } from "/javascript/widgets/Form/Button.js";
 /**
@@ -11,7 +11,7 @@ import { FormButton } from "/javascript/widgets/Form/Button.js";
  *  Javascript classes.
  */
 
-class FormFieldset extends FormElement {
+class FormFieldset extends BaseElement {
   /**
    *  Reference to the legend element.
    *  @var      {Legend}

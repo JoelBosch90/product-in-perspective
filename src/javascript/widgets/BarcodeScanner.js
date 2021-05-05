@@ -1,5 +1,5 @@
 // Import dependencies.
-import { EventHandler } from "/javascript/widgets/EventHandler.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overlay } from "/javascript/widgets/Overlay.js";
 
 /**
@@ -15,21 +15,7 @@ import { Overlay } from "/javascript/widgets/Overlay.js";
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class BarcodeScanner {
-
-  /**
-   *  Private variable that stores the event handler object that can handle all
-   *  events.
-   *  @var      {EventHandler}
-   */
-  _eventHandler = new EventHandler();
-
-  /**
-   *  Private variable that stores a reference to the container element in the
-   *  DOM.
-   *  @var      {Element}
-   */
-  _container = null;
+class BarcodeScanner extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the overlay object.
@@ -56,6 +42,9 @@ class BarcodeScanner {
    *                                  installed.
    */
   constructor(parent) {
+
+    // Call the base class constructor.
+    super();
 
     // Initialize the interface for the barcode scanner. It should return a
     // container for the video element that Quagga creates.
@@ -152,7 +141,7 @@ class BarcodeScanner {
       const code = result.codeResult.code;
 
       // Trigger the event immediately.
-      this._eventHandler.trigger('scanned', { code });
+      this.trigger('scanned', { code });
     });
   }
 
@@ -218,7 +207,7 @@ class BarcodeScanner {
   _handleError = (error) => {
 
     // Trigger the error event.
-    this._eventHandler.trigger("error", error);
+    this.trigger("error", error);
   }
 
   /**
@@ -272,60 +261,6 @@ class BarcodeScanner {
   }
 
   /**
-   *  Method to show the barcode scanner's interface.
-   *  @returns  {BarcodeScanner}
-   */
-  show = () => {
-
-    // Make sure we're not hiding the barcode scanner's interface.
-    this._container.classList.remove("hidden");
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method to hide the barcode scanner's interface.
-   *  @returns  {BarcodeScanner}
-   */
-  hide = () => {
-
-    // Make sure we're hiding the barcode scanner's interface.
-    this._container.classList.add("hidden");
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method for installing event handlers.
-   *  @param    {...any}    args
-   *  @returns  {BarcodeScanner}
-   */
-  on = (...args) => {
-
-    // Pass everything to the event handler.
-    this._eventHandler.on(...args);
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method for removing event handlers.
-   *  @param    {...any}    args
-   *  @returns  {BarcodeScanner}
-   */
-  off = (...args) => {
-
-    // Pass everything to the event handler.
-    this._eventHandler.off(...args);
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {BarcodeScanner}
    */
@@ -335,11 +270,10 @@ class BarcodeScanner {
     delete this._state;
 
     // Remove class objects we used.
-    this._eventHandler.remove();
     this._overlay.remove();
 
-    // Remove all DOM elements we've stored.
-    this._container.remove();
+    // Call the original remove function.
+    super.remove();
 
     // Allow chaining.
     return this;

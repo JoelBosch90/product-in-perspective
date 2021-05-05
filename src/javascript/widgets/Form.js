@@ -3,7 +3,7 @@ import { FormInput } from "/javascript/widgets/Form/Input.js";
 import { FormFieldset } from "/javascript/widgets/Form/Fieldset.js";
 import { FormButton } from "/javascript/widgets/Form/Button.js";
 import { FormTitle } from "/javascript/widgets/Form/Title.js";
-import { EventHandler } from "/javascript/widgets/EventHandler.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 
 /**
  *  The definition of the Form class that can be used to create a form element.
@@ -15,21 +15,7 @@ import { EventHandler } from "/javascript/widgets/EventHandler.js";
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class Form {
-
-  /**
-   *  Private variable that stores the event handler object that can handle all
-   *  events.
-   *  @var      {EventHandler}
-   */
-  _eventHandler = new EventHandler();
-
-  /**
-   *  Private variable that stores a reference to the container element in the
-   *  DOM.
-   *  @var      {Element}
-   */
-  _container = null;
+class Form extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the FormTitle element if a
@@ -72,6 +58,9 @@ class Form {
    *                                    the form.
    */
   constructor(parent, options = {}) {
+
+    // Call the parent class's constructor.
+    super();
 
     // Create a container for the form.
     this._container = document.createElement("form");
@@ -202,74 +191,20 @@ class Form {
   }
 
   /**
-   *  Method to show the form's interface.
-   *  @returns  {Form}
-   */
-  show = () => {
-
-    // Make sure we're not hiding the form's interface.
-    this._container.classList.remove("hidden");
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method to hide the form's interface.
-   *  @returns  {Form}
-   */
-  hide = () => {
-
-    // Make sure we're hiding the form's interface.
-    this._container.classList.add("hidden");
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method for installing event handlers.
-   *  @param    {...any}    args
-   *  @returns  {Form}
-   */
-  on = (...args) => {
-
-    // Pass everything to the event handler.
-    this._eventHandler.on(...args);
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method for removing event handler.
-   *  @param    {...any}    args
-   *  @returns  {Form}
-   */
-  off = (...args) => {
-
-    // Pass everything to the event handler.
-    this._eventHandler.off(...args);
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {Form}
    */
   remove = () => {
 
     // Remove class objects we used.
-    this._eventHandler.remove();
     if (this._title) this._title.remove();
     if (this._inputs) for (const input in this._inputs) input.remove();
     if (this._fieldsets) for (const fieldset in this._fieldsets) fieldset.remove();
     if (this._buttons) for (const button in this._buttons) button.remove();
 
-    // Remove all DOM elements we've stored.
-    this._container.remove();
+    // Call the remove function for the base class. This will also remove the
+    // container.
+    super.remove();
 
     // Allow chaining.
     return this;

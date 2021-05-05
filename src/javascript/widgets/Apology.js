@@ -1,3 +1,6 @@
+// Import dependencies.
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
+
 /**
  *  The definition of the Apology class that can be used to create an apology
  *  message. This can be used to explain to a user why something cannot be
@@ -7,14 +10,7 @@
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
- class Apology {
-
-  /**
-   *  Private variable that stores a reference to the container element in the
-   *  DOM.
-   *  @var      {Element}
-   */
-  _container = null;
+ class Apology extends BaseElement {
 
   /**
    *  Class constructor.
@@ -23,6 +19,9 @@
    *  @param    {string}    message   Message to display to the user.
    */
   constructor(parent, message) {
+
+    // Call the base class constructor.
+    super();
 
     // Create a container for the overlay.
     this._container = document.createElement("div");
@@ -37,47 +36,6 @@
 
     // Add the overlay to the parent container.
     parent.appendChild(this._container);
-  }
-
-  /**
-   *  Method to show the overlay interface.
-   *  @returns  {Overlay}
-   */
-  show = () => {
-
-    // Make sure we're not hiding the overlay interface.
-    this._container.hidden = false;
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method to hide the overlay interface.
-   *  @returns  {Overlay}
-   */
-  hide = () => {
-
-    // Make sure we're hiding the overlay interface.
-    this._container.hidden = true;
-
-    // Allow chaining.
-    return this;
-  }
-
-  /**
-   *  Method to remove this object and clean up after itself.
-   *  @returns  {Overlay}
-   */
-  remove = () => {
-
-    // We didn't use any event listeners or other classes, so we can simply
-    // remove the container from the DOM. But we do need to remove all
-    // references to objects.
-    this._container.remove();
-
-    // Allow chaining.
-    return this;
   }
 }
 
