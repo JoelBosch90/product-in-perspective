@@ -235,8 +235,15 @@ form {
 form .input-field + button,
 form fieldset + button,
 form select + button,
-form input + button {
+form input + button,
+form .input-field + fieldset,
+form fieldset + fieldset,
+form select + fieldset,
+form input + fieldset {
   margin-top: 1em;
+}
+form.center {
+  margin: 0 auto;
 }
 /**
  *  Header

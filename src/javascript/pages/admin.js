@@ -16,6 +16,7 @@ const container = document.body;
 // Create a login form.
 const loginForm = new Form(container, {
   title: "Login",
+  center: true,
   inputs: [
     {
       name:   "email",
@@ -46,6 +47,7 @@ const loginForm = new Form(container, {
 // Create a registration form.
 const registrationForm = new Form(container, {
   title: "Registration",
+  center: true,
   inputs: [
     {
       name:   "email",
@@ -83,6 +85,7 @@ const registrationForm = new Form(container, {
 // Create a change password.
 const changePasswordForm = new Form(container, {
   title: "Change password",
+  center: true,
   inputs: [
     {
       name:   "password",
@@ -113,6 +116,7 @@ const changePasswordForm = new Form(container, {
 // Create a form for creating an app.
 const createApp = new Form(container, {
   title: "App creation",
+  center: true,
   inputs: [
     {
       name:   "name",
@@ -232,6 +236,7 @@ const createApp = new Form(container, {
 // Create a form for creating an new model.
 const createModel = new Form(container, {
   title: "Model creation",
+  center: true,
   inputs: [
     {
       name:   "name",
@@ -263,6 +268,7 @@ const createModel = new Form(container, {
 // Create a form for creating an new model.
 const createProduct = new Form(container, {
   title: "Product creation",
+  center: true,
   inputs: [
     {
       name:   "name",

@@ -56,6 +56,9 @@ class Form extends BaseElement {
    *                                    immediately added to the form.
    *    @property   {string}  title     Optional string for a title to add to
    *                                    the form.
+   *    @property   {boolean} center    Should this form be centered in the
+   *                                    parent element?
+   *                                    Default: false.
    */
   constructor(parent, options = {}) {
 
@@ -67,6 +70,9 @@ class Form extends BaseElement {
 
     // Add the title if requested.
     if (options.title) this.title(options.title);
+
+    // Add the center class to the form if requested.
+    if (options.center) this._container.classList.add("center");
 
     // Add all provided buttons and inputs to the form.
     if (options.inputs) for (const input of options.inputs) this.addInput(input.name, input.options);

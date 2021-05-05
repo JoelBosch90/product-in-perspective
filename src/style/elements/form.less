@@ -23,11 +23,19 @@ form {
   // Targets input elements.
   .input-field, fieldset, select, input {
 
-    // Target buttons that immediately follow input elements.
-    & + button {
+    // Target buttons and fieldsets that immediately follow input elements.
+    & + button,
+    & + fieldset {
 
       // Give them some extra margin at the top.
       margin-top: 1em;
     }
+  }
+
+  // Extra styling for when the form has the center class.
+  &.center {
+
+    // Use the margins to center this form.
+    margin: 0 auto;
   }
 }
