@@ -465,10 +465,11 @@ class ArScene extends BaseElement {
   }
 
   /**
-   *  Method to remove this object and clean up after itself.
+   *  Method to remove this object and clean up after itself. We have to use
+   *  non-arrow function or we'd lose the super context.
    *  @returns  {ArScene}
    */
-  remove = () => {
+  remove() {
 
     // Stop the session.
     this.stop();

@@ -208,10 +208,10 @@ class FormFieldset extends BaseElement {
 
   /**
    *  We need to append the remove method to clean up other elements we've
-   *  added.
+   *  added. We have to use non-arrow function or we'd lose the super context.
    *  @returns  {FormFieldset}
    */
-  remove = () => {
+  remove() {
 
     // Remove all DOM elements we've added.
     if (this._legend) this._legend.remove();

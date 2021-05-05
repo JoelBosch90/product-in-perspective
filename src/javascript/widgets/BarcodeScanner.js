@@ -261,10 +261,11 @@ class BarcodeScanner extends BaseElement {
   }
 
   /**
-   *  Method to remove this object and clean up after itself.
+   *  Method to remove this object and clean up after itself. We have to use
+   *  non-arrow function or we'd lose the super context.
    *  @returns  {BarcodeScanner}
    */
-  remove = () => {
+  remove() {
 
     // Delete the state.
     delete this._state;

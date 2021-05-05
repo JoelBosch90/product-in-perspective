@@ -449,11 +449,12 @@ class ArScene extends BaseElement {
     return this;
   };
   /**
-   *  Method to remove this object and clean up after itself.
+   *  Method to remove this object and clean up after itself. We have to use
+   *  non-arrow function or we'd lose the super context.
    *  @returns  {ArScene}
    */
 
-  remove = () => {
+  remove() {
     // Stop the session.
     this.stop(); // Remove the other objects we've used.
 
@@ -480,7 +481,8 @@ class ArScene extends BaseElement {
     super.remove(); // Allow chaining.
 
     return this;
-  };
+  }
+
 } // Export the ArScene class so it can be imported elsewhere.
 
 

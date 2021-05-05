@@ -88,10 +88,11 @@ class Overlay extends BaseElement {
   }
 
   /**
-   *  Method to remove this object and clean up after itself.
+   *  Method to remove this object and clean up after itself. We have to use
+   *  non-arrow function or we'd lose the super context.
    *  @returns  {Overlay}
    */
-  remove = () => {
+  remove() {
 
     // Remove all additional references to DOM elements we've stored.
     this._top.remove();

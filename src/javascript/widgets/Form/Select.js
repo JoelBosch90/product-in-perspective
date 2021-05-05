@@ -90,10 +90,10 @@ class FormSelect extends BaseElement {
 
   /**
    *  We need to append the remove method to clean up other elements we've
-   *  added.
+   *  added. We have to use non-arrow function or we'd lose the super context.
    *  @returns  {FormSelect}
    */
-  remove = () => {
+  remove() {
 
     // First, clear out all the options.
     this.clear();

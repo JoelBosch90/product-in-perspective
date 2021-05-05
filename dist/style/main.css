@@ -117,8 +117,6 @@ a:hover {
  */
 body {
   margin: 0;
-  width: 100vw;
-  height: 100vh;
   background-color: black;
 }
 /**
@@ -410,7 +408,7 @@ textarea:disabled {
  *  Text
  *    This file installs some basic styling on text in the general application.
  */
-body {
+:root {
   font-family: var(--text-font);
   color: var(--color);
   line-height: var(--line-height);

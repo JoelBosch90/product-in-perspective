@@ -164,10 +164,11 @@ class FormInput extends BaseElement {
   }
 
   /**
-   *  Method to remove this object and clean up after itself.
+   *  Method to remove this object and clean up after itself. We have to use
+   *  non-arrow function or we'd lose the super context.
    *  @returns  {FormInput}
    */
-  remove = () => {
+  remove() {
 
     // Make sure we remove the input element, as it could either be a DOM
     // element that we have a reference to, or a instance of a class object. In
