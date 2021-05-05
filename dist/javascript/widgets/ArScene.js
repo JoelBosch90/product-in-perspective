@@ -115,7 +115,7 @@ class ArScene {
    */
 
 
-  _initInterface(parent) {
+  _initInterface = parent => {
     // Create a container for the barcode scanner.
     this._container = document.createElement("div");
 
@@ -131,15 +131,14 @@ class ArScene {
     this.hide(); // Add the entire interface to the parent container.
 
     parent.appendChild(this._container);
-  }
+  };
   /**
    *  Private method for creating an Aframe scene for augmented reality.
    *  @param    {Element}   parent    The parent element on which the scene will
    *                                  be installed.
    */
 
-
-  _createScene(parent) {
+  _createScene = parent => {
     // Create the Aframe scene element.
     this._scene = document.createElement("a-scene");
 
@@ -169,14 +168,13 @@ class ArScene {
 
     if (this._scene.renderStarted) this._initScene(); // Otherwise, we need to wait for the scene element to load first.
     else this._scene.addEventListener("loaded", () => void this._initScene());
-  }
+  };
   /**
    *  Private method for initializing the scene by adding event listeners and
    *  triggering the loaded event.
    */
 
-
-  _initScene() {
+  _initScene = () => {
     // Add an event listener to the scene to detect when the user has exited the
     // scene.
     this._scene.addEventListener("exit-vr", () => void this.stop()); // Add an event listener to the scene to detect when the user has entered
@@ -187,13 +185,12 @@ class ArScene {
 
 
     this._eventHandler.trigger("loaded");
-  }
+  };
   /**
    *  Method to activate the augmented reality scene.
    */
 
-
-  _activateScene() {
+  _activateScene = () => {
     // Did we end up in virtual reality mode?
     if (this._scene.is("vr-mode")) return this._handleError("VR mode is not yet implemented."); // Did we fail to get to augmented reality mode?
 
@@ -211,17 +208,16 @@ class ArScene {
 
 
     this._placingMode();
-  }
+  };
   /**
    *  Private method for handling errors.
    *  @param    {string}    message A message explaining what went wrong.
    */
 
-
-  _handleError(message) {
+  _handleError = message => {
     // Trigger the error event.
     this._eventHandler.trigger("error", message);
-  }
+  };
   /**
    *  Private method for loading the assets in the scene.
    *  @param    {Element}   scene   The Aframe scene to which the object is
@@ -230,8 +226,7 @@ class ArScene {
    *  @TODO     Get the assets from an API call.
    */
 
-
-  _loadAssets(scene) {
+  _loadAssets = scene => {
     // Create an element for the list of assets.
     const assets = document.createElement("a-assets"); // Some of our models might take a while to load, so we need to increase the
     // timeout.
@@ -247,15 +242,14 @@ class ArScene {
     assets.appendChild(model); // Add the assets to the scene.
 
     scene.appendChild(assets);
-  }
+  };
   /**
    *  Private method for adding an object in an Aframe scene.
    *  @param    {Element}   scene   The Aframe scene to which the object is
    *                                added.
    */
 
-
-  _insertObject(scene) {
+  _insertObject = scene => {
     // First, load the assets.
     this._loadAssets(scene); // Create an Aframe box element.
 
@@ -274,7 +268,7 @@ class ArScene {
 
 
     scene.appendChild(this._object);
-  }
+  };
   /**
    *  Private method for adding a interface in an Aframe scene. This interface
    *  is an object in augmented reality that is attached to the camera view that
@@ -283,8 +277,7 @@ class ArScene {
    *                                added.
    */
 
-
-  _addOverlayToScene(scene) {
+  _addOverlayToScene = scene => {
     // Create an Aframe camera element. To add the overlay to the scene, we can
     // create an interface in a camera object that we can mount the overlay to.
     const camera = document.createElement("a-camera"); // Create an Aframe entity element for the interface.
@@ -303,15 +296,14 @@ class ArScene {
     camera.appendChild(this._interface); // Add the camera to the scene.
 
     scene.appendChild(camera);
-  }
+  };
   /**
    *  Private method for creating an overlay for the interface.
    *  @param    {Element}   parent    The parent element on which the overlay
    *                                  will be installed.
    */
 
-
-  _createOverlay(parent) {
+  _createOverlay = parent => {
     // Create a container for the overlay element.
     this._overlayContainer = document.createElement("div");
 
@@ -352,14 +344,13 @@ class ArScene {
 
 
     parent.appendChild(this._overlayContainer);
-  }
+  };
   /**
    *  Private method to proceed to the mode for finding a location to place the
    *  object.
    */
 
-
-  _placingMode() {
+  _placingMode = () => {
     // Change the mode.
     this._mode = "placing"; // We need the reticle to show.
 
@@ -372,14 +363,13 @@ class ArScene {
     this._proceedButton.textContent = "Place"; // Update the text for the instructions.
 
     this._instructions.textContent = "Select a location to place the object.";
-  }
+  };
   /**
    *  Private method to proceed to the mode for viewing the placed object.
    *  @TODO     Figure out what happens with the vectors and the quaternion.
    */
 
-
-  _viewingMode() {
+  _viewingMode = () => {
     // Change the mode.
     this._mode = "viewing"; // We need to hide the reticle.
 
@@ -398,14 +388,13 @@ class ArScene {
     this._proceedButton.textContent = "Remove"; // Update the text for the instructions.
 
     this._instructions.textContent = "Take a moment to judge the size of that!";
-  }
+  };
   /**
    *  Method for proceeding to the next step.
    *  @returns  {ArScene}
    */
 
-
-  proceed() {
+  proceed = () => {
     // How we need to proceed depends on the mode we're currently in.
     switch (this._mode) {
       // If we're placing, we can view next.
@@ -423,15 +412,14 @@ class ArScene {
 
 
     return this;
-  }
+  };
   /**
    *  Method to select a 3D object to show.
    *  @param    {integer}     category    Number indicating the object category.
    *  @returns  {ArScene}
    */
 
-
-  select(category) {
+  select = category => {
     // // Define the categories we can represent.
     // const categories = {
     //   0: { size: 0.2, color: 'red' },
@@ -455,14 +443,13 @@ class ArScene {
 
 
     return this.show();
-  }
+  };
   /**
    *  Method for stopping the augmented reality session.
    *  @returns  {ArScene}
    */
 
-
-  stop() {
+  stop = () => {
     // Hide this object.
     this.hide(); // Also hide the reticle. This will make sure that it is no longer running
     // hit tests in the background.
@@ -474,68 +461,63 @@ class ArScene {
 
 
     return this;
-  }
+  };
   /**
    *  Method to show the scene.
    *  @returns  {ArScene}
    */
 
-
-  show() {
+  show = () => {
     // Make sure we're not hiding the scene
     this._container.classList.remove("hidden"); // Allow chaining.
 
 
     return this;
-  }
+  };
   /**
    *  Method to hide the scene.
    *  @returns  {ArScene}
    */
 
-
-  hide() {
+  hide = () => {
     // Make sure we're hiding the scene.
     this._container.classList.add("hidden"); // Allow chaining.
 
 
     return this;
-  }
+  };
   /**
    *  Method for installing event handlers.
    *  @param    {...any}    args
    *  @returns  {ArScene}
    */
 
-
-  on(...args) {
+  on = (...args) => {
     // Pass everything to the event handler.
     this._eventHandler.on(...args); // Allow chaining.
 
 
     return this;
-  }
+  };
   /**
    *  Method for removing event handlers.
    *  @param    {...any}    args
    *  @returns  {ArScene}
    */
 
-
-  off(...args) {
+  off = (...args) => {
     // Pass everything to the event handler.
     this._eventHandler.off(...args); // Allow chaining.
 
 
     return this;
-  }
+  };
   /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {ArScene}
    */
 
-
-  remove() {
+  remove = () => {
     // Stop the session.
     this.stop(); // Remove the other objects we've used.
 
@@ -564,8 +546,7 @@ class ArScene {
 
 
     return this;
-  }
-
+  };
 } // Export the ArScene class so it can be imported elsewhere.
 
 

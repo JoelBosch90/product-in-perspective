@@ -1,0 +1,33 @@
+/**
+ *  Form
+ *    This file contains the base styling for a form.
+ */
+
+// Target all forms.
+form {
+
+  // Use grid to create a one column layout by default.
+  display: grid;
+  grid-template-columns: auto;
+
+  // Keep some distance between the form elements.
+  grid-gap: 1em;
+
+  // Keep some white space around the input elements.
+  padding: 2em;
+
+  // Forms contain text and lines of text should never be too long. Yet the form
+  // should never be wider than the parent element.
+  max-width: min(100%, 30em);
+
+  // Targets input elements.
+  .input-field, fieldset, select, input {
+
+    // Target buttons that immediately follow input elements.
+    & + button {
+
+      // Give them some extra margin at the top.
+      margin-top: 1em;
+    }
+  }
+}

@@ -144,7 +144,7 @@ class BarcodeScanner {
    */
 
 
-  _initQuagga() {
+  _initQuagga = () => {
     // Initialize the barcode scanner.
     this.start(); // Handle cases when Quagga has read a barcode.
 
@@ -156,7 +156,7 @@ class BarcodeScanner {
         code
       });
     });
-  }
+  };
   /**
    *  Private method for initializing the DOM interface.
    *  @param    {Element}   parent    The parent element on which the
@@ -165,8 +165,7 @@ class BarcodeScanner {
    *  @returns  {Element}   The container for the video element.
    */
 
-
-  _initInterface(parent) {
+  _initInterface = parent => {
     // Create a container for the barcode scanner.
     this._container = document.createElement("div"); // Add the styling class to the container element.
 
@@ -186,15 +185,14 @@ class BarcodeScanner {
     parent.appendChild(this._container); // Return the container for the video element.
 
     return video;
-  }
+  };
   /**
    *  Private method for creating an overlay for the interface.
    *  @param    {Element}   parent    The parent element on which the overlay
    *                                  interface will be installed.
    */
 
-
-  _initOverlay(parent) {
+  _initOverlay = parent => {
     // Create a container for the overlay element.
     const container = document.createElement("div"); // Add the styling class to the container element.
 
@@ -203,28 +201,26 @@ class BarcodeScanner {
     this._overlay = new Overlay(container); // Add the overlay container to the parent container.
 
     parent.appendChild(container);
-  }
+  };
   /**
    *  Private method for handling errors.
    *  @param    {string}    error     A string describing the error that has
    *                                  occurred.
    */
 
-
-  _handleError(error) {
+  _handleError = error => {
     // Trigger the error event.
     this._eventHandler.trigger("error", error);
-  }
+  };
   /**
    *  Method to expose the Overlay object.
    *  @returns  {Overlay}
    */
 
-
-  overlay() {
+  overlay = () => {
     // Expose the overlay element.
     return this._overlay;
-  }
+  };
   /**
    *  Method to start scanning.
    *  @var      {object}    state     A state object to initialize Quagga.
@@ -237,8 +233,7 @@ class BarcodeScanner {
    *  @returns  {BarcodeScanner}
    */
 
-
-  start(state = this._state) {
+  start = (state = this._state) => {
     // Initialize the Quagga object.
     Quagga.init(state, error => {
       // Handle errors with our own error handler.
@@ -248,80 +243,74 @@ class BarcodeScanner {
     }); // Allow chaining.
 
     return this;
-  }
+  };
   /**
    *  Method to stop scanning.
    *  @returns  {BarcodeScanner}
    */
 
-
-  stop() {
+  stop = () => {
     // Stop Quagga so that we stop processing the video feed.
     Quagga.stop(); // Allow chaining.
 
     return this;
-  }
+  };
   /**
    *  Method to show the barcode scanner's interface.
    *  @returns  {BarcodeScanner}
    */
 
-
-  show() {
+  show = () => {
     // Make sure we're not hiding the barcode scanner's interface.
     this._container.classList.remove("hidden"); // Allow chaining.
 
 
     return this;
-  }
+  };
   /**
    *  Method to hide the barcode scanner's interface.
    *  @returns  {BarcodeScanner}
    */
 
-
-  hide() {
+  hide = () => {
     // Make sure we're hiding the barcode scanner's interface.
     this._container.classList.add("hidden"); // Allow chaining.
 
 
     return this;
-  }
+  };
   /**
    *  Method for installing event handlers.
    *  @param    {...any}    args
    *  @returns  {BarcodeScanner}
    */
 
-
-  on(...args) {
+  on = (...args) => {
     // Pass everything to the event handler.
     this._eventHandler.on(...args); // Allow chaining.
 
 
     return this;
-  }
+  };
   /**
    *  Method for removing event handlers.
    *  @param    {...any}    args
    *  @returns  {BarcodeScanner}
    */
 
-
-  off(...args) {
+  off = (...args) => {
     // Pass everything to the event handler.
     this._eventHandler.off(...args); // Allow chaining.
 
 
     return this;
-  }
+  };
   /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {BarcodeScanner}
    */
 
-
-  remove() {
+  remove = () => {
     // Delete the state.
     delete this._state; // Remove class objects we used.
 
@@ -334,8 +323,7 @@ class BarcodeScanner {
 
 
     return this;
-  }
-
+  };
 } // Export the BarcodeScanner class so it can be imported elsewhere.
 
 

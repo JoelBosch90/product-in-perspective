@@ -69,7 +69,7 @@
    *  Event listener for when the WebXR session ends. It simply resets the hit
    *  test source.
    */
-  _resetHitTestSource() {
+  _resetHitTestSource = () => {
 
     // Simply set it back to null.
     this._hitTestSource = null;
@@ -79,7 +79,7 @@
    *  Event listener for when the WebXR session starts.
    *  @returns  {XRHitTestSource}
    */
-  async _onSessionStart() {
+  _onSessionStart = async () => {
 
     // Store the current WebXR session.
     this._session = this._renderer.xr.getSession();
@@ -100,7 +100,7 @@
    *                                    the pose of the hit location. Or false
    *                                    if the hit test was unsuccessful.
    */
-  doHit(frame) {
+  doHit = (frame) => {
 
     // If we're not in an active session, we cannot do a hit test.
     if (!this._renderer.xr.isPresenting) return;
@@ -128,7 +128,7 @@
    *                                            location. Or false if the hit
    *                                            test was unsuccessful.
    */
-  _hitTest(frame, referenceSpace) {
+  _hitTest = (frame, referenceSpace) => {
 
     // Get the hit test results for this frame.
     const results = frame.getHitTestResults(this._hitTestSource);
@@ -158,7 +158,7 @@
    *                                            location. Or false if the hit
    *                                            test was unsuccessful.
    */
-  _transientHitTest(frame, referenceSpace) {
+  _transientHitTest = (frame, referenceSpace) => {
     console.log("::_transientHitTest");
 
     // Get the transient input hit test results for this frame.
@@ -190,7 +190,7 @@
    *  Method to remove this object and clean up after itself.
    *  @returns  {HitTest}
    */
-  remove() {
+  remove = () => {
 
     // This class does not have any elements in the DOM, does not use any other
     // custom classes, or uses any event handlers that need to be removed.

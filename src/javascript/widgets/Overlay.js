@@ -69,7 +69,7 @@ class Overlay {
    *                                    is the default option.
    *  @returns  {Element}
    */
-  add(type, options = {}) {
+  add = (type, options = {}) => {
 
     // Create the new DOM element.
     const element = document.createElement(type);
@@ -92,7 +92,7 @@ class Overlay {
    *  Method to show the overlay interface.
    *  @returns  {Overlay}
    */
-  show() {
+  show = () => {
 
     // Make sure we're not hiding the overlay interface.
     this._container.hidden = false;
@@ -105,7 +105,7 @@ class Overlay {
    *  Method to hide the overlay interface.
    *  @returns  {Overlay}
    */
-  hide() {
+  hide = () => {
 
     // Make sure we're hiding the overlay interface.
     this._container.hidden = true;
@@ -118,7 +118,7 @@ class Overlay {
    *  Method to remove this object and clean up after itself.
    *  @returns  {Overlay}
    */
-  remove() {
+  remove = () => {
 
     // We didn't use any event listeners or other classes, so we can simply
     // remove the container from the DOM. But we do need to remove all

@@ -42,31 +42,29 @@ class Apology {
    */
 
 
-  show() {
+  show = () => {
     // Make sure we're not hiding the overlay interface.
     this._container.hidden = false; // Allow chaining.
 
     return this;
-  }
+  };
   /**
    *  Method to hide the overlay interface.
    *  @returns  {Overlay}
    */
 
-
-  hide() {
+  hide = () => {
     // Make sure we're hiding the overlay interface.
     this._container.hidden = true; // Allow chaining.
 
     return this;
-  }
+  };
   /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {Overlay}
    */
 
-
-  remove() {
+  remove = () => {
     // We didn't use any event listeners or other classes, so we can simply
     // remove the container from the DOM. But we do need to remove all
     // references to objects.
@@ -74,8 +72,7 @@ class Apology {
 
 
     return this;
-  }
-
+  };
 } // Export the Apology class so it can be imported elsewhere.
 
 

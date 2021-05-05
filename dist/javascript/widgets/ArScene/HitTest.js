@@ -66,17 +66,16 @@ class HitTest {
    */
 
 
-  _resetHitTestSource() {
+  _resetHitTestSource = () => {
     // Simply set it back to null.
     this._hitTestSource = null;
-  }
+  };
   /**
    *  Event listener for when the WebXR session starts.
    *  @returns  {XRHitTestSource}
    */
 
-
-  async _onSessionStart() {
+  _onSessionStart = async () => {
     // Store the current WebXR session.
     this._session = this._renderer.xr.getSession(); // If we have a ray space, use that to get the source for the hit test.
 
@@ -84,7 +83,7 @@ class HitTest {
     // the hit test.
 
     if (this._options.profile) return this._hitTestSource = await this._session.requestHitTestSourceForTransientInput(this._options);
-  }
+  };
   /**
    *  Method to do a hit test for a single frame.
    *  @param    {XRFrame}       frame   The frame that the hit test will be done
@@ -94,8 +93,7 @@ class HitTest {
    *                                    if the hit test was unsuccessful.
    */
 
-
-  doHit(frame) {
+  doHit = frame => {
     // If we're not in an active session, we cannot do a hit test.
     if (!this._renderer.xr.isPresenting) return; // Get a reference space for this WebXR session.
 
@@ -108,7 +106,7 @@ class HitTest {
     if (this._options.profile) return this._transientHitTest(frame, referenceSpace); // Otherwise, we can do a normal hit test.
 
     return this._hitTest(frame, referenceSpace);
-  }
+  };
   /**
    *  Private method to do a normal hit test.
    *  @param {XRFrame}          frame           The frame for the hit test.
@@ -119,8 +117,7 @@ class HitTest {
    *                                            test was unsuccessful.
    */
 
-
-  _hitTest(frame, referenceSpace) {
+  _hitTest = (frame, referenceSpace) => {
     // Get the hit test results for this frame.
     const results = frame.getHitTestResults(this._hitTestSource); // If we didn't get any results, we should return false.
 
@@ -135,7 +132,7 @@ class HitTest {
       pose,
       inputSpace: this._options.space
     };
-  }
+  };
   /**
    *  Private method to do a hit test for a transient input.
    *  @param {XRFrame}          frame           The frame for the hit test.
@@ -146,8 +143,7 @@ class HitTest {
    *                                            test was unsuccessful.
    */
 
-
-  _transientHitTest(frame, referenceSpace) {
+  _transientHitTest = (frame, referenceSpace) => {
     console.log("::_transientHitTest"); // Get the transient input hit test results for this frame.
 
     const results = frame.getHitTestResultsForTransientInput(this._hitTestSource); // If we didn't get any results, we should return false.
@@ -167,20 +163,18 @@ class HitTest {
       pose,
       inputSpace: results[0].inputSource.targetRaySpace
     };
-  }
+  };
   /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {HitTest}
    */
 
-
-  remove() {
+  remove = () => {
     // This class does not have any elements in the DOM, does not use any other
     // custom classes, or uses any event handlers that need to be removed.
     // Allow chaining.
     return this;
-  }
-
+  };
 } // Export the HitTest class so it can be imported elsewhere.
 
 

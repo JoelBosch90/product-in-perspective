@@ -91,6 +91,27 @@
  *  Main import file to gather the styles of all elements.
  */
 /**
+ *  Anchors
+ *    This file installs some basic styling on all anchors in the general
+ *    application.
+ */
+a {
+  color: var(--information-color);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--animation-quick), color var(--animation-quick);
+}
+a:focus {
+  color: var(--active-color);
+  transition: color var(--animation-quick);
+  outline: none;
+}
+a:hover {
+  opacity: 0.65;
+  transition: opacity var(--animation-quick);
+}
+/**
  *  Body
  *    Main styling for the body element.
  */
@@ -157,6 +178,47 @@ input[type="submit"] + button {
   margin-left: 0.5em;
 }
 /**
+ *  Fieldset
+ *    This file contains the base styling for a fieldset.
+ */
+fieldset {
+  display: grid;
+  grid-template-columns: auto;
+  grid-gap: 0.5em;
+  padding: 1em;
+  border-color: var(--border-color);
+  border-radius: 0.25em;
+}
+fieldset legend {
+  background-color: var(--background);
+  line-height: 1em;
+  color: var(--text-font);
+  border-radius: 0.25em;
+  padding: 0.15em 0.45em;
+  margin: 0.1em 0.3em;
+}
+fieldset .input-field + button,
+fieldset input + button {
+  margin-top: 1em;
+}
+/**
+ *  Form
+ *    This file contains the base styling for a form.
+ */
+form {
+  display: grid;
+  grid-template-columns: auto;
+  grid-gap: 1em;
+  padding: 2em;
+  max-width: min(100%, 30em);
+}
+form .input-field + button,
+form fieldset + button,
+form select + button,
+form input + button {
+  margin-top: 1em;
+}
+/**
  *  Header
  *    This file installs some basic styling on all headers in the general
  *    application.
@@ -189,6 +251,160 @@ h3 {
 h4 {
   font-size: 1.15em;
   font-weight: 700;
+}
+/**
+ *  Input
+ *    This file installs some basic styling on all inputs in the general
+ *    application.
+ */
+input,
+select,
+textarea {
+  font-family: var(--text-font);
+  font-size: 1em;
+  line-height: var(--line-height);
+  padding: 0.25em 0.75em;
+  margin-top: 1em;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25em;
+  transition: border-color var(--animation-quick);
+  box-sizing: border-box;
+}
+input.block,
+select.block,
+textarea.block {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+input:not(:disabled):not(:focus):hover,
+select:not(:disabled):not(:focus):hover,
+textarea:not(:disabled):not(:focus):hover {
+  filter: opacity(55%);
+  transition: filter var(--animation-quick);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--active-color);
+  transition: border-color var(--animation-quick);
+  outline: none;
+}
+input:disabled,
+select:disabled,
+textarea:disabled {
+  filter: opacity(30%);
+  background-color: transparent;
+  cursor: not-allowed;
+  transition: filter var(--animation-quick);
+}
+.input-field {
+  width: 100%;
+  position: relative;
+}
+.input-field input[type="text"],
+.input-field input[type="password"],
+.input-field input[type="email"],
+.input-field input[type="number"],
+.input-field input[type="file"],
+.input-field textarea {
+  width: 100%;
+  padding: 0.25em 0.75em;
+  border-width: 1px;
+}
+.input-field input[type="text"]::placeholder,
+.input-field input[type="password"]::placeholder,
+.input-field input[type="email"]::placeholder,
+.input-field input[type="number"]::placeholder,
+.input-field input[type="file"]::placeholder,
+.input-field textarea::placeholder {
+  color: transparent;
+}
+.input-field input[type="text"] + label,
+.input-field input[type="password"] + label,
+.input-field input[type="email"] + label,
+.input-field input[type="number"] + label,
+.input-field input[type="file"] + label,
+.input-field textarea + label {
+  position: absolute;
+  top: 1em;
+  left: 0;
+  color: var(--color);
+  opacity: 0.55;
+  user-select: none;
+  cursor: text;
+  border-color: transparent;
+  border-width: 1px;
+  padding: 0.15em 0.45em;
+  margin: 0.1em 0.3em;
+  background-color: transparent;
+  border-radius: 0.25em;
+  transform-origin: 0 0;
+  transition: color var(--animation-quick), transform var(--animation-quick), background-color var(--animation-quick), line-height var(--animation-quick), opacity var(--animation-quick);
+}
+.input-field input[type="text"]:focus + label,
+.input-field input[type="password"]:focus + label,
+.input-field input[type="email"]:focus + label,
+.input-field input[type="number"]:focus + label,
+.input-field input[type="file"]:focus + label,
+.input-field textarea:focus + label,
+.input-field input[type="text"]:not(:placeholder-shown) + label,
+.input-field input[type="password"]:not(:placeholder-shown) + label,
+.input-field input[type="email"]:not(:placeholder-shown) + label,
+.input-field input[type="number"]:not(:placeholder-shown) + label,
+.input-field input[type="file"]:not(:placeholder-shown) + label,
+.input-field textarea:not(:placeholder-shown) + label {
+  transform: translate(0, -60%) scale(0.8);
+  background-color: var(--background);
+  opacity: 1;
+  line-height: 1em;
+  transition: transform var(--animation-quick), line-height var(--animation-quick), background-color var(--animation-quick);
+}
+.input-field input[type="text"]:focus + label span,
+.input-field input[type="password"]:focus + label span,
+.input-field input[type="email"]:focus + label span,
+.input-field input[type="number"]:focus + label span,
+.input-field input[type="file"]:focus + label span,
+.input-field textarea:focus + label span,
+.input-field input[type="text"]:not(:placeholder-shown) + label span,
+.input-field input[type="password"]:not(:placeholder-shown) + label span,
+.input-field input[type="email"]:not(:placeholder-shown) + label span,
+.input-field input[type="number"]:not(:placeholder-shown) + label span,
+.input-field input[type="file"]:not(:placeholder-shown) + label span,
+.input-field textarea:not(:placeholder-shown) + label span {
+  opacity: 1;
+  color: var(--border-color);
+  transition: color var(--animation-quick), opacity var(--animation-quick);
+}
+.input-field input[type="text"]:focus + label span,
+.input-field input[type="password"]:focus + label span,
+.input-field input[type="email"]:focus + label span,
+.input-field input[type="number"]:focus + label span,
+.input-field input[type="file"]:focus + label span,
+.input-field textarea:focus + label span {
+  color: var(--active-color);
+}
+.input-field input[type="text"]:not(:disabled):not(:focus):hover + label span,
+.input-field input[type="password"]:not(:disabled):not(:focus):hover + label span,
+.input-field input[type="email"]:not(:disabled):not(:focus):hover + label span,
+.input-field input[type="number"]:not(:disabled):not(:focus):hover + label span,
+.input-field input[type="file"]:not(:disabled):not(:focus):hover + label span,
+.input-field textarea:not(:disabled):not(:focus):hover + label span {
+  opacity: 0.55;
+  transition: opacity var(--animation-quick);
+}
+.input-field input[type="text"]:disabled + label span,
+.input-field input[type="password"]:disabled + label span,
+.input-field input[type="email"]:disabled + label span,
+.input-field input[type="number"]:disabled + label span,
+.input-field input[type="file"]:disabled + label span,
+.input-field textarea:disabled + label span {
+  cursor: not-allowed;
+  opacity: 0.25;
+  transition: opacity var(--animation-quick);
+}
+.input-field textarea {
+  resize: vertical;
 }
 /**
  *  Text

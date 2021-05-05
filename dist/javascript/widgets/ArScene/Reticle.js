@@ -74,7 +74,7 @@ class Reticle {
    */
 
 
-  _registerPrimitive(name) {
+  _registerPrimitive = name => {
     // First register the hit test component that we need for this primitive.
     this._registerComponent(name); // Then register the primitive element so that we can use the <a-reticle>
     // element in the DOM within the <a-scene> element.
@@ -108,15 +108,14 @@ class Reticle {
         testing: name + '.doHitTest'
       }
     });
-  }
+  };
   /**
    *  Private method to register the hit test component with AFRAME that the
    *  a-reticle element relies on to perform the hit tests.
    *  @param    {string}    name    Name of the AR hit test component.
    */
 
-
-  _registerComponent(name) {
+  _registerComponent = name => {
     AFRAME.registerComponent(name, {
       /**
        *  Here we can define the properties of the object. We can determine
@@ -277,32 +276,29 @@ class Reticle {
         this.el.sceneEl.renderer.xr.removeEventListener("sessionend", this.onSessionEnd);
       }
     });
-  }
+  };
   /**
    *  Method to expose the reticle's position attributes.
    *  @returns  {string}
    */
 
-
-  position() {
+  position = () => {
     return this._container.getAttribute("position");
-  }
+  };
   /**
    *  Method to expose the reticle's rotation attributes.
    *  @returns  {string}
    */
 
-
-  rotation() {
+  rotation = () => {
     return this._container.getAttribute("rotation");
-  }
+  };
   /**
    *  Method to show the scene.
    *  @returns  {Reticle}
    */
 
-
-  show() {
+  show = () => {
     // Make sure we're not hiding the reticle and that we're performing hit
     // tests.
     this._container.setAttribute("testing", "true");
@@ -311,14 +307,13 @@ class Reticle {
 
 
     return this;
-  }
+  };
   /**
    *  Method to hide the scene.
    *  @returns  {Reticle}
    */
 
-
-  hide() {
+  hide = () => {
     // Make sure we're hiding the reticle. We also don't need to perfom hit
     // tests while the reticle is hidden.
     this._container.setAttribute("visible", "false");
@@ -327,14 +322,13 @@ class Reticle {
 
 
     return this;
-  }
+  };
   /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {Reticle}
    */
 
-
-  remove() {
+  remove = () => {
     // Remove the DOM elements.
     this._container.remove(); // Clear the cache
 
@@ -343,8 +337,7 @@ class Reticle {
 
 
     return this;
-  }
-
+  };
 } // Export the Reticle class so it can be imported elsewhere.
 
 

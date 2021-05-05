@@ -73,7 +73,7 @@ class Overlay {
    */
 
 
-  add(type, options = {}) {
+  add = (type, options = {}) => {
     // Create the new DOM element.
     const element = document.createElement(type); // If text was provided, we should add it to the element.
 
@@ -84,38 +84,35 @@ class Overlay {
     else this._bottom.appendChild(element); // Finally, return the element.
 
     return element;
-  }
+  };
   /**
    *  Method to show the overlay interface.
    *  @returns  {Overlay}
    */
 
-
-  show() {
+  show = () => {
     // Make sure we're not hiding the overlay interface.
     this._container.hidden = false; // Allow chaining.
 
     return this;
-  }
+  };
   /**
    *  Method to hide the overlay interface.
    *  @returns  {Overlay}
    */
 
-
-  hide() {
+  hide = () => {
     // Make sure we're hiding the overlay interface.
     this._container.hidden = true; // Allow chaining.
 
     return this;
-  }
+  };
   /**
    *  Method to remove this object and clean up after itself.
    *  @returns  {Overlay}
    */
 
-
-  remove() {
+  remove = () => {
     // We didn't use any event listeners or other classes, so we can simply
     // remove the container from the DOM. But we do need to remove all
     // references to objects.
@@ -127,8 +124,7 @@ class Overlay {
 
 
     return this;
-  }
-
+  };
 } // Export the Overlay class so it can be imported elsewhere.
 
 
