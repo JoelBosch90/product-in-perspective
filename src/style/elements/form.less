@@ -10,9 +10,6 @@ form {
   display: grid;
   grid-template-columns: auto;
 
-  // Keep some distance between the form elements.
-  grid-gap: 1em;
-
   // Keep some white space around the input elements.
   padding: 2em;
 
@@ -21,14 +18,13 @@ form {
   max-width: min(100%, 30em);
 
   // Targets input elements.
-  .input-field, fieldset, select, input {
+  .input-field, fieldset, select, input, label {
 
     // Target buttons and fieldsets that immediately follow input elements.
-    & + button,
-    & + fieldset {
+    & + :not(.input-field){
 
       // Give them some extra margin at the top.
-      margin-top: 1em;
+      margin-top: 1rem;
     }
   }
 

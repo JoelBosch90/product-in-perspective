@@ -236,19 +236,15 @@ fieldset input + button {
 form {
   display: grid;
   grid-template-columns: auto;
-  grid-gap: 1em;
   padding: 2em;
   max-width: min(100%, 30em);
 }
-form .input-field + button,
-form fieldset + button,
-form select + button,
-form input + button,
-form .input-field + fieldset,
-form fieldset + fieldset,
-form select + fieldset,
-form input + fieldset {
-  margin-top: 1em;
+form .input-field + :not(.input-field),
+form fieldset + :not(.input-field),
+form select + :not(.input-field),
+form input + :not(.input-field),
+form label + :not(.input-field) {
+  margin-top: 1rem;
 }
 form.center {
   margin: 0 auto;
@@ -299,7 +295,7 @@ textarea {
   font-size: 1em;
   line-height: var(--line-height);
   padding: 0.25em 0.75em;
-  margin-top: 1em;
+  margin-top: 1rem;
   border: 1px solid var(--border-color);
   border-radius: 0.25em;
   transition: border-color var(--animation-quick);

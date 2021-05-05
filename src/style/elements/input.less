@@ -24,8 +24,9 @@ textarea {
 
   // We may need the extra margin at the top for the label, but we want this to
   // be consistent for all input elements, so every input element gets the extra
-  // margin on top.
-  margin-top: 1em;
+  // margin on top. We want to make sure we don't base this on local font size,
+  // so that it is easier to align with other elements.
+  margin-top: 1rem;
 
   // Use a thin border to clearly frame the input field.
   border: 1px solid var(--border-color);
