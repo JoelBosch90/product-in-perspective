@@ -9,9 +9,15 @@
 // normal button.
 input[type="file"] {
 
-  // We can simply hide the input element itself as we'll style only the
-  // label.
-  display: none;
+  // We want to hide the input, but should still be in the DOM so that people
+  // can tab over to it and set a focus.
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+
+  // It should not impact the document flow.
+  position: absolute;
 
   // Target the label for this input (it should always be directly after the
   // input in the DOM).
@@ -19,6 +25,17 @@ input[type="file"] {
 
     // Center the text like in a button.
     text-align: center;
+  }
+
+  // Target the label when the input is in focus.
+  &:focus + label {
+
+    // Show that this is the active element with the background-color.
+    background-color: var(--active-background);
+
+    // Use a transition effect to give the focus effect a quick and smooth
+    // animation.
+    transition: background-color var(--animation-quick);
   }
 }
 

@@ -125,10 +125,18 @@ body {
  *    application.
  */
 input[type="file"] {
-  display: none;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+  position: absolute;
 }
 input[type="file"] + label {
   text-align: center;
+}
+input[type="file"]:focus + label {
+  background-color: var(--active-background);
+  transition: background-color var(--animation-quick);
 }
 button,
 input[type="submit"],
