@@ -258,7 +258,7 @@ select {
     }
 
     // Target the label when the input is hovered on.
-    &:not(:disabled):not(:focus):hover + label {
+    &:not(:placeholder-shown):not(:disabled):not(:focus):hover + label {
 
       // Show a dark colour on hover. The colour of the border is a good fit.
       // Sadly, we cannot use opacity here as we want the same on hover effect
