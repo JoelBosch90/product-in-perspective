@@ -14,3 +14,14 @@ prepare the dist folder for hosting.
 When you want to run a local test server, run the following command. It will
 tell you which URL to follow to view the result.
 `npm start`
+
+# Restart production server
+We use PM2 to run the production server. You may want to restart it after
+changing the server.js file.
+`pm2 restart server`
+
+# Symlinks
+Inside the dist folder, there should be symlinks to `src/html`, `src/models`,
+and `src/html`. These are not in de git repository because these symlinks
+depends on the folder structure of the local machine. You should add them
+manually.

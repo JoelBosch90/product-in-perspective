@@ -37,7 +37,7 @@ class AppOverview extends BaseElement {
     this._container = document.createElement("div"); // Create a app overview.
 
     this._overview = new Overview(this._container, {
-      title: "Overview",
+      title: "App overview",
       center: true,
       cards: [{
         id: 1,
