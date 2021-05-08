@@ -6,6 +6,79 @@
 // Target the card container.
 .card {
 
+  // Use the alternative background colour to make these cards clearly distinct
+  // from the main background.
+  background: var(--alternate-background);
+
+  // Use grid to create the card's layout.
+  display: grid;
+  grid-template-areas:
+    "title"
+    "description"
+    "buttons";
+
+  // Make sure the elements in the card don't touch each other. We don't want
+  // this to be too small so that the cards actually have a decent body.
+  gap: 1.5em;
+
+  // Make sure nothing touches the edges of the card.
+  padding: 1em;
+
   // TESTING.
   border: 2px solid var(--border-color);
+
+  // Use rounded borders to create friendlier cards.
+  border-radius: 0.25em;
+
+  // Target all text elements.
+  h2, p, .buttons {
+
+    // We don't need any margins in the context of this card.
+    margin: 0;
+
+    // We don't ever want to break out of the layout of the card.
+    overflow: hidden;
+
+    // We want to clearly show where text was truncated.
+    text-overflow: ellipsis;
+  }
+
+  // Target the card's title.
+  h2 {
+
+    // Occupy the right grid area.
+    grid-area: title;
+
+    // Make sure we can always still display the full title despite removing the
+    // margins.
+    line-height: 2em;
+
+    // We don't want the title to be displayed on more than a single line.
+    white-space: nowrap;
+  }
+
+  // Target the card's description.
+  p {
+
+    // Occupy the right grid area.
+    grid-area: description;
+  }
+
+  // Target the buttons container.
+  .buttons {
+
+    // Occupy the right grid area.
+    grid-area: buttons;
+
+    // Use Flexbox to create a layout for the buttons so that we can use the gap
+    // property to properly space them.
+    display: flex;
+
+    // Make sure that the buttons don't touch each other.
+    gap: 1em;
+
+    // We want to allow the buttons to wrap around on a new row so that they
+    // cannot break the card's the layout.
+    flex-wrap: wrap;
+  }
 }

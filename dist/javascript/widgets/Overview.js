@@ -1,7 +1,7 @@
 // Import dependencies.
-import { OverviewTitle } from "/javascript/widgets/Overview/Title.js";
-import { OverviewCard } from "/javascript/widgets/Overview/Card.js";
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { OverviewCard } from "/javascript/widgets/Overview/Card.js";
+import { Title } from "/javascript/widgets/Title.js";
 /**
  *  The definition of the Overview class that can be used to create a overview
  *  element.
@@ -13,9 +13,9 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 
 class Overview extends BaseElement {
   /**
-   *  Private variable that stores a reference to the OverviewTitle element if a
+   *  Private variable that stores a reference to the Title element if a
    *  title was added to the form.
-   *  @var      {OverviewTitle}
+   *  @var      {Title}
    */
   _title = null;
   /**
@@ -52,7 +52,7 @@ class Overview extends BaseElement {
 
     if (options.center) this._container.classList.add("center"); // Add all provided cards to the overview.
 
-    if (options.cards) for (const card of options.cards) this.addCard(card.name, card.options); // Add the overview to the parent element.
+    if (options.cards) for (const card of options.cards) this.addCard(card); // Add the overview to the parent element.
 
     parent.appendChild(this._container);
   }
@@ -73,7 +73,9 @@ class Overview extends BaseElement {
       else this._title.remove(); // Is there no title component yet?
     } else {
       // If a new title was provided, we should create the title component.
-      if (newTitle) this._title = new OverviewTitle(this._container, newTitle);
+      if (newTitle) this._title = new Title(this._container, {
+        title: newTitle
+      });
     } // Allow chaining.
 
 
@@ -83,9 +85,15 @@ class Overview extends BaseElement {
    *  Method for adding a card element to the overview.
    *  @param    {object}    options   Optional parameters for the element that
    *                                  is added to the overview.
-   *    @property   {string}  type      This is the type of card element.
-   *    @property   {string}  label     This is the label of the element that
-   *                                    will be shown to the user.
+   *    @property   {string}  id            String that uniquely identifies the
+   *                                        object this card represents.
+   *    @property   {string}  title         Title to install on the card.
+   *    @property   {string}  description   Description to install on the card.
+   *    @property   {array}   buttons       An array of options for buttons to
+   *                                        add to the card.
+   *    @property   {boolean} removable     Should we add a remove button?
+   *    @property   {boolean} editable      Should we add an edit button?
+   *    @property   {boolean} viewable      Should we add a view button?
    *  @returns  {OverviewCard}
    */
 
@@ -93,8 +101,10 @@ class Overview extends BaseElement {
     // Create a card element.
     const card = new OverviewCard(this._container, options); // Add the card to the array.
 
-    this._cards.push(card); // Expose the card object.
+    this._cards.push(card); // Propagate all of the card's events.
 
+
+    card.bubbleTo(this); // Expose the card object.
 
     return card;
   };

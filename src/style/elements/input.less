@@ -16,6 +16,13 @@ textarea {
   // font-size.
   font-size: 1em;
 
+  // Use the default text colour.
+  color: var(--color);
+
+  // Use the contrast background colour to clearly contrast against the usual
+  // background.
+  background-color: var(--alternate-background);
+
   // Lines of text with ample space in between are easier to read.
   line-height: var(--line-height);
 
@@ -51,7 +58,7 @@ textarea {
   // take precedence over the focus effect.
   &:not(:disabled):not(:focus):hover {
 
-    // Show a dark colour on hover. The colour of the border is a good fit.
+    // Show a different colour on hover. The colour of the border is a good fit.
     // Sadly, we cannot use opacity here as we want the same on hover effect for
     // the label and these two will clearly overlap if either is not opaque.
     background-color: var(--border-color);
@@ -155,8 +162,8 @@ select {
       left: 0;
       top: 0;
 
-      // Use the default text colour.
-      color: var(--color);
+      // Use the contrast text colour.
+      color: var(--alternate-color);
 
       // As we're immitating the placeholder element, we don't want this label
       // to stand out too much.
@@ -212,7 +219,7 @@ select {
 
       // We want the label to sit on top of the border, but we don't want the
       // border to run through it, so the label needs a background colour.
-      background-color: var(--background);
+      background-color: var(--alternate-background);
 
       // A label should be fully visible.
       opacity: 1;
@@ -251,10 +258,10 @@ select {
     // Target the label when the input is hovered on.
     &:not(:placeholder-shown):not(:disabled):not(:focus):hover + label {
 
-      // Show a dark colour on hover. The colour of the border is a good fit.
-      // Sadly, we cannot use opacity here as we want the same on hover effect
-      // for the label and these two will clearly overlap if either is not
-      // opaque.
+      // Show a different colour on hover. The colour of the border is a good
+      // fit. Sadly, we cannot use opacity here as we want the same on hover
+      // effect for the label and these two will clearly overlap if either is
+      // not opaque.
       background-color: var(--border-color);
 
       // Use a transition effect to give the hover effect a quick and smooth
@@ -264,8 +271,8 @@ select {
       // Target the span that houses the text for the label.
       span {
 
-        // Switch to the default colour for the text, because otherwise it'll be
-        // unreadable.
+        // Switch to the contrast colour for the text, because otherwise it'll
+        // be unreadable.
         color: var(--color);
       }
     }

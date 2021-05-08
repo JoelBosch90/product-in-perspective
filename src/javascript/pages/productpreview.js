@@ -89,7 +89,7 @@ scripts.on('loaded-all', () => {
   const scannerOverlay = scanner.overlay();
 
   // Add a title to the overlay.
-  scannerOverlay.add("h2", {
+  scannerOverlay.add("h1", {
     text:     "Which product?",
     location: "top"
   });

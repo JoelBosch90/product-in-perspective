@@ -9,13 +9,21 @@
 // Declaring these CSS variables on the root of the document guarantees access
 // throughout the application.
 :root {
-  // By default, the base background should be very light to provide a clear
-  // and neutral canvas for the rest of the application.
-  --background: #FFFFFF;
 
-  // By default, the base font should be very dark to provide constrast on the
-  // light default background.
-  --color: #080708;
+  // By default, the base background should be very dark to provide an easy
+  // opportunity for clear constrast. We also want it dark so that it smoothes
+  // the transition with camera elements that are black by default while
+  // loading.
+  --background: #080708;
+
+  // By default, the base font should be very light to provide constrast on the
+  // dark default background.
+  --color: #FFFFFF;
+
+  // Some elements need a different combination of background to contrast the
+  // rest of the application. It should still provide good contrast with the
+  // font colour.
+  --alternate-background: #444444;
 
   // This is the primary branding colour for the application.
   --primary-accent: #3B60E4;

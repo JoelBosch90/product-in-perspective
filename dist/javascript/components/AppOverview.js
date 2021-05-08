@@ -40,19 +40,63 @@ class AppOverview extends BaseElement {
       title: "Overview",
       center: true,
       cards: [{
+        id: 1,
         title: "AppName1",
-        description: "AppDescription1"
+        description: "AppDescription1",
+        removable: true,
+        editable: true,
+        viewable: true
       }, {
+        id: 2,
         title: "AppName2",
-        description: "AppDescription2"
+        description: "AppDescription2",
+        removable: true,
+        editable: true,
+        viewable: true
       }, {
+        id: 3,
         title: "AppName3",
-        description: "AppDescription3"
+        description: "AppDescription3",
+        removable: true,
+        editable: true,
+        viewable: true
       }, {
+        id: 4,
         title: "AppName4",
-        description: "AppDescription4"
+        description: "AppDescription4",
+        removable: true,
+        editable: true,
+        viewable: true
+      }, {
+        id: 5,
+        title: "AppName5",
+        description: "AppDescription5",
+        removable: true,
+        editable: true,
+        viewable: true
+      }, {
+        id: 6,
+        title: "AppName6",
+        description: "AppDescription6",
+        removable: true,
+        editable: true,
+        viewable: true
+      }, {
+        id: 7,
+        title: "AppName7",
+        description: "AppDescription7",
+        removable: true,
+        editable: true,
+        viewable: true
       }]
-    }); // Add the new element to the parent container.
+    });
+
+    this._overview.on('remove', console.log);
+
+    this._overview.on('edit', console.log);
+
+    this._overview.on('view', console.log); // Add the new element to the parent container.
+
 
     parent.appendChild(this._container);
   }

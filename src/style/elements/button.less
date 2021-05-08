@@ -100,7 +100,7 @@ input[type="file"] + label {
   }
 
   // Buttons can be used to submit, confirm or save current settings.
-  &.confirm, &[type="submit"] {
+  &[type="confirm"], &[type="submit"] {
 
     // Use the confirmation colour to show users that this button is used to
     // confirm something. It should stand out in the interface.
@@ -108,14 +108,14 @@ input[type="file"] + label {
   }
 
   // Buttons can be used to remove or undo something.
-  &.remove {
+  &[type="remove"] {
 
     // Warn the user of the risk inherent in using this button.
     background-color: var(--danger-color);
   }
 
   // Buttons can be used to cancel current unsaved settings.
-  &.cancel {
+  &[type="cancel"] {
 
     // This button should have a fairly neutral colour and not draw too much
     // attention.

@@ -22,8 +22,9 @@
  *    or class.
  */
 :root {
-  --background: #FFFFFF;
-  --color: #080708;
+  --background: #080708;
+  --color: #FFFFFF;
+  --alternate-background: #444444;
   --primary-accent: #3B60E4;
   --secondary-accent: #AA6373;
   --border-color: #888888;
@@ -117,7 +118,7 @@ a:hover {
  */
 body {
   margin: 0;
-  background-color: var(--color);
+  background-color: var(--background);
 }
 /**
  *  Button
@@ -163,22 +164,22 @@ input[type="file"] + label.block {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-button.confirm,
-input[type="submit"].confirm,
-input[type="file"] + label.confirm,
+button[type="confirm"],
+input[type="submit"][type="confirm"],
+input[type="file"] + label[type="confirm"],
 button[type="submit"],
 input[type="submit"][type="submit"],
 input[type="file"] + label[type="submit"] {
   background-color: var(--confirmation-color);
 }
-button.remove,
-input[type="submit"].remove,
-input[type="file"] + label.remove {
+button[type="remove"],
+input[type="submit"][type="remove"],
+input[type="file"] + label[type="remove"] {
   background-color: var(--danger-color);
 }
-button.cancel,
-input[type="submit"].cancel,
-input[type="file"] + label.cancel {
+button[type="cancel"],
+input[type="submit"][type="cancel"],
+input[type="file"] + label[type="cancel"] {
   background-color: var(--border-color);
 }
 button:disabled,
@@ -291,6 +292,8 @@ select,
 textarea {
   font-family: var(--text-font);
   font-size: 1em;
+  color: var(--color);
+  background-color: var(--alternate-background);
   line-height: var(--line-height);
   padding: 0.25em 0.75em;
   border: 1px solid var(--border-color);
@@ -357,7 +360,7 @@ select {
   position: absolute;
   left: 0;
   top: 0;
-  color: var(--color);
+  color: var(--alternate-color);
   opacity: 0.55;
   user-select: none;
   cursor: text;
@@ -381,7 +384,7 @@ select {
 .input-field input[type="number"]:not(:placeholder-shown) + label,
 .input-field textarea:not(:placeholder-shown) + label {
   transform: translate(0, -60%) scale(0.8);
-  background-color: var(--background);
+  background-color: var(--alternate-background);
   opacity: 1;
   line-height: 1em;
   transition: transform var(--animation-quick), line-height var(--animation-quick), background-color var(--animation-quick);
@@ -450,13 +453,6 @@ label {
   color: var(--color);
   word-break: break-word;
   hyphens: auto;
-}
-.text-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin: 1em;
 }
 /**
  *  This is the main import file to gather the styles for all classes.
@@ -529,8 +525,7 @@ label {
  *  Main styling for the Overlay class.
  */
 .overlay {
-  --background: rgba(0, 0, 0, 0.4);
-  --color: white;
+  --background: rgba(8, 7, 8, 0.4);
   width: 100%;
   height: 100%;
   display: flex;
@@ -538,10 +533,6 @@ label {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-}
-.overlay button,
-.overlay h2 {
-  color: var(--color);
 }
 .overlay .overlay-top,
 .overlay .overlay-bottom {
@@ -579,7 +570,34 @@ label {
  *    This file installs styling for the Card widget.
  */
 .card {
+  background: var(--alternate-background);
+  display: grid;
+  grid-template-areas: "title" "description" "buttons";
+  gap: 1.5em;
+  padding: 1em;
   border: 2px solid var(--border-color);
+  border-radius: 0.25em;
+}
+.card h2,
+.card p,
+.card .buttons {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card h2 {
+  grid-area: title;
+  line-height: 2em;
+  white-space: nowrap;
+}
+.card p {
+  grid-area: description;
+}
+.card .buttons {
+  grid-area: buttons;
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
 }
 /**
  *  This is the main import file to gather the styles for all pages.

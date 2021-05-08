@@ -3,15 +3,8 @@
  */
 .overlay
 {
-  // We want to use some different colours for the overlay to count for the fact
-  // that we do not know what is under the overlay. We should use colour
-  // combinations that are readable in almost all situations.
-  --background: rgba(0, 0, 0, .4);
-  --color: white;
-
-  // Target overlay buttons and headers. We need to make sure that they work
-  // well against our dark transparent background.
-  button, h2 { color: var(--color); }
+  // We need the background to be partially transparent.
+  --background: rgba(8, 7, 8, .4);
 
   // Occupy all available space.
   width: 100%;

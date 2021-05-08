@@ -1,9 +1,9 @@
 // Import dependencies.
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { FormInput } from "/javascript/widgets/Form/Input.js";
 import { FormFieldset } from "/javascript/widgets/Form/Fieldset.js";
-import { FormButton } from "/javascript/widgets/Form/Button.js";
-import { FormTitle } from "/javascript/widgets/Form/Title.js";
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { Button } from "/javascript/widgets/Button.js";
+import { Title } from "/javascript/widgets/Title.js";
 /**
  *  The definition of the Form class that can be used to create a form element.
  *
@@ -17,9 +17,9 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 
 class Form extends BaseElement {
   /**
-   *  Private variable that stores a reference to the FormTitle element if a
+   *  Private variable that stores a reference to the Title element if a
    *  title was added to the form.
-   *  @var      {FormTitle}
+   *  @var      {Title}
    */
   _title = null;
   /**
@@ -93,7 +93,9 @@ class Form extends BaseElement {
       else this._title.remove(); // Is there no title component yet?
     } else {
       // If a new title was provided, we should create the title component.
-      if (newTitle) this._title = new FormTitle(this._container, newTitle);
+      if (newTitle) this._title = new Title(this._container, {
+        title: newTitle
+      });
     } // Allow chaining.
 
 
@@ -161,12 +163,12 @@ class Form extends BaseElement {
    *    @property   {string}  type      This is the type of input element.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
-   *  @returns  {FormButton}
+   *  @returns  {Button}
    */
 
   addButton = (name, options = {}) => {
     // Create an button element.
-    const button = new FormButton(this._container, Object.assign({}, options, {
+    const button = new Button(this._container, Object.assign({}, options, {
       name
     })); // If there is already an button element with this name. If so, we need to
     // remove that first.

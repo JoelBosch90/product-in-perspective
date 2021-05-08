@@ -22,6 +22,13 @@ class EventHandler {
    */
   _triggers = {};
   /**
+   *  Private variable that keeps track of other EventHandler object that should
+   *  trigger the same events.
+   *  @var    {array}
+   */
+
+  _bubbleTo = [];
+  /**
    *  Class constructor.
    */
 
@@ -30,25 +37,53 @@ class EventHandler {
    *  Method for triggering an event. This method will execute all callback
    *  functions that are registered in the _triggers variable and optionally
    *  pass the provided data to those functions.
-   *  @param    {string}    event       Name of the event.
-   *  @param    {object}    data        Data to be passed to the callbacks for
-   *                                    this event.
+   *  @param    {string}        event       Name of the event.
+   *  @param    {object}        data        Data to be passed to the callbacks
+   *                                        for this event.
    *  @returns  {EventHandler}
    */
 
 
   trigger = (event, data) => {
     // Execute each registered callback function for this event.
-    if (this._triggers[event]) this._triggers[event].forEach(listener => void listener(data)); // Allow chaining;
+    if (this._triggers[event]) this._triggers[event].forEach(listener => void listener(data)); // Trigger the same event on all other handlers we want to bubble to.
+
+    if (this._bubbleTo) for (const handler of this._bubbleTo) handler.trigger(event, data); // Allow chaining;
+
+    return this;
+  };
+  /**
+   *  Method that propagates all events to a different EventHandler object.
+   *  @param    {EventHandler}  EventObject
+   *  @returns  {EventHandler}
+   */
+
+  bubbleTo = handler => {
+    // Add this EventHandler to the bubbleTo list.
+    this._bubbleTo.push(handler); // Allow chaining;
+
+
+    return this;
+  };
+  /**
+   *  Method that stops propagating all events to the specified EventHandler
+   *  object.
+   *  @param    {EventHandler}  EventObject
+   *  @returns  {EventHandler}
+   */
+
+  bubbleOff = handler => {
+    // Add this EventHandler to the bubbleTo list.
+    this._bubbleTo = this._bubbleTo.filter(bubbled => bubbled != handler); // Allow chaining;
 
     return this;
   };
   /**
    *  Method for storing event listeners per event. It will store the callbacks
    *  in separate arrays per event so that they can be triggered separately.
-   *  @param    {string}    event       Name of the event.
-   *  @param    {function}  listener    Function that should be called when
-   *                                    the event happens.
+   *  @param    {string}        event       Name of the event.
+   *  @param    {function}      listener    Function that should be called when
+   *                                        the event happens.
    *  @returns  {EventHandler}
    */
 
@@ -64,9 +99,9 @@ class EventHandler {
   /**
    *  Method for removing event listeners per event. It will remove the callback
    *  from the array of callbacks that is currently stored for this event.
-   *  @param    {string}    event       Name of the event.
-   *  @param    {function}  listener    Function that should be called when
-   *                                    the event happens.
+   *  @param    {string}        event       Name of the event.
+   *  @param    {function}      listener    Function that should be called when
+   *                                        the event happens.
    *  @returns  {EventHandler}
    */
 
@@ -85,8 +120,10 @@ class EventHandler {
    */
 
   remove = () => {
-    // Reset the triggers object.
-    delete this._triggers;
+    // Delete the triggers object.
+    delete this._triggers; // Reset the bubbled array.
+
+    this._bubbled = [];
   };
 } // Export the EventHandler class so it can be imported elsewhere.
 

@@ -316,7 +316,7 @@ class ArScene extends BaseElement {
     this._overlay = new Overlay(this._overlayContainer);
 
     // Add a title to the overlay.
-    this._overlay.add("h2", { location: "top" });
+    this._overlay.add("h1", { location: "top" });
 
     // Add a description to the overlay.
     this._instructions = this._overlay.add("p", { location: "top" });

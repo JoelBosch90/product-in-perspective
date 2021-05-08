@@ -1,6 +1,5 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
-
 /**
  *  The definition of the Button class that can be used to create button
  *  elements.
@@ -11,8 +10,8 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class FormButton extends BaseElement {
 
+class Button extends BaseElement {
   /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element to which the button
@@ -29,48 +28,43 @@ class FormButton extends BaseElement {
    *                                    will be shown to the user.
    */
   constructor(parent, options = {}) {
-
     // First call the constructor of the base class.
-    super();
+    super(); // Create a container for the button element.
 
-    // Create a container for the button element.
     this._container = document.createElement("button");
     if (options.type) this._container.setAttribute("type", options.type);
-    if (options.label) this._container.textContent = options.label;
+    if (options.label) this._container.textContent = options.label; // Add the event listener to the button.
 
-    // Add the event listener to the button.
-    this._container.addEventListener("click", this._onClick);
+    this._container.addEventListener("click", this._onClick); // Add the button element to the parent element.
 
-    // Add the button element to the parent element.
+
     parent.appendChild(this._container);
   }
-
   /**
    *  Definition of an event handler for button clicks.
    *  @param    {Event}     event     The normal HTML click event.
    */
-  _onClick = (event) => {
 
+
+  _onClick = event => {
     // We don't ever want to reload a page to submit a form. So we prevent the
     // default behaviour of all buttons in our forms.
-    event.preventDefault();
+    event.preventDefault(); // Trigger the event handler to bubble this event.
 
-    // Trigger the event handler to bubble this event.
     this.trigger("click", event);
-  }
-
+  };
   /**
    *  Method to remove this object and clean up after itself.
    */
+
   remove = () => {
-
     // Remove the event listener first.
-    this._container.removeEventListener("click", this._onClick);
+    this._container.removeEventListener("click", this._onClick); // Then let the parent element clean up the container.
 
-    // Then let the parent element clean up the container.
+
     super.remove();
-  }
-}
+  };
+} // Export the Button class so it can be imported elsewhere.
 
-// Export the FormButton class so it can be imported elsewhere.
-export { FormButton };
+
+export { Button };
