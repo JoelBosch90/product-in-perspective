@@ -75,7 +75,7 @@ scripts.on('loaded-all', () => {
   // Listen for errors from the BarcodeScanner object.
   scanner.on("error", errorMessage => {
 
-    // These are unrecoverable errors, so we can remove the scene.
+    // These are unrecoverable errors, so we can remove the scanner.
     scanner.remove();
 
     // We should show the apology to the user. The barcode scanner's error

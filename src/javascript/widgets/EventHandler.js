@@ -130,7 +130,7 @@ class EventHandler {
   /**
    *  Method to remove this object and clean up after itself.
    */
-  remove = () => {
+  remove() {
 
     // Delete the triggers object.
     delete this._triggers;

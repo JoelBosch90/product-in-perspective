@@ -119,12 +119,13 @@ class EventHandler {
    *  Method to remove this object and clean up after itself.
    */
 
-  remove = () => {
+  remove() {
     // Delete the triggers object.
     delete this._triggers; // Reset the bubbled array.
 
     this._bubbled = [];
-  };
+  }
+
 } // Export the EventHandler class so it can be imported elsewhere.
 
 
