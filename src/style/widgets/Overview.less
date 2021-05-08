@@ -1,0 +1,29 @@
+/**
+ *  Overview
+ *    This file installs styling for the Overview widget.
+ */
+
+// Target the overview container.
+.overview {
+
+  // Use grid to create a one column layout by default.
+  display: grid;
+  grid-template-columns: auto;
+
+  // Keep some distance between elements.
+  gap: 2em;
+
+  // Keep some white space around the elements.
+  padding: 2em;
+
+  // Wide overviews are hard to read, so they should never be too long. And they
+  // should never be wider than the parent element.
+  max-width: min(100%, 30em);
+
+  // Extra styling for when the overview has the center class.
+  &.center {
+
+    // Use the margins to center this overview.
+    margin: 0 auto;
+  }
+}

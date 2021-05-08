@@ -9,7 +9,7 @@
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
- class HitTest {
+ class ArSceneHitTest {
 
   /**
    *  Private variable that stores the renderer.
@@ -197,5 +197,5 @@
   }
 }
 
-// Export the HitTest class so it can be imported elsewhere.
-export { HitTest };
+// Export the ArSceneHitTest class so it can be imported elsewhere.
+export { ArSceneHitTest };

@@ -1,7 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overlay } from "/javascript/widgets/Overlay.js";
-import { Reticle} from "/javascript/widgets/ArScene/Reticle.js";
+import { ArSceneReticle} from "/javascript/widgets/ArScene/Reticle.js";
 import { debounce } from "/javascript/tools/debounce.js";
 
 /**
@@ -37,7 +37,7 @@ class ArScene extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the Aframe reticle.
-   *  @var      {Reticle}
+   *  @var      {ArSceneReticle}
    */
   _reticle = null;
 
@@ -144,7 +144,7 @@ class ArScene extends BaseElement {
     this._scene.setAttribute("webxr", "optionalFeatures: hit-test, local-floor, dom-overlay; overlayElement: .arscene-overlay;");
 
     // Add a reticle to the scene.
-    this._reticle = new Reticle(this._scene);
+    this._reticle = new ArSceneReticle(this._scene);
 
     // Add a 3D object to the scene.
     this._insertObject(this._scene);

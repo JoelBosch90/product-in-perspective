@@ -22,12 +22,6 @@ textarea {
   // Make sure that the input field is slightly larger than the text inside.
   padding: .25em .75em;
 
-  // We may need the extra margin at the top for the label, but we want this to
-  // be consistent for all input elements, so every input element gets the extra
-  // margin on top. We want to make sure we don't base this on local font size,
-  // so that it is easier to align with other elements.
-  margin-top: 1rem;
-
   // Use a thin border to clearly frame the input field.
   border: 1px solid var(--border-color);
 
@@ -157,13 +151,9 @@ select {
       // the container of the input field.
       position: absolute;
 
-      // Align the label to the top of the input element. This should match
-      // the margin-top on the input element. This ensures that the label is
-      // also positioned correctly for larger inputs like textareas.
-      top: 1em;
-
-      // Position it all the way on the left of the
+      // Position it all the way on the top left of the parent element.
       left: 0;
+      top: 0;
 
       // Use the default text colour.
       color: var(--color);

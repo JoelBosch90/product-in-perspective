@@ -1,5 +1,5 @@
 // Import dependencies.
-import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
+import { ArSceneHitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
 /**
  *  The definition of the Reticle class that can be used to create a reticle
@@ -9,7 +9,7 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
- class Reticle {
+ class ArSceneReticle {
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -175,55 +175,6 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
           const viewerSpace = await session.requestReferenceSpace('viewer');
           const viewerHitTest = new HitTest(renderer, { space: viewerSpace });
           this.hitTest = viewerHitTest;
-
-          // These are transient inputs so need to be handled seperately
-          // const profileToSupport = "generic-touchscreen";
-          // const transientHitTest = new HitTest(renderer, {
-          //   profile: profileToSupport,
-          // });
-
-          // session.addEventListener('selectstart', ({ inputSource }) => {
-          //   if (!this.data.doHitTest) return;
-          //   if (inputSource.profiles[0] === profileToSupport) {
-          //     this.hitTest = transientHitTest;
-          //   } else {
-          //     this.hitTest = this._cache.get(inputSource) || new HitTest(renderer, {
-          //       space: inputSource.targetRaySpace
-          //     });
-          //     this._cache.set(inputSource, this.hitTest);
-          //   }
-          //   this.el.setAttribute('visible', true);
-          // });
-
-          // session.addEventListener('selectend', ({ inputSource }) => {
-          //   this.needsSelectEventForInputSource = inputSource;
-
-          //   if (!this.data.doHitTest) return;
-
-          //   if (this.hasFoundAPose) {
-
-          //     this.el.setAttribute('visible', false);
-
-          //     this.hitTest = null;
-
-          //     // For transient input sources fall back to viewer hit testing
-          //     // after a short while after the transient input source is no longer available.
-          //     // To give a consistent interaction experience
-          //     if (inputSource.profiles[0] === profileToSupport) {
-          //       setTimeout(() => {
-          //         this.hitTest = viewerHitTest;
-          //       }, 300);
-          //     }
-
-          //     if (this.data.target) {
-          //       const target = this.data.target;
-          //       target.setAttribute("position", this.el.getAttribute("position"));
-          //       target.object3D.quaternion.copy(this.el.object3D.quaternion);
-          //       target.setAttribute("visible", true);
-          //     }
-
-          //   }
-          // });
         }
 
         // Listen for the WebXR session to start and end.
@@ -248,19 +199,6 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
         // If there is no frame, we cannot perform a hit test.
         if (!frame) return;
-
-        // if (this.needsSelectEventForInputSource) {
-        //   const inputSource = this.needsSelectEventForInputSource;
-        //   this.needsSelectEventForInputSource = false;
-
-        //   const space = inputSource.targetRaySpace;
-        //   try {
-        //     const pose = frame.getPose(space, this.el.sceneEl.renderer.xr.getReferenceSpace());
-        //     this.el.emit('select', { inputSource, pose });
-        //   } catch (e) {
-        //     console.log(e);
-        //   }
-        // }
 
         // If we don't have an instance of a HitTest, we cannot perform the hit
         // test for this frame.
@@ -319,7 +257,7 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
   /**
    *  Method to show the scene.
-   *  @returns  {Reticle}
+   *  @returns  {ArSceneReticle}
    */
   show = () => {
 
@@ -334,7 +272,7 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
   /**
    *  Method to hide the scene.
-   *  @returns  {Reticle}
+   *  @returns  {ArSceneReticle}
    */
   hide = () => {
 
@@ -360,5 +298,5 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
   }
 }
 
-// Export the Reticle class so it can be imported elsewhere.
-export { Reticle };
+// Export the ArSceneReticle class so it can be imported elsewhere.
+export { ArSceneReticle };

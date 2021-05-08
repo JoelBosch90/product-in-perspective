@@ -20,6 +20,7 @@ class Form extends BaseElement {
   /**
    *  Private variable that stores a reference to the FormTitle element if a
    *  title was added to the form.
+   *  @var      {FormTitle}
    */
   _title = null;
 
@@ -197,15 +198,22 @@ class Form extends BaseElement {
   }
 
   /**
-   *  Method to remove this object and clean up after itself.
+   *  Method to remove this object and clean up after itself. We have to use
+   *  non-arrow function or we'd lose the super context.
    */
-  remove = () => {
+  remove() {
 
     // Remove class objects we used.
     if (this._title) this._title.remove();
     if (this._inputs) for (const input in this._inputs) input.remove();
     if (this._fieldsets) for (const fieldset in this._fieldsets) fieldset.remove();
     if (this._buttons) for (const button in this._buttons) button.remove();
+
+    // Remove all references.
+    this._title = null;
+    this._inputs = {};
+    this._fieldsets = {};
+    this._buttons = {};
 
     // Call the remove function for the base class. This will also remove the
     // container.

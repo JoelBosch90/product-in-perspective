@@ -15,6 +15,12 @@ import { v4 as uuidv4 } from "https://jspm.dev/uuid";
 class FormInput extends BaseElement {
 
   /**
+   *  A private variable reference to the select object.
+   *  @var    {Select}
+   */
+  _select = null;
+
+  /**
    *  To link an input and a label together, we need to have a unique ID. One
    *  way to create this unique ID is through UUID.
    *  @var    {string}
@@ -167,27 +173,56 @@ class FormInput extends BaseElement {
    *                                    added.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {string}  accept    A string describing the file types that
+   *                                    will be accepted.
    */
    _createFileButton = (parent, options) => {
 
+    // Create a container for the input element.
+    this._container = document.createElement("div");
+    this._container.classList.add("file-button");
+
     // Create the input element.
-    this._input = document.createElement("input");
-    this._input.id = this._id;
-    this._input.name = options.name;
-    this._input.setAttribute("type", options.type);
+    const input = document.createElement("input");
+    input.id = this._id;
+    input.name = options.name;
+    input.setAttribute("type", options.type);
+
+    // Install the optional attributes.
+    if (options.accept) input.setAttribute("accept", options.accept);
 
     // Create the label element.
-    this._label = document.createElement("label");
-    this._label.setAttribute("for", this._id);
+    const label = document.createElement("label");
+    label.setAttribute("for", this._id);
 
     // Add a text element to the label.
     const labelText = document.createElement("span");
     labelText.textContent = options.label;
-    this._label.appendChild(labelText);
+    label.appendChild(labelText);
+
+    // Listen for when a file is selected. We want to show the filename for
+    // selected files.
+    input.addEventListener("change", () => {
+
+      // Get the list of selected files.
+      const selected = input.files;
+
+      // Install the label when no files are selected.
+      if (!selected.length) label.textContent = options.label;
+      else {
+
+        // Get the selected File object.
+        const file = selected[0];
+
+        // Update the label text.
+        label.textContent = `${file.name} (${file.size} bytes)`;
+      }
+    })
 
     // Add the input element and the label directly to the parent element.
-    parent.appendChild(this._input);
-    parent.appendChild(this._label);
+    this._container.appendChild(input);
+    this._container.appendChild(label);
+    parent.appendChild(this._container);
   }
 
   /**
@@ -206,25 +241,7 @@ class FormInput extends BaseElement {
   _createSelect = (parent, options) => {
 
     // Create the select element.
-    this._input = new FormSelect(parent, options);
-  }
-
-  /**
-   *  Method to remove this object and clean up after itself. We have to use
-   *  non-arrow function or we'd lose the super context.
-   */
-  remove() {
-
-    // Make sure we remove the input element, as it could either be a DOM
-    // element that we have a reference to, or a instance of a class object. In
-    // either case, it should be removed.
-    this._input.remove();
-
-    // Remove all DOM elements.
-    if (this._label) this._label.remove();
-
-    // Call the original remove method. This also removes the container.
-    super.remove();
+    this._container = new FormSelect(parent, options);
   }
 }
 

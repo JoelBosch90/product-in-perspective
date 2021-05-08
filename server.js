@@ -14,10 +14,9 @@ const app = express();
 // Serve the static files.
 app.use(express.static('dist'));
 
-// Serve QuaggaJS.
+// Serve the Javascript libraries that we'll need to be able to access
+// client-side.
 app.use('/quagga', express.static('node_modules/quagga/dist'));
-
-// Serve Aframe.
 app.use('/aframe', express.static('node_modules/aframe/dist'));
 
 // Process a root page request.

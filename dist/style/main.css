@@ -124,24 +124,28 @@ body {
  *    This file installs some basic styling on all buttons in the general
  *    application.
  */
-input[type="file"] {
+.file-button {
+  display: inline-block;
+}
+.file-button input[type="file"] {
   width: 0;
   height: 0;
   padding: 0;
   border: 0;
   position: absolute;
 }
-input[type="file"] + label {
+.file-button input[type="file"] + label {
+  display: block;
   text-align: center;
 }
-input[type="file"]:focus + label {
+.file-button input[type="file"]:focus + label {
   background-color: var(--active-background);
   transition: background-color var(--animation-quick);
 }
 button,
 input[type="submit"],
 input[type="file"] + label {
-  display: block;
+  display: inline-block;
   font-size: 1.25em;
   color: var(--color);
   font-family: var(--text-font);
@@ -197,12 +201,12 @@ input[type="file"] + label:not(:disabled):hover {
   filter: opacity(65%);
   transition: filter var(--animation-quick);
 }
-button:not(label) + button,
-input[type="submit"]:not(label) + button,
-input[type="file"] + label:not(label) + button,
-button:not(label) + input[type="submit"],
-input[type="submit"]:not(label) + input[type="submit"],
-input[type="file"] + label:not(label) + input[type="submit"] {
+button button,
+input[type="submit"] button,
+input[type="file"] + label button,
+button input[type="submit"],
+input[type="submit"] input[type="submit"],
+input[type="file"] + label input[type="submit"] {
   margin-left: 0.5em;
 }
 /**
@@ -212,7 +216,7 @@ input[type="file"] + label:not(label) + input[type="submit"] {
 fieldset {
   display: grid;
   grid-template-columns: auto;
-  grid-gap: 0.5em;
+  gap: 1em;
   padding: 1em;
   border-color: var(--border-color);
   border-radius: 0.25em;
@@ -236,15 +240,9 @@ fieldset input + button {
 form {
   display: grid;
   grid-template-columns: auto;
+  gap: 1em;
   padding: 2em;
   max-width: min(100%, 30em);
-}
-form .input-field + :not(.input-field),
-form fieldset + :not(.input-field),
-form select + :not(.input-field),
-form input + :not(.input-field),
-form label + :not(.input-field) {
-  margin-top: 1rem;
 }
 form.center {
   margin: 0 auto;
@@ -295,7 +293,6 @@ textarea {
   font-size: 1em;
   line-height: var(--line-height);
   padding: 0.25em 0.75em;
-  margin-top: 1rem;
   border: 1px solid var(--border-color);
   border-radius: 0.25em;
   transition: border-color var(--animation-quick);
@@ -358,8 +355,8 @@ select {
 .input-field input[type="number"] + label,
 .input-field textarea + label {
   position: absolute;
-  top: 1em;
   left: 0;
+  top: 0;
   color: var(--color);
   opacity: 0.55;
   user-select: none;
@@ -562,6 +559,27 @@ label {
 *:-webkit-full-screen,
 *:-moz-full-screen {
   background-color: transparent;
+}
+/**
+ *  Overview
+ *    This file installs styling for the Overview widget.
+ */
+.overview {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 2em;
+  padding: 2em;
+  max-width: min(100%, 30em);
+}
+.overview.center {
+  margin: 0 auto;
+}
+/**
+ *  Card
+ *    This file installs styling for the Card widget.
+ */
+.card {
+  border: 2px solid var(--border-color);
 }
 /**
  *  This is the main import file to gather the styles for all pages.

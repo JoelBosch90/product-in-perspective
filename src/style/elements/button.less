@@ -4,38 +4,48 @@
  *    application.
  */
 
+// Target a file button.
+.file-button {
 
-// Target file inputs specifically. We use the label to style the input as a
-// normal button.
-input[type="file"] {
+  // By default, buttons should not be block elements.
+  display: inline-block;
 
-  // We want to hide the input, but should still be in the DOM so that people
-  // can tab over to it and set a focus.
-  width: 0;
-  height: 0;
-  padding: 0;
-  border: 0;
+  // Target file inputs specifically. We use the label to style the input as a
+  // normal button.
+  input[type="file"] {
 
-  // It should not impact the document flow.
-  position: absolute;
+    // We want to hide the input, but should still be in the DOM so that people
+    // can tab over to it and set a focus.
+    width: 0;
+    height: 0;
+    padding: 0;
+    border: 0;
 
-  // Target the label for this input (it should always be directly after the
-  // input in the DOM).
-  & + label {
+    // It should not impact the document flow.
+    position: absolute;
 
-    // Center the text like in a button.
-    text-align: center;
-  }
+    // Target the label for this input (it should always be directly after the
+    // input in the DOM).
+    & + label {
 
-  // Target the label when the input is in focus.
-  &:focus + label {
+      // We need this input to always behave like a block-level element. Its
+      // wrapper div should behave like a button.
+      display: block;
 
-    // Show that this is the active element with the background-color.
-    background-color: var(--active-background);
+      // Center the text like in a button.
+      text-align: center;
+    }
 
-    // Use a transition effect to give the focus effect a quick and smooth
-    // animation.
-    transition: background-color var(--animation-quick);
+    // Target the label when the input is in focus.
+    &:focus + label {
+
+      // Show that this is the active element with the background-color.
+      background-color: var(--active-background);
+
+      // Use a transition effect to give the focus effect a quick and smooth
+      // animation.
+      transition: background-color var(--animation-quick);
+    }
   }
 }
 
@@ -44,8 +54,8 @@ button,
 input[type="submit"],
 input[type="file"] + label {
 
-  // By default, buttons should be block elements.
-  display: block;
+  // By default, buttons should not be block elements.
+  display: inline-block;
 
   // We want large buttons.
   font-size: 1.25em;
@@ -157,11 +167,9 @@ input[type="file"] + label {
     transition: filter var(--animation-quick);
   }
 
-  // Select buttons that are preceeded by another button. We should exclude this
-  // behaviour for file inputs as they are really used as inputs instead of
-  // buttons.
-  &:not(label) + button,
-  &:not(label) + input[type="submit"] {
+  // Select buttons that are preceeded by another button.
+  button,
+  input[type="submit"] {
 
     // In case two buttons are next to each other they should have some space in
     // between.

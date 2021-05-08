@@ -10,23 +10,15 @@ form {
   display: grid;
   grid-template-columns: auto;
 
-  // Keep some white space around the input elements.
+  // Keep some white space between elements.
+  gap: 1em;
+
+  // Keep some white space around the elements.
   padding: 2em;
 
-  // Forms contain text and lines of text should never be too long. Yet the form
+  // Forms contain text and lines of text should never be too long. And the form
   // should never be wider than the parent element.
   max-width: min(100%, 30em);
-
-  // Targets input elements.
-  .input-field, fieldset, select, input, label {
-
-    // Target buttons and fieldsets that immediately follow input elements.
-    & + :not(.input-field){
-
-      // Give them some extra margin at the top.
-      margin-top: 1rem;
-    }
-  }
 
   // Extra styling for when the form has the center class.
   &.center {
