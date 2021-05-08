@@ -26,11 +26,11 @@
   --color: #FFFFFF;
   --alternate-background: #444444;
   --primary-accent: #3B60E4;
-  --secondary-accent: #AA6373;
+  --secondary-accent: #EA526F;
   --border-color: #888888;
   --information-color: var(--primary-accent);
   --confirmation-color: #06A77D;
-  --danger-color: #D64045;
+  --danger-color: #AF1B3F;
   --active-color: #E09F3E;
   --active-background: #E09F3E;
 }
@@ -199,8 +199,8 @@ input[type="file"] + label:focus {
 button:not(:disabled):hover,
 input[type="submit"]:not(:disabled):hover,
 input[type="file"] + label:not(:disabled):hover {
-  filter: opacity(65%);
-  transition: filter var(--animation-quick);
+  filter: brightness(150%);
+  transition: brightness var(--animation-quick);
 }
 button button,
 input[type="submit"] button,
@@ -311,8 +311,8 @@ textarea.block {
 input:not(:disabled):not(:focus):hover,
 select:not(:disabled):not(:focus):hover,
 textarea:not(:disabled):not(:focus):hover {
-  background-color: var(--border-color);
-  transition: background-color var(--animation-quick);
+  filter: brightness(150%);
+  transition: brightness var(--animation-quick);
 }
 input:focus,
 select:focus,

@@ -58,14 +58,13 @@ textarea {
   // take precedence over the focus effect.
   &:not(:disabled):not(:focus):hover {
 
-    // Show a different colour on hover. The colour of the border is a good fit.
-    // Sadly, we cannot use opacity here as we want the same on hover effect for
-    // the label and these two will clearly overlap if either is not opaque.
-    background-color: var(--border-color);
+    // Show a subtle on hover effect. We want to make elements light up to make
+    // them stand out in our generally dark interface.
+    filter: brightness(150%);
 
     // Use a transition effect to give the hover effect a quick and smooth
     // animation.
-    transition: background-color var(--animation-quick);
+    transition: brightness var(--animation-quick);
   }
 
   // Show the user when this input has been selected.

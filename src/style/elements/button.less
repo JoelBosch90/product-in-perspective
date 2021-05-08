@@ -157,14 +157,13 @@ input[type="file"] + label {
   // Add on hover effects only when the the button is not disabled.
   &:not(:disabled):hover {
 
-    // Show a subtle effect to show this button is an interactive element. Use
-    // the filter to set the opacity so that we are unhindered by any regular
-    // opacity the element might have.
-    filter: opacity(65%);
+    // Show a subtle on hover effect. We want to make elements light up to make
+    // them stand out in our generally dark interface.
+    filter: brightness(150%);
 
     // Use a transition effect to give the focus effect a quick and smooth
     // animation.
-    transition: filter var(--animation-quick);
+    transition: brightness var(--animation-quick);
   }
 
   // Select buttons that are preceeded by another button.
