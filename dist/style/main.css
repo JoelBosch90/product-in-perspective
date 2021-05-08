@@ -32,7 +32,7 @@
   --confirmation-color: #06A77D;
   --danger-color: #AF1B3F;
   --active-color: #E09F3E;
-  --active-background: #E09F3E;
+  --active-background: #C98F37;
 }
 /**
  *  Fonts
@@ -199,7 +199,7 @@ input[type="file"] + label:focus {
 button:not(:disabled):hover,
 input[type="submit"]:not(:disabled):hover,
 input[type="file"] + label:not(:disabled):hover {
-  filter: brightness(150%);
+  filter: brightness(125%);
   transition: brightness var(--animation-quick);
 }
 button button,
@@ -308,10 +308,10 @@ textarea.block {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-input:not(:disabled):not(:focus):hover,
-select:not(:disabled):not(:focus):hover,
-textarea:not(:disabled):not(:focus):hover {
-  filter: brightness(150%);
+input:not(:disabled):hover,
+select:not(:disabled):hover,
+textarea:not(:disabled):hover {
+  filter: brightness(125%);
   transition: brightness var(--animation-quick);
 }
 input:focus,
@@ -410,20 +410,13 @@ select {
 .input-field textarea:focus + label span {
   color: var(--active-color);
 }
-.input-field input[type="text"]:not(:placeholder-shown):not(:disabled):not(:focus):hover + label,
-.input-field input[type="password"]:not(:placeholder-shown):not(:disabled):not(:focus):hover + label,
-.input-field input[type="email"]:not(:placeholder-shown):not(:disabled):not(:focus):hover + label,
-.input-field input[type="number"]:not(:placeholder-shown):not(:disabled):not(:focus):hover + label,
-.input-field textarea:not(:placeholder-shown):not(:disabled):not(:focus):hover + label {
-  background-color: var(--border-color);
-  transition: background-color var(--animation-quick);
-}
-.input-field input[type="text"]:not(:placeholder-shown):not(:disabled):not(:focus):hover + label span,
-.input-field input[type="password"]:not(:placeholder-shown):not(:disabled):not(:focus):hover + label span,
-.input-field input[type="email"]:not(:placeholder-shown):not(:disabled):not(:focus):hover + label span,
-.input-field input[type="number"]:not(:placeholder-shown):not(:disabled):not(:focus):hover + label span,
-.input-field textarea:not(:placeholder-shown):not(:disabled):not(:focus):hover + label span {
-  color: var(--color);
+.input-field input[type="text"]:not(:placeholder-shown):not(:disabled):hover + label,
+.input-field input[type="password"]:not(:placeholder-shown):not(:disabled):hover + label,
+.input-field input[type="email"]:not(:placeholder-shown):not(:disabled):hover + label,
+.input-field input[type="number"]:not(:placeholder-shown):not(:disabled):hover + label,
+.input-field textarea:not(:placeholder-shown):not(:disabled):hover + label {
+  filter: brightness(125%);
+  transition: brightness var(--animation-quick);
 }
 .input-field input[type="text"]:disabled + label span,
 .input-field input[type="password"]:disabled + label span,

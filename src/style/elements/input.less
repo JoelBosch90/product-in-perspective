@@ -54,13 +54,12 @@ textarea {
     margin-bottom: .5em;
   }
 
-  // Show hover effects only when the input has not been disabled. It should not
-  // take precedence over the focus effect.
-  &:not(:disabled):not(:focus):hover {
+  // Show hover effects only when the input has not been disabled.
+  &:not(:disabled):hover {
 
     // Show a subtle on hover effect. We want to make elements light up to make
     // them stand out in our generally dark interface.
-    filter: brightness(150%);
+    filter: brightness(125%);
 
     // Use a transition effect to give the hover effect a quick and smooth
     // animation.
@@ -255,25 +254,11 @@ select {
     }
 
     // Target the label when the input is hovered on.
-    &:not(:placeholder-shown):not(:disabled):not(:focus):hover + label {
+    &:not(:placeholder-shown):not(:disabled):hover + label {
 
-      // Show a different colour on hover. The colour of the border is a good
-      // fit. Sadly, we cannot use opacity here as we want the same on hover
-      // effect for the label and these two will clearly overlap if either is
-      // not opaque.
-      background-color: var(--border-color);
-
-      // Use a transition effect to give the hover effect a quick and smooth
-      // animation.
-      transition: background-color var(--animation-quick);
-
-      // Target the span that houses the text for the label.
-      span {
-
-        // Switch to the contrast colour for the text, because otherwise it'll
-        // be unreadable.
-        color: var(--color);
-      }
+      // Use similar on hover effects to the normal input elements.
+      filter: brightness(125%);
+      transition: brightness var(--animation-quick);
     }
 
     // Target the label when the input has been disabled.
