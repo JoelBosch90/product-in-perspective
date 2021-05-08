@@ -196,10 +196,7 @@ class BarcodeScanner extends BaseElement {
    *                                  occurred.
    */
 
-  _handleError = error => {
-    // Trigger the error event.
-    this.trigger("error", error);
-  };
+  _handleError = error => void this.trigger("error", error);
   /**
    *  Method to expose the Overlay object.
    *  @returns  {Overlay}

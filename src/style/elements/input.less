@@ -200,9 +200,11 @@ select {
       transform-origin: 0 0;
 
       // When animating the label, we want to use these animations.
-      transition: color var(--animation-quick), transform var(--animation-quick),
+      transition: color var(--animation-quick),
+        transform var(--animation-quick),
         background-color var(--animation-quick),
-        line-height var(--animation-quick), opacity var(--animation-quick);
+        line-height var(--animation-quick),
+        opacity var(--animation-quick);
     }
 
     // Target the label when the input element is being used.
@@ -254,7 +256,7 @@ select {
     }
 
     // Target the label when the input is hovered on.
-    &:not(:placeholder-shown):not(:disabled):hover + label {
+    &:not(:disabled):hover + label {
 
       // Use similar on hover effects to the normal input elements.
       filter: brightness(125%);

@@ -152,7 +152,7 @@ class BarcodeScanner extends BaseElement {
    *                                  installed.
    *  @returns  {Element}   The container for the video element.
    */
-  _initInterface = (parent) => {
+  _initInterface = parent => {
 
     // Create a container for the barcode scanner.
     this._container = document.createElement("div");
@@ -184,7 +184,7 @@ class BarcodeScanner extends BaseElement {
    *  @param    {Element}   parent    The parent element on which the overlay
    *                                  interface will be installed.
    */
-  _initOverlay = (parent) => {
+  _initOverlay = parent => {
 
     // Create a container for the overlay element.
     const container = document.createElement("div");
@@ -204,11 +204,7 @@ class BarcodeScanner extends BaseElement {
    *  @param    {string}    error     A string describing the error that has
    *                                  occurred.
    */
-  _handleError = (error) => {
-
-    // Trigger the error event.
-    this.trigger("error", error);
-  }
+  _handleError = error => void this.trigger("error", error);
 
   /**
    *  Method to expose the Overlay object.

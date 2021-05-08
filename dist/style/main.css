@@ -410,11 +410,11 @@ select {
 .input-field textarea:focus + label span {
   color: var(--active-color);
 }
-.input-field input[type="text"]:not(:placeholder-shown):not(:disabled):hover + label,
-.input-field input[type="password"]:not(:placeholder-shown):not(:disabled):hover + label,
-.input-field input[type="email"]:not(:placeholder-shown):not(:disabled):hover + label,
-.input-field input[type="number"]:not(:placeholder-shown):not(:disabled):hover + label,
-.input-field textarea:not(:placeholder-shown):not(:disabled):hover + label {
+.input-field input[type="text"]:not(:disabled):hover + label,
+.input-field input[type="password"]:not(:disabled):hover + label,
+.input-field input[type="email"]:not(:disabled):hover + label,
+.input-field input[type="number"]:not(:disabled):hover + label,
+.input-field textarea:not(:disabled):hover + label {
   filter: brightness(125%);
   transition: brightness var(--animation-quick);
 }
