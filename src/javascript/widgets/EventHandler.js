@@ -90,15 +90,11 @@ class EventHandler {
 
   /**
    *  Method to remove this object and clean up after itself.
-   *  @returns  {EventHandler}
    */
   remove = () => {
 
     // Reset the triggers object.
     delete this._triggers;
-
-    // Allow chaining;
-    return this;
   }
 }
 

@@ -166,15 +166,11 @@ class HitTest {
   };
   /**
    *  Method to remove this object and clean up after itself.
-   *  @returns  {HitTest}
    */
 
-  remove = () => {
-    // This class does not have any elements in the DOM, does not use any other
+  remove = () => {// This class does not have any elements in the DOM, does not use any other
     // custom classes, or uses any event handlers that need to be removed, but
     // we want this method here for consistency's sake.
-    // Allow chaining.
-    return this;
   };
 } // Export the HitTest class so it can be imported elsewhere.
 

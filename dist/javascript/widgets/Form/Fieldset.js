@@ -187,7 +187,6 @@ class FormFieldset extends BaseElement {
   /**
    *  We need to append the remove method to clean up other elements we've
    *  added. We have to use non-arrow function or we'd lose the super context.
-   *  @returns  {FormFieldset}
    */
 
   remove() {
@@ -198,9 +197,7 @@ class FormFieldset extends BaseElement {
     if (this._fieldsets) for (const fieldset in this._fieldsets) fieldset.remove();
     if (this._buttons) for (const button in this._buttons) button.remove(); // Call the original remove method. This also removes the container.
 
-    super.remove(); // Allow chaining.
-
-    return this;
+    super.remove();
   }
 
 } // Export the FormFieldset class so it can be imported elsewhere.

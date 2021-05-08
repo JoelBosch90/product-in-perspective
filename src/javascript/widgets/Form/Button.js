@@ -61,7 +61,6 @@ class FormButton extends BaseElement {
 
   /**
    *  Method to remove this object and clean up after itself.
-   *  @returns  {FormButton}
    */
   remove = () => {
 
@@ -70,9 +69,6 @@ class FormButton extends BaseElement {
 
     // Then let the parent element clean up the container.
     super.remove();
-
-    // Allow chaining.
-    return this;
   }
 }
 

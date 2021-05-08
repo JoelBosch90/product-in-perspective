@@ -94,16 +94,13 @@ class FormSelect extends BaseElement {
   /**
    *  We need to append the remove method to clean up other elements we've
    *  added. We have to use non-arrow function or we'd lose the super context.
-   *  @returns  {FormSelect}
    */
 
   remove() {
     // First, clear out all the options.
     this.clear(); // Call the original remove method. This also removes the container.
 
-    super.remove(); // Allow chaining.
-
-    return this;
+    super.remove();
   }
 
 } // Export the FormSelect class so it can be imported elsewhere.

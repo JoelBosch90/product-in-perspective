@@ -90,7 +90,6 @@ class Overlay extends BaseElement {
   /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
-   *  @returns  {Overlay}
    */
   remove() {
 
@@ -100,9 +99,6 @@ class Overlay extends BaseElement {
 
     // Call the original remove method.
     super.remove();
-
-    // Allow chaining.
-    return this;
   }
 }
 

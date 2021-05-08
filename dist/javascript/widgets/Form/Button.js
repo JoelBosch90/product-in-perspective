@@ -55,7 +55,6 @@ class FormButton extends BaseElement {
   };
   /**
    *  Method to remove this object and clean up after itself.
-   *  @returns  {FormButton}
    */
 
   remove = () => {
@@ -63,9 +62,7 @@ class FormButton extends BaseElement {
     this._container.removeEventListener("click", this._onClick); // Then let the parent element clean up the container.
 
 
-    super.remove(); // Allow chaining.
-
-    return this;
+    super.remove();
   };
 } // Export the FormButton class so it can be imported elsewhere.
 

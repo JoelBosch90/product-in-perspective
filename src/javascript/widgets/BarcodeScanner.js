@@ -275,9 +275,6 @@ class BarcodeScanner extends BaseElement {
 
     // Call the original remove function.
     super.remove();
-
-    // Allow chaining.
-    return this;
   }
 }
 

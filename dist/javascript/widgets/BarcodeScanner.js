@@ -256,9 +256,7 @@ class BarcodeScanner extends BaseElement {
     this._overlay.remove(); // Call the original remove function.
 
 
-    super.remove(); // Allow chaining.
-
-    return this;
+    super.remove();
   }
 
 } // Export the BarcodeScanner class so it can be imported elsewhere.

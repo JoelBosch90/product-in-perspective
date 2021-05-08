@@ -178,7 +178,6 @@ class Form extends BaseElement {
   };
   /**
    *  Method to remove this object and clean up after itself.
-   *  @returns  {Form}
    */
 
   remove = () => {
@@ -189,9 +188,7 @@ class Form extends BaseElement {
     if (this._buttons) for (const button in this._buttons) button.remove(); // Call the remove function for the base class. This will also remove the
     // container.
 
-    super.remove(); // Allow chaining.
-
-    return this;
+    super.remove();
   };
 } // Export the Form class so it can be imported elsewhere.
 

@@ -198,7 +198,6 @@ class Form extends BaseElement {
 
   /**
    *  Method to remove this object and clean up after itself.
-   *  @returns  {Form}
    */
   remove = () => {
 
@@ -211,9 +210,6 @@ class Form extends BaseElement {
     // Call the remove function for the base class. This will also remove the
     // container.
     super.remove();
-
-    // Allow chaining.
-    return this;
   }
 }
 

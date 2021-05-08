@@ -50,7 +50,6 @@ class BaseElement extends EventHandler {
   /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
-   *  @returns  {BaseElement}
    */
   remove() {
 
@@ -59,9 +58,6 @@ class BaseElement extends EventHandler {
 
     // Call the EventHandler's remove function.
     super.remove();
-
-    // Allow chaining.
-    return this;
   }
 }
 

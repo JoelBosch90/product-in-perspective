@@ -349,7 +349,6 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
   /**
    *  Method to remove this object and clean up after itself.
-   *  @returns  {Reticle}
    */
   remove = () => {
 
@@ -358,9 +357,6 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
     // Clear the cache
     this._cache.clear();
-
-    // Allow chaining.
-    return this;
   }
 }
 

@@ -109,7 +109,6 @@ class FormSelect extends BaseElement {
   /**
    *  We need to append the remove method to clean up other elements we've
    *  added. We have to use non-arrow function or we'd lose the super context.
-   *  @returns  {FormSelect}
    */
   remove() {
 
@@ -118,9 +117,6 @@ class FormSelect extends BaseElement {
 
     // Call the original remove method. This also removes the container.
     super.remove();
-
-    // Allow chaining.
-    return this;
   }
 }
 

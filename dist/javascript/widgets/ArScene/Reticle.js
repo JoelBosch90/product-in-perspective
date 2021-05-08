@@ -325,7 +325,6 @@ class Reticle {
   };
   /**
    *  Method to remove this object and clean up after itself.
-   *  @returns  {Reticle}
    */
 
   remove = () => {
@@ -333,10 +332,7 @@ class Reticle {
     this._container.remove(); // Clear the cache
 
 
-    this._cache.clear(); // Allow chaining.
-
-
-    return this;
+    this._cache.clear();
   };
 } // Export the Reticle class so it can be imported elsewhere.
 

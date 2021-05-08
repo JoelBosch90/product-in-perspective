@@ -1,9 +1,9 @@
 ## Product in perspective
 
 # Using the correct version of Node
-Before you begin, make sure you use that the Node Package Manager (npm) uses
+Before you begin, make sure that you use the Node Package Manager (npm) uses
 the correct version of Node. We're using version 16.0.0.
-`nvm use 16.0.0`
+`nvm use 16`
 
 # Building the app
 After any change to the src folder, you can run the following command to

@@ -46,16 +46,13 @@ class BaseElement extends EventHandler {
   /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
-   *  @returns  {BaseElement}
    */
 
   remove() {
     // Remove the container if it was ever initialized.
     if (this._container) this._container.remove(); // Call the EventHandler's remove function.
 
-    super.remove(); // Allow chaining.
-
-    return this;
+    super.remove();
   }
 
 } // Export the BaseElement class so it can be imported elsewhere.
