@@ -1,7 +1,5 @@
 module.exports = function(app) {
 
-  console.log("Importing messages");
-
   const { v4: uuid } = require('uuid');
 
   let messages = {

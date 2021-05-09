@@ -87,10 +87,10 @@ class Api {
         const fullPath = path.join(directory, file);
 
         // If this is a directory, we should explore it recursively instead.
-        if (fs.lstatSync(fullPath).isDirectory()) return readDirectory(fullPath);
+        if (fs.lstatSync(fullPath).isDirectory()) readDirectory(fullPath);
 
         // If this is a Javascript file, we import the routes.
-        if (file.toLowerCase().endsWith('.js')) return require(fullPath)(app);
+        else if (file.toLowerCase().endsWith('.js')) require(fullPath)(app);
       }
     };
 
