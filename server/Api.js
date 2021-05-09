@@ -54,18 +54,18 @@ class Api {
     this._installAuthentication(app);
 
     // Now we can load all of our API endpoints.
-    this._installRoutes(app);
+    this._installEndpoints(app);
 
     // Start listening for incoming requests.
     this._listen(app);
   }
 
   /**
-   *  Private method to automatically import routes from all Javascript files in
-   *  the 'routes' directory that lives in the 'Api' directory.
+   *  Private method to automatically import endpoints from all Javascript files
+   *  in the 'endpoints' directory that lives in the 'Api' directory.
    *  @param    {EventEmitter}    app     The express application object.
    */
-  _installRoutes = app => {
+  _installEndpoints = app => {
 
     // We need to be able to read files and manipulate paths.
     const fs = require('fs');
@@ -89,13 +89,13 @@ class Api {
         // If this is a directory, we should explore it recursively instead.
         if (fs.lstatSync(fullPath).isDirectory()) readDirectory(fullPath);
 
-        // If this is a Javascript file, we import the routes.
+        // If this is a Javascript file, we import the endpoints.
         else if (file.toLowerCase().endsWith('.js')) require(fullPath)(app);
       }
     };
 
-    // Start by reading the top level routes directory.
-    readDirectory(__dirname + '/Api/routes');
+    // Start by reading the top level endpoints directory.
+    readDirectory(__dirname + '/Api/endpoints');
   }
 
   /**
