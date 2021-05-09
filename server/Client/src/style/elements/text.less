@@ -1,0 +1,38 @@
+/**
+ *  Text
+ *    This file installs some basic styling on text in the general application.
+ */
+
+// Install these properties on the root of the application and have them
+// propagate down to other elements.
+:root {
+
+  // Install the basic text font.
+  font-family: var(--text-font);
+
+  // Install the basic text colour.
+  color: var(--color);
+
+  // Lines with a lot of white space are easier to read.
+  line-height: var(--line-height);
+
+  // We want the text in our application to be very easy to read for all users.
+  // We don't rely on a lot of text, so we can afford to go a bigger.
+  //
+  // NOTA BENE: As a lot of the application is built on font-size, this will
+  // scale most of the application.
+  font-size: 1em;
+}
+
+// Target comment text containers.
+p, span, label {
+
+  // Install the default text colour on these text containers.
+  color: var(--color);
+
+  // Prevent long words from breaking our content.
+  word-break: break-word;
+
+  // Show the users where we break long words.
+  hyphens: auto;
+}

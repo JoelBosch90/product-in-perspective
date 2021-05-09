@@ -5,7 +5,10 @@
   "main": "server.js",
   "dependencies": {
     "aframe": "^1.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^9.0.1",
     "express": "^4.17.1",
+    "mysql2": "^2.2.5",
     "qs": "^6.10.1",
     "quagga": "^0.12.1",
     "require": "^0.4.4",
@@ -14,17 +17,19 @@
   "devDependencies": {
     "@babel/cli": "^7.13.16",
     "@babel/core": "^7.14.0",
+    "@babel/node": "^7.13.13",
     "@babel/preset-env": "^7.14.1",
     "eslint": "^7.24.0",
     "less": "^4.1.1",
+    "nodemon": "^2.0.7",
     "obj2gltf": "^3.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-style": "npx lessc src/style/main.less dist/style/main.css",
-    "build-js": "babel src/javascript -d dist/javascript",
+    "build-style": "npx lessc server/Client/src/style/main.less server/Client/dist/style/main.css",
+    "build-js": "babel server/Client/src/javascript -d server/Client/dist/javascript",
     "build": "npm run build-style & npm run build-js",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
