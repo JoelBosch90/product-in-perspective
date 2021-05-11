@@ -1,3 +1,13 @@
+// Load libraries.
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+
+// Get access to the Database class.
+const Database = require('./Database.js');
+const { models } = require('mongoose');
+
 /**
  *  The definition of the Api class component that is used to process all API
  *  requests.
@@ -35,20 +45,17 @@ class Api {
    */
   constructor(config) {
 
-    // Load libraries.
-    const express = require('express');
-
     // Get the express application object.
     const app = express();
 
     // Store the config for reference.
     this._config = config;
 
-    // Install middleware.
-    this._installMiddelware(app, express);
-
     // Connect to the database.
-    // this._connectDatabase();
+    this._connectDatabase(app);
+
+    // Install external middleware.
+    this._installMiddelware(app, express);
 
     // For every request, we want to try processing authentication.
     this._installAuthentication(app);
@@ -61,41 +68,28 @@ class Api {
   }
 
   /**
-   *  Private method to automatically import endpoints from all Javascript files
-   *  in the 'endpoints' directory that lives in the 'Api' directory.
+   *  Private method to connect to the database.
    *  @param    {EventEmitter}    app     The express application object.
    */
-  _installEndpoints = app => {
+  _connectDatabase = app => {
 
-    // We need to be able to read files and manipulate paths.
-    const fs = require('fs');
-    const path = require('path');
+    // Start the new database.
+    this._database = new Database(this._config.database);
 
-    /**
-     *  Helper function to read a directory so that we can call it recursively.
-     *  @param    {string}        directory     Name of the directory.
-     */
-    const readDirectory = directory => {
+    // Install new middleware on the Express app.
+    app.use((request, response, next) => {
 
-      // Get the files in this directory.
-      const files = fs.readdirSync(directory);
+      // Create or expand the context for each request.
+      request.context = Object.assign({}, request.context, {
 
-      // Loop through all the files.
-      for (const file of files) {
+        // Add the database models to the context of each request for easy
+        // access.
+        models: this._database.models(),
+      });
 
-        // Get the full path to the file by adding the directory.
-        const fullPath = path.join(directory, file);
-
-        // If this is a directory, we should explore it recursively instead.
-        if (fs.lstatSync(fullPath).isDirectory()) readDirectory(fullPath);
-
-        // If this is a Javascript file, we import the endpoints.
-        else if (file.toLowerCase().endsWith('.js')) require(fullPath)(app);
-      }
-    };
-
-    // Start by reading the top level endpoints directory.
-    readDirectory(__dirname + '/Api/endpoints');
+      // Show that we're done here and can continue processing the request.
+      next();
+    });
   }
 
   /**
@@ -105,9 +99,6 @@ class Api {
    *  @param    {Function}        express The express library object.
    */
   _installMiddelware = (app, express) => {
-
-    // Import the CORS library.
-    const cors = require('cors');
 
     // Use the CORS library to manage CORS headers for external connections.
     app.use(cors());
@@ -127,42 +118,71 @@ class Api {
    *  @param    {EventEmitter}    app     The express application object.
    */
    _installAuthentication = app => {
-    app.use((request, response, next) => {
+    app.use(async (request, response, next) => {
 
       // If there is a JWT on the body text, we should try to authenticate this
       // user here for easier processing along the line.
       if (request.body.token) {
 
-        // Create the context for this request.
-        request.context = {
+        // Create or expand the context for each request.
+        request.context = Object.assign({}, request.context, {
 
           // @TODO Actually process the JWT.
-          user: 0,
+          user: await request.context.models.User.findOne({
+            email: 'henk@henk.nl',
+          }),
           authenticated: true,
-        }
+        });
       }
 
       // Show that we're done here and can continue processing the request.
       next();
-    })
+    });
   }
 
   /**
-   *  Private method to connect to the database.
-   *  @TODO Actually connect to a real database.
+   *  Private method to automatically import endpoints from all Javascript files
+   *  in the 'endpoints' directory that lives in the 'Api' directory.
+   *  @param    {EventEmitter}    app     The express application object.
    */
-  _connectDatabase = () => {
+  _installEndpoints = app => {
 
-    // Load the MySQL dependency.
-    const mysql = require('mysql');
+    // Construct the path to the endpoints directory.
+    const endpointsDirectory = __dirname + '/Api/endpoints';
 
-    // Set up the database connection.
-    this._database = mysql.createConnection({
-      host:       this._config.api.host,
-      user:       this._config.database.user,
-      password:   this._config.database.password,
-      database:   this._config.database.name,
-    });
+    /**
+     *  Helper function to read a directory so that we can call it recursively.
+     *  @param    {string}        directory     Name of the directory.
+     */
+    const readDirectory = directory => {
+
+      // Get the files in this directory.
+      const files = fs.readdirSync(directory);
+
+      // Loop through all the files.
+      for (const file of files) {
+
+        // Get the full path to the file by adding the directory.
+        const fullPath = path.join(directory, file);
+
+        // If this is a directory, we should explore it recursively instead.
+        if (fs.lstatSync(fullPath).isDirectory()) readDirectory(fullPath);
+
+        // We shouldn't process anything but Javascript files here.
+        else if (file.toLowerCase().endsWith('.js')) {
+
+          // Get the relative path in the endpoints directory without the
+          // extension.
+          const apiPath = fullPath.replace(endpointsDirectory, "").slice(0, -3);
+
+          // Import this endpoint and supply the path to this endpoint.
+          require(fullPath)(app, apiPath);
+        }
+      }
+    };
+
+    // Start by reading the top level endpoints directory.
+    readDirectory(endpointsDirectory);
   }
 
   /**
@@ -171,13 +191,37 @@ class Api {
    */
   _listen = app => {
 
-    // Start listening at the API port.
-    app.listen(this._config.api.port, () => {
+    // First, wait for the database to connect.
+    this._database.connect().then(async () => {
 
-      // Tell the command terminal where we're listening for incoming requests.
-      console.log(
-        `Hosting API at ${this._config.api.host}:${this._config.api.port}.`
-      );
+      // //------------------------------<TESTING>---------------------------------
+      // const models = this._database.models();
+      // await Promise.all([models.User.deleteMany({})]);
+
+      // (async () => {
+      //   const user1 = new models.User({
+      //     email: 'henk@henk.nl',
+      //     password: 'abc',
+      //   });
+      //   const user2 = new models.User({
+      //     email: 'albert@albert.nl',
+      //     password: 'abcdef',
+      //   });
+
+      //   await user2.save();
+      //   await user1.save();
+      // })();
+      // //------------------------------</TESTING>--------------------------------
+
+      // Then start listening at the API port.
+      app.listen(this._config.api.port, () => {
+
+        // Tell the command terminal where we're listening for incoming
+        // requests.
+        console.log(
+          `Hosting API at ${this._config.api.host}:${this._config.api.port}.`
+        );
+      });
     });
   }
 }

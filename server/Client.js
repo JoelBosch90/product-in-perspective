@@ -1,6 +1,5 @@
 // Load libraries.
 const express = require('express');
-const env = require('dotenv').config();
 
 /**
  *  The definition of the Client class component that is used to serve all
@@ -17,6 +16,12 @@ class Client {
    *  @var      {object}
    */
   _config = {};
+
+  /**
+   *  Absolute path to the directory that hosts public files.
+   *  @var      {string}
+   */
+  _publicDir = null;
 
   /**
    *  Class constructor.
@@ -36,6 +41,9 @@ class Client {
     // Store the config for reference.
     this._config = config;
 
+    // Store the absolute path to the directory that holds the public files.
+    this._publicDir = __dirname  + '/Client/public';
+
     // Start serving everything that we need to serve the client side
     // application.
     this._serveStaticFiles(app);
@@ -53,7 +61,7 @@ class Client {
   _serveStaticFiles = app => {
 
     // Serve the static files.
-    app.use(express.static(__dirname  + '/Client/dist'));
+    app.use(express.static(this._publicDir));
   }
 
   /**
@@ -83,18 +91,14 @@ class Client {
     app.get('/', (request, response) => {
 
       // Serve the product preview file containing the default app.
-      response.sendFile("/html/productpreview.html", {
-        root: __dirname  + '/Client/dist'
-      });
+      response.sendFile("/html/productpreview.html", { root: this._publicDir });
     });
 
     // Process an admin login page request.
     app.get('/admin', (request, response) => {
 
       // Serve the admin file to start the admin environment.
-      response.sendFile("/html/admin.html", {
-        root: __dirname + '/Client/dist'
-      });
+      response.sendFile("/html/admin.html", { root: this._publicDir });
     });
   }
 
