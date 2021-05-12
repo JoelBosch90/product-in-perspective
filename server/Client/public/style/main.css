@@ -565,7 +565,6 @@ label {
 .card {
   background: var(--alternate-background);
   display: grid;
-  grid-template-areas: "title" "description" "buttons";
   gap: 1.5em;
   padding: 1em;
   border: 2px solid var(--border-color);
@@ -578,16 +577,16 @@ label {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.card h2:empty,
+.card p:empty,
+.card .buttons:empty {
+  display: none;
+}
 .card h2 {
-  grid-area: title;
   line-height: 2em;
   white-space: nowrap;
 }
-.card p {
-  grid-area: description;
-}
 .card .buttons {
-  grid-area: buttons;
   display: flex;
   gap: 1em;
   flex-wrap: wrap;

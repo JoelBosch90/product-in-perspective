@@ -39,11 +39,17 @@ class AppCreator extends BaseElement {
     this._form = new Form(this._container, {
       title: "App creation",
       center: true,
+      params: {
+        post: '/app' // put:  '/app/609ab55684241e248f620baa',
+        // get:  '/app/609ab55684241e248f620baa',
+
+      },
       inputs: [{
         name: "name",
         options: {
           label: "Name",
-          type: "text"
+          type: "text",
+          required: true
         }
       }, {
         name: "description",
@@ -55,7 +61,8 @@ class AppCreator extends BaseElement {
         name: "slug",
         options: {
           label: "Slug",
-          type: "text"
+          type: "text",
+          required: true
         }
       }],
       fieldsets: [{
@@ -78,7 +85,8 @@ class AppCreator extends BaseElement {
             name: "button",
             options: {
               label: "Button",
-              type: "text"
+              type: "text",
+              required: true
             }
           }]
         }
@@ -102,7 +110,8 @@ class AppCreator extends BaseElement {
             name: "button",
             options: {
               label: "Button",
-              type: "text"
+              type: "text",
+              required: true
             }
           }]
         }
@@ -126,7 +135,8 @@ class AppCreator extends BaseElement {
             name: "button",
             options: {
               label: "Button",
-              type: "text"
+              type: "text",
+              required: true
             }
           }]
         }
@@ -138,7 +148,11 @@ class AppCreator extends BaseElement {
           type: "submit"
         }
       }]
-    }); // Add the new element to the parent container.
+    }); // Listen for when the app creation was succesful to suggest the app
+    // overview.
+
+    this._form.on("stored", () => void this.trigger("navigate", "AppOverview")); // Add the new element to the parent container.
+
 
     parent.appendChild(this._container);
   }

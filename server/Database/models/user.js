@@ -5,6 +5,8 @@
 // Import dependencies.
 const mongoose = require('mongoose');
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 // Create a new schema for the User entity.
 const userSchema = new mongoose.Schema({
@@ -12,16 +14,17 @@ const userSchema = new mongoose.Schema({
     // Users are identified by their email address. Thus every user needs one
     // and it should unique across all users.
     email: {
-      type:     String,
-      unique:   true,
-      required: true,
+      type:       String,
+      unique:     true,
+      lowercase:  true,
+      required:   true,
     },
 
     // Users should be able to authenticate with their password. Thus every user
     // needs a password.
     password: {
-      type:     String,
-      required: true,
+      type:       String,
+      required:   true,
     }
   },
 
@@ -41,6 +44,17 @@ userSchema.methods.checkPassword = function(password, callback) {
 
     // Otherwise, pass no error and provide whether or not the password matches.
     callback(null, isMatch);
+  });
+}
+
+// Install an extra method for checking the user password.
+userSchema.methods.createToken = function(password, callback) {
+
+  // Create a new JWT for authentication.
+  return jwt.sign({ id: this._id }, process.env.DB_TOKEN_SECRET, {
+
+    // Let each token expire in 24 hours.
+    expiresIn: 86400,
   });
 }
 

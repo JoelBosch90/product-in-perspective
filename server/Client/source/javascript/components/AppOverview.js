@@ -1,4 +1,5 @@
 // Import dependencies.
+import { Request} from "/javascript/tools/Request.js";
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overview } from "/javascript/widgets/Overview.js";
 
@@ -26,6 +27,12 @@ class AppOverview extends BaseElement {
   _overview = null;
 
   /**
+   *  Reference to the request object.
+   *  @var      {Request}
+   */
+  _request = null;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
@@ -39,76 +46,81 @@ class AppOverview extends BaseElement {
     // Create a container for this component.
     this._container = document.createElement("div");
 
-    // Create a app overview.
-    this._overview = new Overview(this._container, {
-      title: "App overview",
-      center: true,
-      cards: [
-        {
-          id:           1,
-          title:        "AppName1",
-          description:  "AppDescription1",
-          removable:    true,
-          editable:     true,
-          viewable:     true,
-        },
-        {
-          id:           2,
-          title:        "AppName2",
-          description:  "AppDescription2",
-          removable:    true,
-          editable:     true,
-          viewable:     true,
-        },
-        {
-          id:           3,
-          title:        "AppName3",
-          description:  "AppDescription3",
-          removable:    true,
-          editable:     true,
-          viewable:     true,
-        },
-        {
-          id:           4,
-          title:        "AppName4",
-          description:  "AppDescription4",
-          removable:    true,
-          editable:     true,
-          viewable:     true,
-        },
-        {
-          id:           5,
-          title:        "AppName5",
-          description:  "AppDescription5",
-          removable:    true,
-          editable:     true,
-          viewable:     true,
-        },
-        {
-          id:           6,
-          title:        "AppName6",
-          description:  "AppDescription6",
-          removable:    true,
-          editable:     true,
-          viewable:     true,
-        },
-        {
-          id:           7,
-          title:        "AppName7",
-          description:  "AppDescription7",
-          removable:    true,
-          editable:     true,
-          viewable:     true,
-        },
-      ],
-    });
+    // Create a new request object.
+    this._request = new Request();
 
-    this._overview.on('remove', console.log);
-    this._overview.on('edit', console.log);
-    this._overview.on('view', console.log);
+    // First, request a list of all apps.
+    this._request.get('/app/all')
+      .catch(this._errorHandler)
+      .then(response => {
+
+        // Get access to the JSON object.
+        response.json().then(apps => {
+
+          // Use this component's error handling if an error has occurred with
+          // the HTTP request.
+          if (!response.ok) return this._errorHandler(apps.error);
+
+          // Create a new cards object.
+          const cards = {};
+
+          // Create a app overview.
+          this._overview = new Overview(this._container, {
+            title: "App overview",
+            center: true,
+          });
+
+          // Loop through all of theapps.
+          for (const app of apps) {
+
+            // Create a new card for each app.
+            const card = this._overview.addCard({
+              id:           app._id,
+              title:        app.name,
+              description:  app.description,
+              removable:    true,
+              editable:     true,
+              viewable:     true,
+            });
+
+            // Add the card to our cards dictionary.
+            cards[app._id] = card;
+          }
+
+          // Handle remove requests.
+          this._overview.on('remove', id => {
+            this.delete('/app/' + id)
+              .catch(this._errorHandler)
+              .then(response => {
+
+                // If it was deleted from the database, we should remove it from
+                // the overview as well.
+                if (response.ok) cards[id].remove();
+              });
+          });
+
+          this._overview.on('edit', console.log);
+          this._overview.on('view', console.log);
+
+          // Add the new element to the parent container.
+          parent.appendChild(this._container);
+        });
+      });
 
     // Add the new element to the parent container.
     parent.appendChild(this._container);
+  }
+
+  /**
+   *  Private method for handling errors.
+   *  @param    {Error}     error   Object describing the error that has
+   *                                occurred.
+   *  @TODO     Implement user friendly error handling.
+   */
+  _errorHandler = error => {
+
+    // For now we want to simply log the error.
+    console.error(error);
   }
 
   /**

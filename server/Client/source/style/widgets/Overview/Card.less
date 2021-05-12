@@ -12,10 +12,6 @@
 
   // Use grid to create the card's layout.
   display: grid;
-  grid-template-areas:
-    "title"
-    "description"
-    "buttons";
 
   // Make sure the elements in the card don't touch each other. We don't want
   // this to be too small so that the cards actually have a decent body.
@@ -41,13 +37,17 @@
 
     // We want to clearly show where text was truncated.
     text-overflow: ellipsis;
+
+    // Target empty elements.
+    &:empty {
+
+      // Don't display empty elements.
+      display: none;
+    }
   }
 
   // Target the card's title.
   h2 {
-
-    // Occupy the right grid area.
-    grid-area: title;
 
     // Make sure we can always still display the full title despite removing the
     // margins.
@@ -57,18 +57,8 @@
     white-space: nowrap;
   }
 
-  // Target the card's description.
-  p {
-
-    // Occupy the right grid area.
-    grid-area: description;
-  }
-
   // Target the buttons container.
   .buttons {
-
-    // Occupy the right grid area.
-    grid-area: buttons;
 
     // Use Flexbox to create a layout for the buttons so that we can use the gap
     // property to properly space them.

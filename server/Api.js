@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const jwt = require("jsonwebtoken");
 
 // Get access to the Database class.
 const Database = require('./Database.js');
@@ -42,6 +43,8 @@ class Api {
    *                                        database.
    *      @property {string}    password    The password for connecting to the
    *                                        database.
+   *      @property {string}    secret      The database secret for creating
+   *                                        tokens.
    */
   constructor(config) {
 
@@ -120,18 +123,24 @@ class Api {
    _installAuthentication = app => {
     app.use(async (request, response, next) => {
 
-      // If there is a JWT on the body text, we should try to authenticate this
-      // user here for easier processing along the line.
-      if (request.body.token) {
+      // Check if we have an access token.
+      const token = request.headers["x-access-token"];
 
-        // Create or expand the context for each request.
-        request.context = Object.assign({}, request.context, {
+      // If there is a token, we want to confirm it so that we can set the
+      // special access variables.
+      if (token) {
 
-          // @TODO Actually process the JWT.
-          user: await request.context.models.User.findOne({
-            email: 'henk@henk.nl',
-          }),
-          authenticated: true,
+        // Verify the JWT.
+        jwt.verify(token, this._config.database.secret, (error, decoded) => {
+
+          // If verification fails, we won't add the special access variables.
+          if (error) return;
+
+          // Create or expand the context for each request.
+          request.context = Object.assign({}, request.context, {
+            user:           decoded.id,
+            authenticated:  true,
+          });
         });
       }
 
@@ -193,25 +202,6 @@ class Api {
 
     // First, wait for the database to connect.
     this._database.connect().then(async () => {
-
-      // //------------------------------<TESTING>---------------------------------
-      // const models = this._database.models();
-      // await Promise.all([models.User.deleteMany({})]);
-
-      // (async () => {
-      //   const user1 = new models.User({
-      //     email: 'henk@henk.nl',
-      //     password: 'abc',
-      //   });
-      //   const user2 = new models.User({
-      //     email: 'albert@albert.nl',
-      //     password: 'abcdef',
-      //   });
-
-      //   await user2.save();
-      //   await user1.save();
-      // })();
-      // //------------------------------</TESTING>--------------------------------
 
       // Then start listening at the API port.
       app.listen(this._config.api.port, () => {

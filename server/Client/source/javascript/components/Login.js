@@ -41,33 +41,49 @@ class Login extends BaseElement {
 
     // Create a login form.
     this._form = new Form(this._container, {
-      title: "Login",
-      center: true,
+      title:      "Login",
+      center:     true,
+      params: {
+        post:        '/login',
+      },
       inputs: [
         {
-          name:   "email",
+          name:       "email",
           options: {
-            label:  "Email address",
-            type:   "email",
+            label:      "Email address",
+            type:       "email",
+            required:   true,
           },
         },
         {
-          name:   "password",
+          name:       "password",
           options: {
-            label:  "Password",
-            type:   "password",
+            label:      "Password",
+            type:       "password",
+            required:   true,
           },
         },
       ],
       buttons: [
         {
-          name:   "submit",
+          name:       "submit",
           options: {
-            label:  "Login",
-            type:   "submit",
+            label:      "Login",
+            type:       "submit",
           },
         },
       ],
+    });
+
+    // Listen for when the registration was successful.
+    this._form.on("stored", response => {
+
+      // @TODO Do this in a much safer way. Currently, this is unprotected
+      // against cross site scripting!!!
+      localStorage.setItem('jwt', response.token);
+
+      // Suggest moving to the login component.
+      this.trigger("navigate", "Login");
     });
 
     // Add the new element to the parent container.

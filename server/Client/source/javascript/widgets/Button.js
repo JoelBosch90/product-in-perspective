@@ -27,6 +27,8 @@ class Button extends BaseElement {
    *                                    Default: 'text'
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {boolean} disabled  Should this button be disabled by
+   *                                    default?
    */
   constructor(parent, options = {}) {
 
@@ -37,6 +39,7 @@ class Button extends BaseElement {
     this._container = document.createElement("button");
     if (options.type) this._container.setAttribute("type", options.type);
     if (options.label) this._container.textContent = options.label;
+    if (options.disabled) this.disabled(options.disabled);
 
     // Add the event listener to the button.
     this._container.addEventListener("click", this._onClick);
@@ -51,12 +54,31 @@ class Button extends BaseElement {
    */
   _onClick = (event) => {
 
-    // We don't ever want to reload a page to submit a form. So we prevent the
-    // default behaviour of all buttons in our forms.
-    event.preventDefault();
-
     // Trigger the event handler to bubble this event.
     this.trigger("click", event);
+  }
+
+  /**
+   *  Method for disabling/enabling this element. Can be used as both a getter
+   *  and a setter.
+   *
+   *  @getter
+   *    @return   {boolean}
+   *
+   *  @setter
+   *    @param    {boolean} disable     Should this element be disabled?
+   *    @return   {FormSelect}
+   */
+  disabled = disable => {
+
+    // If used as a getter, return the disabled state of the form select.
+    if (disable === undefined) return this._container.disabled;
+
+    // Set the requested attribute.
+    this._container.setAttribute("disabled", disable);
+
+    // Allow chaining.
+    return this;
   }
 
   /**

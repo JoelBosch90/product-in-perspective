@@ -9,9 +9,17 @@ const mongoose = require('mongoose');
 const modelSchema = new mongoose.Schema({
 
     // Users recognize their products by their name. These names should be
-    // unique per model, but do not need to be unique across all products.
+    // unique per model, but does not need to be unique across all products.
     name: {
       type:     String,
+      required: true,
+    },
+
+    // Every product should be identified by a single barcode. It should be
+    // unique per model, but does not need to be unique across all products.
+    barcode: {
+      type:     Number,
+      ref:      'Model',
       required: true,
     },
 
@@ -19,7 +27,15 @@ const modelSchema = new mongoose.Schema({
     model: {
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'Model',
-    }
+      required: true,
+    },
+
+    // Every product should also be connected to a single user.
+    user: {
+      type:     mongoose.Schema.Types.ObjectId,
+      ref:      'User',
+      required: true,
+    },
   },
 
   // Keep timestamps for when each product is created and modified.

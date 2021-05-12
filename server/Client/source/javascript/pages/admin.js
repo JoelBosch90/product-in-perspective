@@ -20,12 +20,16 @@ import { AppOverview } from "/javascript/components/AppOverview.js";
 const container = document.body;
 
 // Test form components.
-new Login(container);
-new Registration(container);
-new PasswordChanger(container);
-new AppCreator(container);
-new ModelCreator(container);
-new ProductCreator(container);
+// new Login(container);
+// const registration = new Registration(container);
+// registration.on("navigate", console.log);
+// new PasswordChanger(container);
+const appCreator = new AppCreator(container);
+appCreator.on("navigate", console.log);
+// const modelCreator = new ModelCreator(container);
+// modelCreator.on("navigate", console.log);
+// const productCreator = new ProductCreator(container);
+// productCreator.on("navigate", console.log);
 
 // Test overview components.
 new AppOverview(container);

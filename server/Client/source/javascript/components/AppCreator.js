@@ -41,114 +41,124 @@ class AppCreator extends BaseElement {
 
     // Create a form for creating an app.
     this._form = new Form(this._container, {
-      title: "App creation",
-      center: true,
+      title:    "App creation",
+      center:   true,
+      params: {
+        post:   '/app',
+        // put:  '/app/609ab55684241e248f620baa',
+        // get:  '/app/609ab55684241e248f620baa',
+      },
       inputs: [
         {
-          name:   "name",
+          name: "name",
           options: {
-            label:  "Name",
-            type:   "text",
+            label:    "Name",
+            type:     "text",
+            required: true,
           },
         },
         {
-          name:   "description",
+          name: "description",
           options: {
             label:  "Description",
             type:   "textarea",
           },
         },
         {
-          name:   "slug",
+          name: "slug",
           options: {
-            label:  "Slug",
-            type:   "text",
+            label:    "Slug",
+            type:     "text",
+            required: true,
           },
         },
       ],
       fieldsets: [
         {
-          name:   "scanning",
+          name: "scanning",
           options: {
             legend: "Texts in scanning mode",
             inputs: [
               {
-                name:   "title",
+                name: "title",
                 options: {
                   label:  "Title",
                   type:   "text",
                 }
               },
               {
-                name:   "description",
+                name: "description",
                 options: {
-                  label:  "Description",
-                  type:   "textarea",
+                  label: "Description",
+                  type:  "textarea",
                 }
               },
               {
-                name:   "button",
+                name: "button",
                 options: {
-                  label:  "Button",
-                  type:   "text",
+                  label:    "Button",
+                  type:     "text",
+                  required: true,
                 }
               },
             ],
           },
         },
         {
-          name:   "placing",
+          name: "placing",
           options: {
             legend: "Texts in placing mode",
             inputs: [
               {
-                name:   "title",
+                name: "title",
                 options: {
                   label:  "Title",
                   type:   "text",
                 },
               },
               {
-                name:   "description",
+                name: "description",
                 options: {
                   label:  "Description",
                   type:   "textarea",
                 },
               },
               {
-                name:   "button",
+                name:       "button",
                 options: {
-                  label:  "Button",
-                  type:   "text",
+                  label:    "Button",
+                  type:     "text",
+                  required: true,
                 },
               },
             ],
           },
         },
         {
-          name:   "viewing",
+          name: "viewing",
           options: {
             legend: "Texts in viewing mode",
             inputs: [
               {
-                name:   "title",
+                name: "title",
                 options: {
                   label:  "Title",
                   type:   "text",
                 },
               },
               {
-                name:   "description",
+                name: "description",
                 options: {
                   label:  "Description",
                   type:   "textarea",
                 },
               },
               {
-                name:   "button",
+                name: "button",
                 options: {
-                  label:  "Button",
-                  type:   "text",
+                  label:    "Button",
+                  type:     "text",
+                  required: true,
                 },
               },
             ],
@@ -157,7 +167,7 @@ class AppCreator extends BaseElement {
       ],
       buttons: [
         {
-          name:   "submit",
+          name: "submit",
           options: {
             label:  "Create app",
             type:   "submit",
@@ -165,6 +175,10 @@ class AppCreator extends BaseElement {
         },
       ],
     });
+
+    // Listen for when the app creation was succesful to suggest the app
+    // overview.
+    this._form.on("stored", () => void this.trigger("navigate", "AppOverview"));
 
     // Add the new element to the parent container.
     parent.appendChild(this._container);

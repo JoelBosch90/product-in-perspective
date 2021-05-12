@@ -33,8 +33,11 @@ class FormSelect extends BaseElement {
     // First call the constructor of the base class.
     super(); // Create a container for the select element.
 
-    this._container = document.createElement("select");
-    if (options.name) this._container.name = options.name; // Should we set a label?
+    this._container = document.createElement("select"); // Set the optional attributes.
+
+    if (options.name) this._container.name = options.name;
+    if (options.required) this._container.setAttribute("required", true);
+    if (options.disabled) this.disabled(options.disabled); // Should we set a label?
 
     if (options.label) {
       // Add the label as a disabled option to get a placeholder value.
@@ -53,14 +56,55 @@ class FormSelect extends BaseElement {
     parent.appendChild(this._container);
   }
   /**
+   *  Method for getting the current value of this element. Can be used as both
+   *  a getter and a setter.
+   *
+   *  @getter
+   *    @return   {string}
+   *
+   *  @setter
+   *    @param    {string}      newValue    The new value for this element.
+   *    @return   {FormInput}
+   */
+
+
+  value = newValue => {
+    // If used as a getter, return the value of the input.
+    if (newValue === undefined) return this._container.value; // Set the requested value.
+
+    this._container.value = newValue; // Allow chaining.
+
+    return this;
+  };
+  /**
+   *  Method for disabling/enabling this element. Can be used as both a getter
+   *  and a setter.
+   *
+   *  @getter
+   *    @return   {boolean}
+   *
+   *  @setter
+   *    @param    {boolean} disable     Should this element be disabled?
+   *    @return   {FormSelect}
+   */
+
+  disabled = disable => {
+    // If used as a getter, return the disabled state of the form select.
+    if (disable === undefined) return this._container.disabled; // Set the requested attribute.
+
+    this._container.setAttribute("disabled", disable); // Allow chaining.
+
+
+    return this;
+  };
+  /**
    *  Method for adding an option element to the select element.
-   *  @property   {string}  value     This is the value of the option that is
+   *  @param    {string}  value       This is the value of the option that is
    *                                  communicated to the API endpoint.
-   *  @property   {string}  label     This is the label of the options that is
+   *  @param    {string}  label       This is the label of the options that is
    *                                  shown to the user.
    *  @returns  {FormSelect}
    */
-
 
   addOption = (label, value) => {
     // We cannot add an option without a label.

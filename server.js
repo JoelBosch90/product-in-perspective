@@ -25,8 +25,13 @@ const api = new Api({
     user:     process.env.DB_USER,
     password: process.env.DB_PWD,
 
+    // Get the local token that will be used to hash the authentication tokens.
+    // WARNING: refreshing this token will invalidate all current tokens, even
+    // if they've not yet expired.
+    secret:   process.env.DB_TOKEN_SECRET,
+
     // Get the URL where the database will be served.
-    url:        process.env.DB_URL
+    url:      process.env.DB_URL
   },
 });
 

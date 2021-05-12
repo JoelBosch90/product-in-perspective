@@ -1,4 +1,5 @@
 // Import dependencies.
+import { Request } from "/javascript/tools/Request.js";
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { FormInput } from "/javascript/widgets/Form/Input.js";
 import { FormFieldset } from "/javascript/widgets/Form/Fieldset.js";
@@ -8,7 +9,12 @@ import { Title } from "/javascript/widgets/Title.js";
  *  The definition of the Form class that can be used to create a form element.
  *
  *  @event      submit        Triggered when the user opts to submit the form.
- *  @event      stored        Triggered when the API call has succeeded.
+ *                            Will contain a FormData object with the submitted
+ *                            data from the form.
+ *  @event      stored        Triggered when the API call has succeeded. Will
+ *                            contain the server response data.
+ *  @event      error         Triggered when the API call has failed. Will
+ *                            contain the server response data.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
@@ -44,27 +50,62 @@ class Form extends BaseElement {
 
   _buttons = {};
   /**
-   *  Class constructor.
-   *  @param    {Element}   parent    The parent element to which the form will
-   *                                  be added.
-   *  @param    {object}    options   Optional parameters for instantiating the
-   *                                  form.
-   *    @property   {array}   buttons   Optional array of buttons that are
-   *                                    immediately added to the form.
-   *    @property   {array}   inputs    Optional array of inputs that are
-   *                                    immediately added to the form.
-   *    @property   {string}  title     Optional string for a title to add to
-   *                                    the form.
-   *    @property   {boolean} center    Should this form be centered in the
-   *                                    parent element?
-   *                                    Default: false.
+   *  Reference to the parameters we'll need for the API call.
+   *  @var      {object}
    */
 
-  constructor(parent, options = {}) {
+  _params = null;
+  /**
+   *  Reference to the request object.
+   *  @var      {Request}
+   */
+
+  _request = null;
+  /**
+   *  Class constructor.
+   *  @param    {Element}   parent      The parent element to which the form
+   *                                    will be added.
+   *  @param    {object}    options     Optional parameters for instantiating
+   *                                    the form.
+   *    @property   {array}   buttons     Optional array of buttons that are
+   *                                      immediately added to the form.
+   *    @property   {array}   inputs      Optional array of inputs that are
+   *                                      immediately added to the form.
+   *    @property   {string}  title       Optional string for a title to add to
+   *                                      the form.
+   *    @property   {boolean} center      Should this form be centered in the
+   *                                      parent element?
+   *                                      Default: false.
+   *    @property   {object}    params    Optional parameters for submitting the
+   *                                      form and performing the API call. This
+   *                                      object can contain 'get', 'post', or
+   *                                      'put' objects with the parameters of
+   *                                      API calls. If the 'get' object is
+   *                                      provided, the 'post' object will be
+   *                                      ignored.
+   *     @property     {string}  get        An string containing the API
+   *                                        endpoint used for getting the
+   *                                        information to prefill the form.
+   *     @property     {string}  put        An string containing the API
+   *                                        endpoint used for submitting the
+   *                                        form when editing an entity.
+   *     @property     {string}  post       An string containing the API
+   *                                        endpoint used for submitting the
+   *                                        form when creating a new entity.
+   */
+
+  constructor(parent, options = {}, params) {
     // Call the parent class's constructor.
     super(); // Create a container for the form.
 
-    this._container = document.createElement("form"); // Add the title if requested.
+    this._container = document.createElement("form"); // Create a new request object.
+
+    this._request = new Request(); // Store the API parameters.
+
+    if (options.params) this._params = options.params; // Make sure we listen to submit events.
+
+    this._container.addEventListener('submit', this.submit); // Add the title if requested.
+
 
     if (options.title) this.title(options.title); // Add the center class to the form if requested.
 
@@ -72,7 +113,9 @@ class Form extends BaseElement {
 
     if (options.inputs) for (const input of options.inputs) this.addInput(input.name, input.options);
     if (options.fieldsets) for (const fieldset of options.fieldsets) this.addFieldset(fieldset.name, fieldset.options);
-    if (options.buttons) for (const button of options.buttons) this.addButton(button.name, button.options); // Add the form to the parent element.
+    if (options.buttons) for (const button of options.buttons) this.addButton(button.name, button.options); // If we got a GET parameter, we can try to prefill data in this form.
+
+    if (options.params && options.params.get) this._request.get(options.params.get).then(this._prefill).catch(this._errorHandler); // Add the form to the parent element.
 
     parent.appendChild(this._container);
   }
@@ -180,6 +223,108 @@ class Form extends BaseElement {
     return button;
   };
   /**
+   *  Method to submit the form.
+   *  @param    {Event}     event     Optional parameter that is supplied if
+   *                                  this method is used as a callback for an
+   *                                  event listener.
+   *  @returns  {Promise|undefined}
+   */
+
+  submit = event => {
+    // We don't ever want to reload a page to submit a form. So we prevent the
+    // default submit behaviour here if this method was called an part of an
+    // event listener.
+    if (event) event.preventDefault(); // Get the values from the form.
+
+    const values = this.values(); // Trigger the submit event and provide the submitted values.
+
+    this.trigger('submit', values); // We cannot perform any HTTP requests without parameters.
+
+    if (!this._params) return; // If we have the parameters for a PUT request, perform the PUT request.
+
+    if (this._params.put) return this._request.put(this._params.put, values).then(this._submitResponseHandler).catch(this._errorHandler); // If we don't have the parameters for a PUT request, but we do have the
+    // parameters for a POST request, perform the POST request.
+
+    if (this._params.post) return this._request.post(this._params.post, values).then(this._submitResponseHandler).catch(this._errorHandler);
+  };
+  /**
+   *  Private method for handling an HTTP submit request response.
+   *  @param    {Response}  reponse Reponse object from an HTTP request.
+   */
+
+  _submitResponseHandler = response => {
+    // Get access to the JSON object.
+    response.json().then(json => {
+      // Use the form's error handling if an error has occurred with the HTTP
+      // request.
+      if (!response.ok) return this._errorHandler(json.error); // Otherwise, we can trigger the 'stored' event.
+
+      this.trigger("stored", json);
+    });
+  };
+  /**
+   *  Private method for handling errors.
+   *  @param    {Error}     error   Object describing the error that has
+   *                                occurred.
+   *  @TODO     Implement user friendly error handling.
+   */
+
+  _errorHandler = error => {
+    // For now we want to simply log the error.
+    console.error(error);
+  };
+  /**
+   *  Private method for prefilling form fields with an HTTP request response.
+   *  @param    {Response}  reponse Reponse object from an HTTP request.
+   */
+
+  _prefill = response => {
+    // Get access to the JSON object.
+    response.json().then(json => {
+      // Use the form's error handling if an error has occurred with the HTTP
+      // request.
+      if (!response.ok) return this._errorHandler(json.error); // Prefill all data.
+
+      this.values(json);
+    });
+  };
+  /**
+   *  Method for getting or setting the values of all input elements in this
+   *  form.
+   *
+   *  @getter
+   *    @return   {object}
+   *
+   *  @setter
+   *    @param    {object}  newData  The new data to be used as inputs.
+   *    @return   {Form}
+   */
+
+  values = newData => {
+    // Is this used as a getter?
+    if (newData === undefined) {
+      // Get the data from the form.
+      const data = new FormData(this._container); // Convert the data to an object and return that.
+
+      return Object.fromEntries(data.entries());
+    } // Loop through all information we got to see if we should prefill an
+    // input field.
+
+
+    for (const [name, value] of Object.entries(newData)) {
+      // See if there is an input with this name.
+      const input = this._inputs[name]; // If so, set the correct value.
+
+      if (input) input.value(value);
+    } // Make sure that we also propagate this behaviour to fieldsets.
+
+
+    for (const fieldset of Object.values(this._fieldsets)) fieldset.values(newData); // Allow chaining.
+
+
+    return this;
+  };
+  /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
    */
@@ -189,7 +334,10 @@ class Form extends BaseElement {
     if (this._title) this._title.remove();
     if (this._inputs) for (const input in this._inputs) input.remove();
     if (this._fieldsets) for (const fieldset in this._fieldsets) fieldset.remove();
-    if (this._buttons) for (const button in this._buttons) button.remove(); // Remove all references.
+    if (this._buttons) for (const button in this._buttons) button.remove();
+
+    this._request.remove(); // Remove all references.
+
 
     this._title = null;
     this._inputs = {};

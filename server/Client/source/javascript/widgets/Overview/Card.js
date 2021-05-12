@@ -65,6 +65,11 @@ class OverviewCard extends BaseElement {
     this._container = document.createElement("div");
     this._container.classList.add("card");
 
+    // We always want to add the title and the description, even if they contain
+    // no text.
+    this.title(options.title);
+    this.description(options.description);
+
     // Should we add a view button?
     if (options.viewable) {
       this.addButton({
@@ -96,8 +101,6 @@ class OverviewCard extends BaseElement {
     }
 
     // Install the other options.
-    if (options.title) this.title(options.title);
-    if (options.description) this.description(options.description);
     if (options.buttons) for (const button of options.buttons) this.addButton(button);
 
     // Add the card to the parent container.
@@ -114,8 +117,8 @@ class OverviewCard extends BaseElement {
     // If there is no title element yet, we should first install it.
     if (!this._title) this._title = new Title(this._container, { type: 'h2' });
 
-    // Install the new title.
-    this._title.update(newTitle);
+    // Update the title if we have one.
+    if (newTitle) this._title.update(newTitle);
 
     // Allow chaining.
     return this;
@@ -136,8 +139,8 @@ class OverviewCard extends BaseElement {
       this._container.appendChild(this._description);
     }
 
-    // Install the new description.
-    this._description.textContent = newDescription;
+    // Update the description if we have one.
+    if (newDescription) this._description.textContent = newDescription;
 
     // Allow chaining.
     return this;

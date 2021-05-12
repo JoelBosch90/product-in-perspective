@@ -72,6 +72,7 @@ class FormInput extends BaseElement {
    *  @returns  {string}
    */
   _uuidv4 = () => {
+
     // Based this GitHub repository: https://gist.github.com/jed/982883
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
       (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
@@ -91,6 +92,8 @@ class FormInput extends BaseElement {
    *                                    added.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {boolean} disabled  Should this input be disabled by
+   *                                    default?
    */
   _createInput = (parent, options) => {
 
@@ -105,8 +108,12 @@ class FormInput extends BaseElement {
     this._input = document.createElement("input");
     this._input.id = this._id;
     this._input.name = options.name;
-    this._input.setAttribute("type", options.type);
+    this._input.setAttribute("type", options.type || 'text');
     this._input.setAttribute("placeholder", options.label);
+
+    // Install the optional attributes.
+    if (options.required) this._input.setAttribute("required", true);
+    if (options.disabled) this.disabled(options.disabled);
 
     // Create the label element.
     this._label = document.createElement("label");
@@ -138,6 +145,8 @@ class FormInput extends BaseElement {
    *                                    added.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {boolean} disabled  Should this input be disabled by
+   *                                    default?
    */
   _createTextarea = (parent, options) => {
 
@@ -154,6 +163,10 @@ class FormInput extends BaseElement {
     this._input.name = options.name;
     this._input.setAttribute("type", options.type);
     this._input.setAttribute("placeholder", options.label);
+
+    // Install the optional attributes.
+    if (options.required) this._input.setAttribute("required", true);
+    if (options.disabled) this.disabled(options.disabled);
 
     // Create the label element.
     this._label = document.createElement("label");
@@ -187,6 +200,8 @@ class FormInput extends BaseElement {
    *                                    will be shown to the user.
    *    @property   {string}  accept    A string describing the file types that
    *                                    will be accepted.
+   *    @property   {boolean} disabled  Should this button be disabled by
+   *                                    default?
    */
    _createFileButton = (parent, options) => {
 
@@ -202,6 +217,8 @@ class FormInput extends BaseElement {
 
     // Install the optional attributes.
     if (options.accept) input.setAttribute("accept", options.accept);
+    if (options.required) this._container.setAttribute("required", true);
+    if (options.disabled) this.disabled(options.disabled);
 
     // Create the label element.
     const label = document.createElement("label");
@@ -254,6 +271,78 @@ class FormInput extends BaseElement {
 
     // Create the select element.
     this._container = new FormSelect(parent, options);
+  }
+
+  /**
+   *  Method for getting the current value of this element. Can be used as both
+   *  a getter and a setter.
+   *
+   *  @getter
+   *    @return   {string|undefined}
+   *
+   *  @setter
+   *    @param    {string}      newValue    The new value for this element.
+   *    @return   {FormInput}
+   */
+  value = newValue => {
+
+    // If we are using a different object, we should relay to that.
+    if (this._container instanceof FormSelect) {
+
+      // If used as a getter, return the value of the select.
+      if (newValue === undefined) return this._container.value();
+
+      // Set the requested value.
+      this._container.value(newValue);
+
+      // Allow chaining.
+      return this;
+    }
+
+    // If used as a getter, return the value of the input.
+    if (newValue === undefined) return this._input.value;
+
+    // Set the requested value.
+    this._input.value = newValue;
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Method for disabling/enabling this element. Can be used as both a getter
+   *  and a setter.
+   *
+   *  @getter
+   *    @return   {boolean}
+   *
+   *  @setter
+   *    @param    {boolean}     disable     Should this element be disabled?
+   *    @return   {FormInput}
+   */
+  disabled = disable => {
+
+    // If we are using a different object, we should relay to that.
+    if (this._container instanceof FormSelect) {
+
+      // If used as a getter, return the value of the select.
+      if (disable === undefined) return this._container.disabled();
+
+      // Set the requested value.
+      this._container.disabled(disable);
+
+      // Allow chaining.
+      return this;
+    }
+
+    // If used as a getter, return the disabled state of the input.
+    if (disable === undefined) return this._input.disabled;
+
+    // Set the requested attribute.
+    this._input.setAttribute("disabled", disable);
+
+    // Allow chaining.
+    return this;
   }
 }
 

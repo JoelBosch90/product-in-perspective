@@ -185,6 +185,51 @@ class FormFieldset extends BaseElement {
     return button;
   };
   /**
+   *  Method for setting the values of all input elements in this fieldset.
+   *
+   *  @setter
+   *    @param    {object}  newData  The new data to be used as inputs.
+   *    @return   {Form}
+   */
+
+  values = newData => {
+    // Loop through all information we got to see if we should prefill an
+    // input field.
+    for (const [name, value] of Object.entries(newData)) {
+      // See if there is an input with this name.
+      const input = this._inputs[name]; // If so, set the correct value.
+
+      if (input) input.value(value);
+    } // Make sure that we also propagate this behaviour to other fieldsets.
+
+
+    for (const fieldset of Object.values(this._fieldsets)) fieldset.values(newData); // Allow chaining.
+
+
+    return this;
+  };
+  /**
+   *  Method for disabling/enabling this element. Can be used as both a getter
+   *  and a setter.
+   *
+   *  @getter
+   *    @return   {boolean}
+   *
+   *  @setter
+   *    @param    {boolean}     disable     Should this element be disabled?
+   *    @return   {FormFieldset}
+   */
+
+  disabled = disable => {
+    // If used as a getter, return the disabled state of the input.
+    if (disable === undefined) return this._container.disabled; // Set the requested attribute.
+
+    this._container.setAttribute("disabled", disable); // Allow chaining.
+
+
+    return this;
+  };
+  /**
    *  We need to append the remove method to clean up other elements we've
    *  added. We have to use non-arrow function or we'd lose the super context.
    */

@@ -5,6 +5,10 @@ import { Form } from "/javascript/widgets/Form.js";
  *  The definition of the Registration class component that can be used to load
  *  a registration form.
  *
+ *  @event      navigate      Triggered when the this component has finished.
+ *                            May contain a suggestion for the component to load
+ *                            next.
+ *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
@@ -39,23 +43,29 @@ class Registration extends BaseElement {
     this._form = new Form(this._container, {
       title: "Registration",
       center: true,
+      params: {
+        post: '/user'
+      },
       inputs: [{
         name: "email",
         options: {
           label: "Email address",
-          type: "email"
+          type: "email",
+          required: true
         }
       }, {
         name: "password",
         options: {
           label: "Password",
-          type: "password"
+          type: "password",
+          required: true
         }
       }, {
         name: "repeat",
         options: {
           label: "Repeat password",
-          type: "password"
+          type: "password",
+          required: true
         }
       }],
       buttons: [{
@@ -65,7 +75,13 @@ class Registration extends BaseElement {
           type: "submit"
         }
       }]
+    }); // Listen for when the registration was successful.
+
+    this._form.on("stored", () => {
+      // Suggest moving to the login component.
+      this.trigger("navigate", "Login");
     }); // Add the new element to the parent container.
+
 
     parent.appendChild(this._container);
   }
