@@ -1,6 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Form } from "/javascript/widgets/Form.js";
+import { goTo } from "/javascript/tools/goTo.js";
 /**
  *  The definition of the AppForm class component that can be used to load
  *  a form to create a new app.
@@ -27,12 +28,22 @@ class AppForm extends BaseElement {
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
-   *  @param    {array}     options
+   *  @param    {object}    options     Optional parameters.
+   *    @property {string}    appId       ID that identifies an app.
    */
 
   constructor(parent, options = {}) {
     // Call the base class constructor first.
-    super(); // Create a container for this component.
+    super(); // Do we have the ID for a specific app?
+
+    const params = options.appId // If so, we'll try to edit that app.
+    ? {
+      put: '/app/' + options.appId,
+      get: '/app/' + options.appId
+    } // If not, we'll create a new one.
+    : {
+      post: '/app'
+    }; // Create a container for this component.
 
     this._container = document.createElement("div");
 
@@ -42,11 +53,7 @@ class AppForm extends BaseElement {
     this._form = new Form(parent, {
       title: "App creation",
       center: true,
-      params: {
-        post: '/app' // put:  '/app/609ab55684241e248f620baa',
-        // get:  '/app/609ab55684241e248f620baa',
-
-      },
+      params,
       inputs: [{
         name: "name",
         options: {
@@ -151,10 +158,9 @@ class AppForm extends BaseElement {
           type: "submit"
         }
       }]
-    }); // Listen for when the app creation was succesful to suggest the app
-    // overview.
+    }); // When the app was stored successfully, return to the app overview.
 
-    this._form.on("stored", () => void this.trigger("navigate", "AppOverview")); // Add the new element to the parent container.
+    this._form.on("stored", () => void goTo('/admin/app')); // Add the new element to the parent container.
 
 
     parent.appendChild(this._container);

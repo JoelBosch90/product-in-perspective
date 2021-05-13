@@ -159,7 +159,6 @@
    *                                            test was unsuccessful.
    */
   _transientHitTest = (frame, referenceSpace) => {
-    console.log("::_transientHitTest");
 
     // Get the transient input hit test results for this frame.
     const results = frame.getHitTestResultsForTransientInput(this._hitTestSource);

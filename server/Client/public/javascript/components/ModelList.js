@@ -2,16 +2,17 @@
 import { Request } from "/javascript/tools/Request.js";
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overview } from "/javascript/widgets/Overview.js";
+import { goTo } from "/javascript/tools/goTo.js";
 /**
- *  The definition of the AppOverview class component that can be used to load
- *  overview of created apps.
+ *  The definition of the ModelList class component that can be used to load
+ *  overview of created models.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
 
-class AppOverview extends BaseElement {
+class ModelList extends BaseElement {
   /**
    *  Private variable that stores a reference to the container element in the
    *  DOM.
@@ -31,6 +32,12 @@ class AppOverview extends BaseElement {
 
   _request = null;
   /**
+   *  Reference to the API request for the apps.
+   *  @var      {Promise}
+   */
+
+  _requestPromise = null;
+  /**
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
@@ -43,57 +50,52 @@ class AppOverview extends BaseElement {
 
     this._container = document.createElement("div"); // Create a new request object.
 
-    this._request = new Request(); // First, request a list of all apps.
+    this._request = new Request(); // First, request a list of all models. Store the promise.
 
-    this._request.get('/app/all').catch(this._errorHandler).then(response => {
+    this._requestPromise = this._request.get('/model/all').catch(this._errorHandler).then(response => {
       // Get access to the JSON object.
-      response.json().then(apps => {
+      if (response) return response.json().then(models => {
         // Use this component's error handling if an error has occurred with
         // the HTTP request.
-        if (!response.ok) return this._errorHandler(apps.error); // Create a new cards object.
+        if (!response.ok) return this._errorHandler(models.error); // Create a new cards object.
 
-        const cards = {}; // Create a app overview.
+        const cards = {}; // Create a model overview.
 
         this._overview = new Overview(this._container, {
-          title: "App overview",
+          title: "Model overview",
           center: true
-        }); // Loop through all of theapps.
+        }); // Loop through all of the models.
 
-        for (const app of apps) {
-          // Create a new card for each app.
+        for (const model of models) {
+          // Create a new card for each model.
           const card = this._overview.addCard({
-            id: app._id,
-            title: app.name,
-            description: app.description,
+            id: model._id,
+            title: model.name,
+            description: model.description,
             removable: true,
             editable: true,
-            viewable: true
+            viewable: false
           }); // Add the card to our cards dictionary.
 
 
-          cards[app._id] = card;
+          cards[model._id] = card;
         } // Handle remove requests.
 
 
         this._overview.on('remove', id => {
-          this.delete('/app/' + id).catch(this._errorHandler).then(response => {
+          this._request.delete('/model/' + id).catch(this._errorHandler).then(response => {
             // If it was deleted from the database, we should remove it from
             // the overview as well.
             if (response.ok) cards[id].remove();
           });
         });
 
-        this._overview.on('edit', console.log);
-
-        this._overview.on('view', console.log); // Add the new element to the parent container.
+        this._overview.on('edit', id => void goTo('/admin/model/' + id)); // Add the new element to the parent container.
 
 
         parent.appendChild(this._container);
       });
-    }); // Add the new element to the parent container.
-
-
-    parent.appendChild(this._container);
+    });
   }
   /**
    *  Private method for handling errors.
@@ -113,14 +115,15 @@ class AppOverview extends BaseElement {
    */
 
   remove() {
-    // Remove the Overview element.
-    this._overview.remove(); // Call the BaseElement's remove function.
-
+    // Remove the Overview element once the request promise has resolved.
+    if (this._requestPromise) this._requestPromise.then(() => {
+      this._overview.remove();
+    }); // Call the BaseElement's remove function.
 
     super.remove();
   }
 
-} // Export the AppOverview class so it can be imported elsewhere.
+} // Export the ModelList class so it can be imported elsewhere.
 
 
-export { AppOverview };
+export { ModelList };

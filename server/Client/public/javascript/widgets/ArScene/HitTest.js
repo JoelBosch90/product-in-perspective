@@ -144,8 +144,7 @@ class ArSceneHitTest {
    */
 
   _transientHitTest = (frame, referenceSpace) => {
-    console.log("::_transientHitTest"); // Get the transient input hit test results for this frame.
-
+    // Get the transient input hit test results for this frame.
     const results = frame.getHitTestResultsForTransientInput(this._hitTestSource); // If we didn't get any results, we should return false.
 
     if (!results.length) return false; // Get the first result of the hit test. It should be the one closest to the

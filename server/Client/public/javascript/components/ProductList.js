@@ -4,15 +4,15 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overview } from "/javascript/widgets/Overview.js";
 import { goTo } from "/javascript/tools/goTo.js";
 /**
- *  The definition of the AppList class component that can be used to load
- *  overview of created apps.
+ *  The definition of the ProductList class component that can be used to load
+ *  overview of created products.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
 
-class AppList extends BaseElement {
+class ProductList extends BaseElement {
   /**
    *  Private variable that stores a reference to the container element in the
    *  DOM.
@@ -50,49 +50,47 @@ class AppList extends BaseElement {
 
     this._container = document.createElement("div"); // Create a new request object.
 
-    this._request = new Request(); // First, request a list of all apps. Store the promise.
+    this._request = new Request(); // First, request a list of all products. Store the promise.
 
-    this._requestPromise = this._request.get('/app/all').catch(this._errorHandler).then(response => {
+    this._requestPromise = this._request.get('/product/all').catch(this._errorHandler).then(response => {
       // Get access to the JSON object.
-      if (response) return response.json().then(apps => {
+      if (response) return response.json().then(products => {
         // Use this component's error handling if an error has occurred with
         // the HTTP request.
-        if (!response.ok) return this._errorHandler(apps.error); // Create a new cards object.
+        if (!response.ok) return this._errorHandler(products.error); // Create a new cards object.
 
-        const cards = {}; // Create a app overview.
+        const cards = {}; // Create a product overview.
 
         this._overview = new Overview(this._container, {
-          title: "App overview",
+          title: "Product overview",
           center: true
-        }); // Loop through all of the apps.
+        }); // Loop through all of the products.
 
-        for (const app of apps) {
-          // Create a new card for each app.
+        for (const product of products) {
+          // Create a new card for each product.
           const card = this._overview.addCard({
-            id: app._id,
-            title: app.name,
-            description: app.description,
+            id: product._id,
+            title: product.name,
+            description: product.description,
             removable: true,
             editable: true,
-            viewable: true
+            viewable: false
           }); // Add the card to our cards dictionary.
 
 
-          cards[app._id] = card;
+          cards[product._id] = card;
         } // Handle remove requests.
 
 
         this._overview.on('remove', id => {
-          this._request.delete('/app/' + id).catch(this._errorHandler).then(response => {
+          this._request.delete('/product/' + id).catch(this._errorHandler).then(response => {
             // If it was deleted from the database, we should remove it from
             // the overview as well.
             if (response.ok) cards[id].remove();
           });
         });
 
-        this._overview.on('edit', id => void goTo('/admin/app/' + id));
-
-        this._overview.on('view', console.log); // Add the new element to the parent container.
+        this._overview.on('edit', id => void goTo('/admin/product/' + id)); // Add the new element to the parent container.
 
 
         parent.appendChild(this._container);
@@ -125,7 +123,7 @@ class AppList extends BaseElement {
     super.remove();
   }
 
-} // Export the AppList class so it can be imported elsewhere.
+} // Export the ProductList class so it can be imported elsewhere.
 
 
-export { AppList };
+export { ProductList };

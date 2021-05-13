@@ -7,14 +7,17 @@
 import { Router } from "/javascript/tools/Router.js";
 import { View } from "/javascript/widgets/View.js";
 import { Apology } from "/javascript/widgets/Apology.js";
+
+// Import components.
 import { Login } from "/javascript/components/Login.js";
 import { Registration } from "/javascript/components/Registration.js";
 import { PasswordForm } from "/javascript/components/PasswordForm.js";
-import { AppForm } from "/javascript/components/AppForm.js";
-import { ModelForm } from "/javascript/components/ModelForm.js";
-import { ProductForm } from "/javascript/components/ProductForm.js";
 import { AppList } from "/javascript/components/AppList.js";
-import { goTo } from "/javascript/tools/goTo.js";
+import { AppForm } from "/javascript/components/AppForm.js";
+import { ModelList } from "/javascript/components/ModelList.js";
+import { ModelForm } from "/javascript/components/ModelForm.js";
+import { ProductList } from "/javascript/components/ProductList.js";
+import { ProductForm } from "/javascript/components/ProductForm.js";
 
 /**
  *  This is the container for the entire application. Because we want to use the
@@ -23,28 +26,16 @@ import { goTo } from "/javascript/tools/goTo.js";
  */
 const container = document.body;
 
-// Test form components.
-// new Login(container);
-// const registration = new Registration(container);
-// registration.on("navigate", console.log);
-// new PasswordForm(container);
-// const appCreator = new AppCreator(container);
-// appCreator.on("navigate", console.log);
-// const modelForm = new ModelForm(container);
-// modelForm.on("navigate", console.log);
-// const productForm = new ProductForm(container);
-// productForm.on("navigate", console.log);
-
-// Test overview components.
-// new AppList(container);
-
 /**
  *  Create a new View instance. The View will automatically clean up previously
  *  installed components if we install a new one so that we always have one
  *  active.
  *  @var      {View}
  */
-const view = new View(container);
+const view = new View(container, {
+  cacheSize:  1,
+  Widget:     Apology,
+});
 
 /**
  *  Create a new Router instance. The Router will listen for any changes to the
@@ -64,17 +55,16 @@ const router = new Router(new Map([
   ['/admin/app', AppList],
   ['/admin/app/new', AppForm],
   ['/admin/app/:appId', AppForm],
-  ['/admin/model', ModelForm],
+  ['/admin/model', ModelList],
   ['/admin/model/new', ModelForm],
   ['/admin/model/:modelId', ModelForm],
-  ['/admin/product', ProductForm],
+  ['/admin/product', ProductList],
   ['/admin/product/new', ProductForm],
   ['/admin/product/:productId', ProductForm],
 ]))
 
   // Make sure that we pass on any navigation requests to the View widget.
-  // .on("navigate", page => void view.install(page.widget, page.options))
-  .on("navigate", page => { console.log(page); view.install(page.widget, page.options); })
+  .on("navigate", page => void view.install(page.widget, page.options))
 
   // Show an apology if the route could not be found.
   .on("not-found", () => void view.install(Apology, "This page could not be found."))

@@ -2,6 +2,7 @@
 import { Request } from "/javascript/tools/Request.js";
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Form } from "/javascript/widgets/Form.js";
+import { goTo } from "/javascript/tools/goTo.js";
 /**
  *  The definition of the ProductForm class component that can be used to load
  *  a form to create a new product.
@@ -31,10 +32,17 @@ class ProductForm extends BaseElement {
 
   _request = null;
   /**
+   *  Reference to the API request for the apps.
+   *  @var      {Promise}
+   */
+
+  _requestPromise = null;
+  /**
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
-   *  @param    {array}     options
+   *  @param    {object}    formOptions     Optional parameters.
+   *    @property {string}    productId       ID that identifies a product.
    */
 
   constructor(parent, options = {}) {
@@ -43,9 +51,9 @@ class ProductForm extends BaseElement {
 
     this._container = document.createElement("div"); // Create a new request object.
 
-    this._request = new Request(); // First, request a list of all models.
+    this._request = new Request(); // First, request a list of all models. Store the promise.
 
-    this._request.get('/model/all').catch(this._errorHandler).then(response => {
+    this._requestPromise = this._request.get('/model/all').catch(this._errorHandler).then(response => {
       // Get access to the JSON object.
       response.json().then(models => {
         // Use this component's error handling if an error has occurred with
@@ -63,10 +71,10 @@ class ProductForm extends BaseElement {
           modelOption.label = model.name; // Add the option to the array.
 
           modelOptions.push(modelOption);
-        } // Create the
+        } // Create the form.
 
 
-        this._createForm(modelOptions); // Add the new element to the parent container.
+        this._createForm(modelOptions, options); // Add the new element to the parent container.
 
 
         parent.appendChild(this._container);
@@ -76,19 +84,26 @@ class ProductForm extends BaseElement {
   /**
    *  Private method to create the form and add it to the container.
    *  @param    {array}     modelOptions    An array of models to choose from.
+   *  @param    {object}    formOptions     Optional parameters.
+   *    @property {string}    productId       ID that identifies a product.
    */
 
 
-  _createForm = modelOptions => {
-    // Create a form for creating an new product.
+  _createForm = (modelOptions, formOptions) => {
+    // Do we have the ID for a specific product?
+    const params = formOptions.productId // If so, we'll try to edit that product.
+    ? {
+      put: '/product/' + formOptions.productId,
+      get: '/product/' + formOptions.productId
+    } // If not, we'll create a new one.
+    : {
+      post: '/product'
+    }; // Create a form for creating an new product.
+
     this._form = new Form(this._container, {
       title: "Product creation",
       center: true,
-      params: {
-        // post: '/product',
-        put: '/product/609ae2910c8a5c612673926c',
-        get: '/product/609ae2910c8a5c612673926c'
-      },
+      params,
       inputs: [{
         name: "name",
         options: {
@@ -118,10 +133,9 @@ class ProductForm extends BaseElement {
           type: "submit"
         }
       }]
-    }); // Listen for when the model creation was succesful to suggest the
-    // model overview.
+    }); // When the product was stored successfully, return to the product overview.
 
-    this._form.on("stored", () => void this.trigger("navigate", "ModelOverview"));
+    this._form.on("stored", () => void goTo('/admin/product'));
   };
   /**
    *  Private method for handling errors.
@@ -140,8 +154,10 @@ class ProductForm extends BaseElement {
    */
 
   remove() {
-    // Remove the Form element.
-    this._form.remove(); // Call the BaseElement's remove function.
+    // Remove the Form element once the request promise has resolved.
+    this._requestPromise.then(() => {
+      this._form.remove();
+    }); // Call the BaseElement's remove function.
 
 
     super.remove();

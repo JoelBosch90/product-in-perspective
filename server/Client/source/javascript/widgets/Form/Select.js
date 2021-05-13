@@ -147,7 +147,7 @@ class FormSelect extends BaseElement {
   clear = () => {
 
     // Remove all options, if we have any.
-    if (this._options) for (const option in this._options) options.remove();
+    for (const option of this._options) option.remove();
 
     // Remove all references to the options.
     this._options = [];

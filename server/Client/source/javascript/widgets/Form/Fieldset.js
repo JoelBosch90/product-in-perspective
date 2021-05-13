@@ -1,7 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { FormInput } from "/javascript/widgets/Form/Input.js";
-import { FormButton } from "/javascript/widgets/Form/Button.js";
+import { Button } from "/javascript/widgets/Button.js";
 
 /**
  *  The definition of the Fieldset class that can be used to create fieldset
@@ -188,12 +188,12 @@ class FormFieldset extends BaseElement {
    *                                    Default: 'text'
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
-   *  @returns  {FormButton}
+   *  @returns  {Button}
    */
   addButton = (name, options = {}) => {
 
     // Create an button element.
-    const button = new FormButton(this._container, Object.assign({}, options, { name }));
+    const button = new Button(this._container, Object.assign({}, options, { name }));
 
     // If there is already an button element with this name. If so, we need to
     // remove that first.

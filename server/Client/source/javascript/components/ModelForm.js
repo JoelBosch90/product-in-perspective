@@ -2,6 +2,7 @@
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Request } from "/javascript/tools/Request.js";
 import { Form } from "/javascript/widgets/Form.js";
+import { goTo } from "/javascript/tools/goTo.js";
 
 /**
  *  The definition of the ModelForm class component that can be used to load
@@ -33,10 +34,17 @@ class ModelForm extends BaseElement {
   _request = null;
 
   /**
+   *  Reference to the API request for the apps.
+   *  @var      {Promise}
+   */
+  _requestPromise = null;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
-   *  @param    {array}     options
+   *  @param    {object}    options     Optional parameters.
+   *    @property {string}    modelId       ID that identifies a model.
    */
   constructor(parent, options = {}) {
 
@@ -49,8 +57,8 @@ class ModelForm extends BaseElement {
     // Create a new request object.
     this._request = new Request();
 
-    // First, request a list of all apps.
-    this._request.get('/app/all')
+    // First, request a list of all apps. Store the promise.
+    this._requestPromise = this._request.get('/app/all')
       .catch(this.errorHandler)
       .then(response => {
 
@@ -79,7 +87,7 @@ class ModelForm extends BaseElement {
           }
 
           // Create the form.
-          this._createForm(appOptions);
+          this._createForm(appOptions, options);
 
           // Add the new element to the parent container.
           parent.appendChild(this._container);
@@ -90,18 +98,25 @@ class ModelForm extends BaseElement {
   /**
    *  Private method to create the form and add it to the container.
    *  @param    {array}     appOptions    An array of apps to choose from.
+   *  @param    {object}    formOptions   Optional parameters.
+   *    @property {string}    modelId       ID that identifies a model.
    */
-  _createForm = (appOptions) => {
+  _createForm = (appOptions, formOptions) => {
+
+    // Do we have the ID for a specific model?
+    const params = formOptions.modelId
+
+      // If so, we'll try to edit that model.
+      ? { put: '/model/' + formOptions.modelId, get: '/model/' + formOptions.modelId }
+
+      // If not, we'll create a new one.
+      : { post: '/model' };
 
     // Create a form for creating an new model.
     this._form = new Form(this._container, {
       title: "Model creation",
       center: true,
-      params: {
-        // post:   '/model',
-        put:  '/model/609ad3afcf7d0e490d2a558b',
-        get:  '/model/609ad3afcf7d0e490d2a558b',
-      },
+      params,
       inputs: [
         {
           name:   "name",
@@ -140,9 +155,9 @@ class ModelForm extends BaseElement {
       ],
     });
 
-    // Listen for when the model creation was succesful to suggest the
-    // model overview.
-    this._form.on("stored", () => void this.trigger("navigate", "ModelOverview"));
+
+    // When the model was stored successfully, return to the model overview.
+    this._form.on("stored", () => void goTo('/admin/model'));
   }
 
   /**
@@ -163,8 +178,8 @@ class ModelForm extends BaseElement {
    */
   remove() {
 
-    // Remove the Form element.
-    this._form.remove();
+    // Remove the Form element once the request promise has resolved.
+    this._requestPromise.then(() => { this._form.remove(); });
 
     // Call the BaseElement's remove function.
     super.remove();

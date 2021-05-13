@@ -64,7 +64,7 @@ class View extends BaseElement {
    *  @param   {Class}   Widget     The widget that will be installed as the
    *                                active widget. It should extend the
    *                                BaseElement class.
-   *  @param   {object}  options    The additional options that will be passed
+   *  @param   {object}  params     The additional options that will be passed
    *                                to the widget. These will be ignore if a
    *                                widget with this class was already
    *                                installed.
@@ -72,11 +72,11 @@ class View extends BaseElement {
    */
 
 
-  install(Widget, options) {
+  install(Widget, ...params) {
     // Check if we've installed a widget with this class before.
     if (!this._widgets.has(Widget)) {
       // If not, create it.
-      const widget = new Widget(this._container, options); // Make sure we propagate all events that this widget triggers.
+      const widget = new Widget(this._container, ...params); // Make sure we propagate all events that this widget triggers.
 
       widget.bubbleTo(this); // And add it to the Map, using the class as a key.
 
