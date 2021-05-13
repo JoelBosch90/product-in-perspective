@@ -238,9 +238,9 @@ class FormFieldset extends BaseElement {
     // Remove all DOM elements we've added.
     if (this._legend) this._legend.remove(); // Remove all classes we've added.
 
-    if (this._inputs) for (const input in this._inputs) input.remove();
-    if (this._fieldsets) for (const fieldset in this._fieldsets) fieldset.remove();
-    if (this._buttons) for (const button in this._buttons) button.remove(); // Call the original remove method. This also removes the container.
+    if (this._inputs) for (const input of Object.values(this._inputs)) input.remove();
+    if (this._fieldsets) for (const fieldset of Object.values(this._fieldsets)) fieldset.remove();
+    if (this._buttons) for (const button of Object.values(this._buttons)) button.remove(); // Call the original remove method. This also removes the container.
 
     super.remove();
   }

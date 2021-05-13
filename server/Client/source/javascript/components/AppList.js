@@ -4,14 +4,14 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overview } from "/javascript/widgets/Overview.js";
 
 /**
- *  The definition of the AppOverview class component that can be used to load
+ *  The definition of the AppList class component that can be used to load
  *  overview of created apps.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class AppOverview extends BaseElement {
+class AppList extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -137,5 +137,5 @@ class AppOverview extends BaseElement {
   }
 }
 
-// Export the AppOverview class so it can be imported elsewhere.
-export { AppOverview };
+// Export the AppList class so it can be imported elsewhere.
+export { AppList };

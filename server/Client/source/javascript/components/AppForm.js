@@ -3,14 +3,14 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Form } from "/javascript/widgets/Form.js";
 
 /**
- *  The definition of the AppCreator class component that can be used to load
+ *  The definition of the AppForm class component that can be used to load
  *  a form to create a new app.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class AppCreator extends BaseElement {
+class AppForm extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -38,9 +38,10 @@ class AppCreator extends BaseElement {
 
     // Create a container for this component.
     this._container = document.createElement("div");
+    this._container.classList.add("app-form");
 
     // Create a form for creating an app.
-    this._form = new Form(this._container, {
+    this._form = new Form(parent, {
       title:    "App creation",
       center:   true,
       params: {
@@ -198,5 +199,5 @@ class AppCreator extends BaseElement {
   }
 }
 
-// Export the AppCreator class so it can be imported elsewhere.
-export { AppCreator };
+// Export the AppForm class so it can be imported elsewhere.
+export { AppForm };

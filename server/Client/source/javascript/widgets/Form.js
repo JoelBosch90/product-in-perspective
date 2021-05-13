@@ -377,9 +377,9 @@ class Form extends BaseElement {
 
     // Remove class objects we used.
     if (this._title) this._title.remove();
-    if (this._inputs) for (const input in this._inputs) input.remove();
-    if (this._fieldsets) for (const fieldset in this._fieldsets) fieldset.remove();
-    if (this._buttons) for (const button in this._buttons) button.remove();
+    if (this._inputs) for (const input of Object.values(this._inputs)) input.remove();
+    if (this._fieldsets) for (const fieldset of Object.values(this._fieldsets)) fieldset.remove();
+    if (this._buttons) for (const button of Object.values(this._buttons)) button.remove();
     this._request.remove();
 
     // Remove all references.

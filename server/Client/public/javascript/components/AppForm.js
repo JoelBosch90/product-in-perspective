@@ -2,7 +2,7 @@
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Form } from "/javascript/widgets/Form.js";
 /**
- *  The definition of the AppCreator class component that can be used to load
+ *  The definition of the AppForm class component that can be used to load
  *  a form to create a new app.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
@@ -10,7 +10,7 @@ import { Form } from "/javascript/widgets/Form.js";
  *  Javascript classes.
  */
 
-class AppCreator extends BaseElement {
+class AppForm extends BaseElement {
   /**
    *  Private variable that stores a reference to the container element in the
    *  DOM.
@@ -173,7 +173,7 @@ class AppCreator extends BaseElement {
     super.remove();
   }
 
-} // Export the AppCreator class so it can be imported elsewhere.
+} // Export the AppForm class so it can be imported elsewhere.
 
 
-export { AppCreator };
+export { AppForm };

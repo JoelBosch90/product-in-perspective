@@ -92,18 +92,13 @@ class Client {
    */
   _servePages = app => {
 
-    // Process a root page request.
-    app.get('/', (request, response) => {
+    // We want to serve a single page application. This means that we should
+    // serve the same index for all URLs. Routing can then be solved
+    // client-side without hard page reloads.
+    app.get('/*', (request, response) => {
 
-      // Serve the product preview file containing the default app.
-      response.sendFile("/html/productpreview.html", { root: this._publicDir });
-    });
-
-    // Process an admin login page request.
-    app.get('/admin', (request, response) => {
-
-      // Serve the admin file to start the admin environment.
-      response.sendFile("/html/admin.html", { root: this._publicDir });
+      // Serve the main index file.
+      response.sendFile("/html/index.html", { root: this._publicDir });
     });
   }
 

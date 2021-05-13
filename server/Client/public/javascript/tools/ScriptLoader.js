@@ -1,5 +1,5 @@
 // Import dependencies
-import { EventHandler } from "/javascript/widgets/EventHandler.js";
+import { EventHandler } from "/javascript/tools/EventHandler.js";
 /**
  *  The definition of the ScriptLoader class that can be used to dynamically
  *  load an internal Javascript library.

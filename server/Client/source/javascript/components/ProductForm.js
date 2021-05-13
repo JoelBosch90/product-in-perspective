@@ -1,17 +1,17 @@
 // Import dependencies.
+import { Request} from "/javascript/tools/Request.js";
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Request } from "/javascript/tools/Request.js";
 import { Form } from "/javascript/widgets/Form.js";
 
 /**
- *  The definition of the ModelCreator class component that can be used to load
- *  a form to create a new model.
+ *  The definition of the ProductForm class component that can be used to load
+ *  a form to create a new product.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class ModelCreator extends BaseElement {
+class ProductForm extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -49,37 +49,38 @@ class ModelCreator extends BaseElement {
     // Create a new request object.
     this._request = new Request();
 
-    // First, request a list of all apps.
-    this._request.get('/app/all')
-      .catch(this.errorHandler)
+    // First, request a list of all models.
+    this._request.get('/model/all')
+      .catch(this._errorHandler)
       .then(response => {
 
         // Get access to the JSON object.
-        response.json().then(apps => {
+        response.json().then(models => {
 
-          // Use the form's error handling if an error has occurred with the
-          // HTTP request.
-          if (!response.ok) return this.errorHandler(apps.error);
+          // Use this component's error handling if an error has occurred with
+          // the HTTP request.
+          if (!response.ok) return this._errorHandler(models.error);
 
           // Create a new options array.
-          const appOptions = [];
+          const modelOptions = [];
 
-          // Loop through all of the apps.
-          for (const app of apps) {
+          // Loop through all of the models.
+          for (const model of models) {
 
-            // Create a new option for each app.
-            const appOption = {};
+            // Create a new option for each model.
+            const modelOption = {};
 
-            // We want users to be able to select the app ID based on the name.
-            appOption.value = app._id;
-            appOption.label = app.name;
+            // We want users to be able to select the model ID based on the
+            // name.
+            modelOption.value = model._id;
+            modelOption.label = model.name;
 
             // Add the option to the array.
-            appOptions.push(appOption);
+            modelOptions.push(modelOption);
           }
 
-          // Create the form.
-          this._createForm(appOptions);
+          // Create the
+          this._createForm(modelOptions);
 
           // Add the new element to the parent container.
           parent.appendChild(this._container);
@@ -89,46 +90,45 @@ class ModelCreator extends BaseElement {
 
   /**
    *  Private method to create the form and add it to the container.
-   *  @param    {array}     appOptions    An array of apps to choose from.
+   *  @param    {array}     modelOptions    An array of models to choose from.
    */
-  _createForm = (appOptions) => {
+  _createForm = (modelOptions) => {
 
-    // Create a form for creating an new model.
+    // Create a form for creating an new product.
     this._form = new Form(this._container, {
-      title: "Model creation",
+      title: "Product creation",
       center: true,
       params: {
-        // post:   '/model',
-        put:  '/model/609ad3afcf7d0e490d2a558b',
-        get:  '/model/609ad3afcf7d0e490d2a558b',
+        // post: '/product',
+        put:  '/product/609ae2910c8a5c612673926c',
+        get:  '/product/609ae2910c8a5c612673926c',
       },
       inputs: [
         {
           name:   "name",
           options:  {
-            label:    "Name",
-            type:     "text",
+            label:  "Name",
+            type:   "text",
+            required: true,
+          },
+        },
+        {
+          name:   "barcode",
+          options:  {
+            label:  "Barcode",
+            type:   "number",
             required: true,
           },
         },
         {
           name:   "model",
           options:  {
-            label:  "Upload model ...",
-            accept: ".glTF",
-            type:   "file",
-          },
-        },
-        {
-          name:   "app",
-          required: true,
-          options:  {
-            type:     "select",
-            options:  appOptions,
+            label:  "Select model ...",
+            type:   "select",
+            options: modelOptions,
           },
         },
       ],
-      fieldsets: [],
       buttons: [
         {
           name:   "submit",
@@ -171,5 +171,5 @@ class ModelCreator extends BaseElement {
   }
 }
 
-// Export the ModelCreator class so it can be imported elsewhere.
-export { ModelCreator };
+// Export the ProductForm class so it can be imported elsewhere.
+export { ProductForm };
