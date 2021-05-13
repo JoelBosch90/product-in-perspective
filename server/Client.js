@@ -93,7 +93,7 @@ class Client {
   _servePages = app => {
 
     // We want to serve a single page application. This means that we should
-    // serve the same index for all URLs. Routing can then be solved
+    // serve the same index for all pages. Routing can then be solved
     // client-side without hard page reloads.
     app.get('/*', (request, response) => {
 

@@ -31,6 +31,12 @@ class AppList extends BaseElement {
 
   _request = null;
   /**
+   *  Reference to the API request for the apps.
+   *  @var      {Promise}
+   */
+
+  _requestPromise = null;
+  /**
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
@@ -43,57 +49,52 @@ class AppList extends BaseElement {
 
     this._container = document.createElement("div"); // Create a new request object.
 
-    this._request = new Request(); // First, request a list of all apps.
+    this._request = new Request(); // First, request a list of all apps. Store the promise.
 
-    this._request.get('/app/all').catch(this._errorHandler).then(response => {
-      // Get access to the JSON object.
-      response.json().then(apps => {
-        // Use this component's error handling if an error has occurred with
-        // the HTTP request.
-        if (!response.ok) return this._errorHandler(apps.error); // Create a new cards object.
+    this._requestPromise = this._request.get('/app/all').catch(this._errorHandler).then(response => // Get access to the JSON object.
+    response.json().then(apps => {
+      // Use this component's error handling if an error has occurred with
+      // the HTTP request.
+      if (!response.ok) return this._errorHandler(apps.error); // Create a new cards object.
 
-        const cards = {}; // Create a app overview.
+      const cards = {}; // Create a app overview.
 
-        this._overview = new Overview(this._container, {
-          title: "App overview",
-          center: true
-        }); // Loop through all of theapps.
+      this._overview = new Overview(this._container, {
+        title: "App overview",
+        center: true
+      }); // Loop through all of the apps.
 
-        for (const app of apps) {
-          // Create a new card for each app.
-          const card = this._overview.addCard({
-            id: app._id,
-            title: app.name,
-            description: app.description,
-            removable: true,
-            editable: true,
-            viewable: true
-          }); // Add the card to our cards dictionary.
-
-
-          cards[app._id] = card;
-        } // Handle remove requests.
+      for (const app of apps) {
+        // Create a new card for each app.
+        const card = this._overview.addCard({
+          id: app._id,
+          title: app.name,
+          description: app.description,
+          removable: true,
+          editable: true,
+          viewable: true
+        }); // Add the card to our cards dictionary.
 
 
-        this._overview.on('remove', id => {
-          this.delete('/app/' + id).catch(this._errorHandler).then(response => {
-            // If it was deleted from the database, we should remove it from
-            // the overview as well.
-            if (response.ok) cards[id].remove();
-          });
+        cards[app._id] = card;
+      } // Handle remove requests.
+
+
+      this._overview.on('remove', id => {
+        this.delete('/app/' + id).catch(this._errorHandler).then(response => {
+          // If it was deleted from the database, we should remove it from
+          // the overview as well.
+          if (response.ok) cards[id].remove();
         });
-
-        this._overview.on('edit', console.log);
-
-        this._overview.on('view', console.log); // Add the new element to the parent container.
-
-
-        parent.appendChild(this._container);
       });
-    }); // Add the new element to the parent container.
+
+      this._overview.on('edit', console.log);
+
+      this._overview.on('view', console.log); // Add the new element to the parent container.
 
 
-    parent.appendChild(this._container);
+      parent.appendChild(this._container);
+    }));
   }
   /**
    *  Private method for handling errors.
@@ -113,8 +114,10 @@ class AppList extends BaseElement {
    */
 
   remove() {
-    // Remove the Overview element.
-    this._overview.remove(); // Call the BaseElement's remove function.
+    // Remove the Overview element once the request promise has resolved.
+    this._requestPromise.then(() => {
+      this._overview.remove();
+    }); // Call the BaseElement's remove function.
 
 
     super.remove();

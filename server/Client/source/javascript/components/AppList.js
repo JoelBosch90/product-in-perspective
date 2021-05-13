@@ -33,6 +33,12 @@ class AppList extends BaseElement {
   _request = null;
 
   /**
+   *  Reference to the API request for the apps.
+   *  @var      {Promise}
+   */
+  _requestPromise = null;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
@@ -49,10 +55,10 @@ class AppList extends BaseElement {
     // Create a new request object.
     this._request = new Request();
 
-    // First, request a list of all apps.
-    this._request.get('/app/all')
+    // First, request a list of all apps. Store the promise.
+    this._requestPromise = this._request.get('/app/all')
       .catch(this._errorHandler)
-      .then(response => {
+      .then(response =>
 
         // Get access to the JSON object.
         response.json().then(apps => {
@@ -70,7 +76,7 @@ class AppList extends BaseElement {
             center: true,
           });
 
-          // Loop through all of theapps.
+          // Loop through all of the apps.
           for (const app of apps) {
 
             // Create a new card for each app.
@@ -104,11 +110,8 @@ class AppList extends BaseElement {
 
           // Add the new element to the parent container.
           parent.appendChild(this._container);
-        });
-      });
-
-    // Add the new element to the parent container.
-    parent.appendChild(this._container);
+        })
+      );
   }
 
   /**
@@ -129,8 +132,8 @@ class AppList extends BaseElement {
    */
   remove() {
 
-    // Remove the Overview element.
-    this._overview.remove();
+    // Remove the Overview element once the request promise has resolved.
+    this._requestPromise.then(() => { this._overview.remove(); });
 
     // Call the BaseElement's remove function.
     super.remove();

@@ -116,7 +116,7 @@ class Overview extends BaseElement {
   remove() {
     // Remove class objects we used.
     if (this._title) this._title.remove();
-    if (this._cards) for (const card in this._cards) card.remove(); // Remove all references.
+    if (this._cards) for (const card of this._cards) card.remove(); // Remove all references.
 
     this._title = null;
     this._cards = []; // Call the remove function for the base class. This will also remove the

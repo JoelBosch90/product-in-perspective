@@ -3,10 +3,11 @@
  *  passed will be executed after the given delay. This delay is reset every
  *  time this debounce function is called again before the function is called.
  *
- *  @param    function    func    Function that will ultimately be executed.
- *  @param    integer     delay   The minimum number of milliseconds that have
- *                                too pass before the function is called.
- *  @returns  function
+ *  @param    {function}    func    Function that will ultimately be executed.
+ *  @param    {integer}     delay   The minimum number of milliseconds that
+ *                                  have to pass before the function is
+ *                                  called.
+ *  @returns  {function}
  */
 const debounce = (func, delay) => {
   // Set a timer.
