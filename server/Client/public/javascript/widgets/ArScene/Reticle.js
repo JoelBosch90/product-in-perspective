@@ -80,7 +80,7 @@ class Reticle {
     // element in the DOM within the <a-scene> element.
 
 
-    AFRAME.registerPrimitive('a-reticle', {
+    if (!AFRAME.primitives.primitives['a-reticle']) AFRAME.registerPrimitive('a-reticle', {
       /**
        *  These are the preset default components. Here we can install
        *  components and default component properties.
@@ -116,7 +116,7 @@ class Reticle {
    */
 
   _registerComponent = name => {
-    AFRAME.registerComponent(name, {
+    if (!AFRAME.components[name]) AFRAME.registerComponent(name, {
       /**
        *  Here we can define the properties of the object. We can determine
        *  their types and default values.

@@ -66,11 +66,8 @@ class ScriptLoader extends EventHandler {
     // Store a reference to the head element of the page.
     this._head = document.getElementsByTagName('head')[0];
 
-    // Store the list of scripts we should load.
-    this._toLoad = paths;
-
-    // Load all paths.
-    for (const path of paths) this.load(path);
+    // Load all scripts.
+    if (paths) this.loadAll(paths);
   }
 
   /**
@@ -78,7 +75,7 @@ class ScriptLoader extends EventHandler {
    *  @param    {Event}     event     Event object describinig the error that
    *                                  occurred.
    */
-  _loadHandler = (event) => {
+  _loadHandler = event => {
 
     // Get the script element and the path to the Javascript library from the
     // event.
@@ -101,7 +98,7 @@ class ScriptLoader extends EventHandler {
    *  @param    {Event}     event     Event object describing the error that
    *                                  occurred.
    */
-  _errorHandler = (event) => {
+  _errorHandler = event => {
 
     // Get the script element and the path to the Javascript library from the
     // event.
@@ -117,17 +114,58 @@ class ScriptLoader extends EventHandler {
   }
 
   /**
+   *  Private method that checks if a script has been loaded before.
+   *  @param    {string}      path    Path to a Javascript library.
+   */
+  _alreadyLoaded = path => document.querySelector(`script[src*="${path}"]`);
+
+  /**
+   *  Method to dynamically load an internal Javascript library.
+   *  @param    {array}     paths     An array of paths to Javascript libraries
+   *                                  that should be loaded.
+   *  @returns  {ScriptLoader}
+   */
+  loadAll = paths => {
+
+    // Store the list of scripts we should load.
+    this._toLoad = paths;
+
+    // Load all paths.
+    for (const path of paths) this.load(path);
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
    *  Method to dynamically load an internal Javascript library.
    *  @param    {string}      path    Path to a Javascript library.
    *  @returns  {ScriptLoader}
    */
-  load = (path) => {
+  load = path => {
 
     // We shouldn't load libraries twice.
     if (this._loading.has(path) || this._loaded.has(path)) return;
 
     // If we've failed loading this script before, we'll try again fresh.
     if (this._failed.has(path)) this._failed.delete(path);
+
+    // Check if this script was already loaded before.
+    const alreadyLoaded = this._alreadyLoaded(path);
+
+    // If so, we want to use that script tag to trigger the events. We should
+    // not attempt to load it again as that may trigger errors.
+    if (alreadyLoaded) {
+
+      // Remove this path from the toLoad array.
+      this._toLoad = this._toLoad.filter(listed => path != listed);
+
+      // Trigger the appropriate loaded events.
+      this._loadHandler({ target: alreadyLoaded });
+
+      // We do not need to do anything else. Allow chaining.
+      return this;
+    };
 
     // Create the script element. We'll load the new script by adding a script
     // tag to the DOM. This is a safe way to load a new script.
@@ -169,13 +207,11 @@ class ScriptLoader extends EventHandler {
     // Reset the list of items we have to load.
     this._toLoad = [];
 
-    // Remove all script elements we've added to the DOM.
-    for (const [path, script] of this._loaded.entries()) script.remove();
-    for (const [path, script] of this._loading.entries()) script.remove();
-    for (const [path, script] of this._failed.entries()) script.remove();
-
-    // Remove the reference to the DOM element so that they can be properly
-    // garbage collected if they are removed from the DOM.
+    // In this case, it does not make sense to remove the script tags. They
+    // serve as proof that these libraries have been loaded, so it is more
+    // useful to leave them in the DOM. We should still remove the reference to
+    // the DOM elements so that they can be properly garbage collected if they
+    // are removed from the DOM.
     this._head = null;
     this._loaded.clear();
     this._loading.clear();

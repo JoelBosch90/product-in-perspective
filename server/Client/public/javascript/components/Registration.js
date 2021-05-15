@@ -39,7 +39,10 @@ class Registration extends BaseElement {
     // Call the base class constructor first.
     super(); // Create a container for this component.
 
-    this._container = document.createElement("div"); // Create a registration form.
+    this._container = document.createElement("div");
+
+    this._container.classList.add("registration"); // Create a registration form.
+
 
     this._form = new Form(this._container, {
       title: "Registration",

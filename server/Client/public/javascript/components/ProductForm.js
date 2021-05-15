@@ -49,7 +49,10 @@ class ProductForm extends BaseElement {
     // Call the base class constructor first.
     super(); // Create a container for this component.
 
-    this._container = document.createElement("div"); // Create a new request object.
+    this._container = document.createElement("div");
+
+    this._container.classList.add("productform"); // Create a new request object.
+
 
     this._request = new Request(); // First, request a list of all models. Store the promise.
 

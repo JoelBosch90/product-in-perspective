@@ -52,6 +52,7 @@ class ModelList extends BaseElement {
 
     // Create a container for this component.
     this._container = document.createElement("div");
+    this._container.classList.add("modellist");
 
     // Create a new request object.
     this._request = new Request();

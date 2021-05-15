@@ -48,7 +48,10 @@ class AppList extends BaseElement {
     // Call the base class constructor first.
     super(); // Create a container for this component.
 
-    this._container = document.createElement("div"); // Create a new request object.
+    this._container = document.createElement("div");
+
+    this._container.classList.add("applist"); // Create a new request object.
+
 
     this._request = new Request(); // First, request a list of all apps. Store the promise.
 
@@ -123,7 +126,8 @@ class AppList extends BaseElement {
    */
 
   remove() {
-    // Remove the Overview element once the request promise has resolved.
+    console.log("AppList::remove"); // Remove the Overview element once the request promise has resolved.
+
     if (this._requestPromise) this._requestPromise.then(() => {
       this._overview.remove();
     }); // Call the BaseElement's remove function.

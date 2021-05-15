@@ -262,6 +262,9 @@ class BarcodeScanner extends BaseElement {
    */
   remove() {
 
+    // Make sure we stop scanning first.
+    this.stop();
+
     // Delete the state.
     delete this._state;
 

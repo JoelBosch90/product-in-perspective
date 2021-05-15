@@ -52,6 +52,7 @@ class AppList extends BaseElement {
 
     // Create a container for this component.
     this._container = document.createElement("div");
+    this._container.classList.add("applist");
 
     // Create a new request object.
     this._request = new Request();
@@ -141,6 +142,8 @@ class AppList extends BaseElement {
    *  non-arrow function or we'd lose the super context.
    */
   remove() {
+
+    console.log("AppList::remove");
 
     // Remove the Overview element once the request promise has resolved.
     if (this._requestPromise) this._requestPromise.then(() => { this._overview.remove(); });

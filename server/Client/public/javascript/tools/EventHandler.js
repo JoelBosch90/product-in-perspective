@@ -121,7 +121,7 @@ class EventHandler {
 
   remove() {
     // Delete the triggers object.
-    delete this._triggers; // Reset the bubbled array.
+    this._triggers = {}; // Reset the bubbled array.
 
     this._bubbled = [];
   }

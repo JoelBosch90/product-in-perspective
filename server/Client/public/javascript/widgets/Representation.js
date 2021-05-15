@@ -109,19 +109,14 @@ class Representation extends BaseElement {
 
     const quagga = "/quagga/quagga.min.js";
     const aframe = "/aframe/aframe.js";
-    this._scriptLoader = new ScriptLoader([quagga, aframe]); // Get the object to make HTTP requests.
+    this._scriptLoader = new ScriptLoader(); // Get the object to make HTTP requests.
 
     this._request = new Request(); // Next, start loading products.
 
     this._loadProducts(options.appPath); // We need to know what texts to display in the overlay elements.
 
 
-    this._loadTexts(options.appPath); // Create a container for the overlay.
-
-
-    this._container = document.createElement("div");
-
-    this._container.classList.add("representation"); // Listen for the scriptloader to load all scripts.
+    this._loadTexts(options.appPath); // Listen for the scriptloader to load all scripts.
 
 
     this._scriptLoader.on("loaded-all", script => {
@@ -137,7 +132,15 @@ class Representation extends BaseElement {
           this._loadArScene();
         });
       });
-    }); // Add the overlay to the parent container.
+    }); // Start loading after we've installed the event listener.
+
+
+    this._scriptLoader.loadAll([quagga, aframe]); // Create a container for the overlay.
+
+
+    this._container = document.createElement("div");
+
+    this._container.classList.add("representation"); // Add the overlay to the parent container.
 
 
     parent.appendChild(this._container);
@@ -154,13 +157,7 @@ class Representation extends BaseElement {
     this._scene.on("error", errorMessage => void this.trigger("error", errorMessage)); // Listen for when the scene ends.
 
 
-    this._scene.on('end', () => {
-      // Hide the scene.
-      this._scene.hide(); // Start and show the barcode scanner again.
-
-
-      this._scanner.start().show();
-    }); // Debounce the select handler.
+    this._scene.on('end', this._onSceneEnd); // Debounce the select handler.
 
 
     const selectHandler = debounce(this._selectProduct, 500); // Wait for the augmented reality scene to activate.
@@ -174,6 +171,17 @@ class Representation extends BaseElement {
 
       if (this._shownProduct) this._selectButton.disabled = false;
     });
+  };
+  /**
+   *  Private event hanlder for the scene ending.
+   */
+
+  _onSceneEnd = () => {
+    // Hide the scene.
+    this._scene.hide(); // Start and show the barcode scanner again.
+
+
+    this._scanner.start().show();
   };
   /**
    *  Private method to load the barcode scanner.
@@ -290,25 +298,24 @@ class Representation extends BaseElement {
    */
 
   remove() {
-    // Remove all classes that we've initialized.
-    this._scanner.remove();
+    // Stop listening for the scene to end.
+    if (this._scene) this._scene.off("end", this._onSceneEnd); // Remove all classes that we've initialized.
 
-    this._scene.remove();
+    if (this._scanner) this._scanner.remove();
+    if (this._scene) this._scene.remove();
+    if (this._request) this._request.remove();
+    if (this._scriptLoader) this._scriptLoader.remove(); // Remove all references to DOM elements.
 
-    this._request.remove();
-
-    this._scriptLoader.remove(); // Remove all references to DOM elements.
-
-
-    this._productDisplay.remove();
-
-    this._selectButton.remove(); // Remove all objects.
-
+    if (this._productDisplay) this._productDisplay.remove();
+    if (this._selectButton) this._selectButton.remove(); // Remove all objects.
 
     if (this._productsPromise) this._productsPromise.then(() => {
-      delete this._products;
+      // It does not make sense to remove the products before they're loaded.
+      delete this._products; // Remove the promise as well.
+
+      this._productsPromise = null;
     });
-    delete this._shownProduct; // Call the BaseElement's remove function.
+    if (this._shownProduct) delete this._shownProduct; // Call the BaseElement's remove function.
 
     super.remove();
   }

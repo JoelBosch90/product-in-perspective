@@ -83,7 +83,7 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
     // Then register the primitive element so that we can use the <a-reticle>
     // element in the DOM within the <a-scene> element.
-    AFRAME.registerPrimitive('a-reticle', {
+    if (!AFRAME.primitives.primitives['a-reticle']) AFRAME.registerPrimitive('a-reticle', {
 
       /**
        *  These are the preset default components. Here we can install
@@ -123,7 +123,7 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
    *  @param    {string}    name    Name of the AR hit test component.
    */
   _registerComponent = (name) => {
-    AFRAME.registerComponent(name, {
+    if (!AFRAME.components[name]) AFRAME.registerComponent(name, {
 
       /**
        *  Here we can define the properties of the object. We can determine

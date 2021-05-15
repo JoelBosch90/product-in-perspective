@@ -35,7 +35,10 @@ class PasswordForm extends BaseElement {
     // Call the base class constructor first.
     super(); // Create a container for this component.
 
-    this._container = document.createElement("div"); // Create a change password.
+    this._container = document.createElement("div");
+
+    this._container.classList.add("passwordform"); // Create a change password.
+
 
     this._form = new Form(this._container, {
       title: "Change password",
