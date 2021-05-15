@@ -74,6 +74,13 @@ class AppForm extends BaseElement {
           type: "text",
           required: true
         }
+      }, {
+        name: "exit-button",
+        options: {
+          label: "Exit button",
+          type: "text",
+          required: true
+        }
       }],
       fieldsets: [{
         name: "scanning",

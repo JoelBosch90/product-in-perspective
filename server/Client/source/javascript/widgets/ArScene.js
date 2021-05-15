@@ -1,7 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overlay } from "/javascript/widgets/Overlay.js";
-import { ArSceneReticle} from "/javascript/widgets/ArScene/Reticle.js";
+import { Reticle} from "/javascript/widgets/ArScene/Reticle.js";
 import { debounce } from "/javascript/tools/debounce.js";
 
 /**
@@ -37,7 +37,7 @@ class ArScene extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the Aframe reticle.
-   *  @var      {ArSceneReticle}
+   *  @var      {Reticle}
    */
   _reticle = null;
 
@@ -68,32 +68,56 @@ class ArScene extends BaseElement {
   _interface = null;
 
   /**
-   *  Private variable that stores a reference to the proceed button.
+   *  Private variable that stores a reference to the overlay proceed button.
    *  @var      {Element}
    */
   _proceedButton = null;
 
   /**
-   *  Private variable that stores a reference to the stop button.
+   *  Private variable that stores a reference to the overlay stop button.
    *  @var      {Element}
    */
   _stopButton = null;
 
   /**
-   *  Private variable that stores a reference to the instructions element.
+   *  Private variable that stores a reference to the overlay instructions.
    *  @var      {Element}
    */
   _instructions = null;
 
   /**
+   *  Private variable that stores a reference to the overlay title.
+   *  @var      {Element}
+   */
+  _overlayTitle
+
+  /**
+   *  Private variable that stores the texts for this scene.
+   *  @var      {object}
+   */
+  _texts = null;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element on which the
    *                                  overlay interface will be installed.
+   *  @param    {object}    texts     This is an object that provides texts for
+   *                                  the augmented reality scene.
+   *    @property {string}    "exit-button"         Text for the exit button.
+   *    @property {string}    "placing-title"       Title text in placing mode.
+   *    @property {string}    "placing-description" Description in placing mode.
+   *    @property {string}    "placing-button"      Button text in placing mode.
+   *    @property {string}    "viewing-title"       Title text in viewing mode.
+   *    @property {string}    "viewing-description" Description in viewing mode.
+   *    @property {string}    "viewing-button"      Button text in viewing mode.
    */
-  constructor(parent) {
+  constructor(parent, texts) {
 
     // Call the base class constructor.
     super();
+
+    // Store the texts we need to use.
+    this._texts = texts;
 
     // Initialize the interface.
     this._initInterface(parent);
@@ -144,7 +168,7 @@ class ArScene extends BaseElement {
     this._scene.setAttribute("webxr", "optionalFeatures: hit-test, local-floor, dom-overlay; overlayElement: .arscene-overlay;");
 
     // Add a reticle to the scene.
-    this._reticle = new ArSceneReticle(this._scene);
+    this._reticle = new Reticle(this._scene);
 
     // Add a 3D object to the scene.
     this._insertObject(this._scene);
@@ -316,7 +340,7 @@ class ArScene extends BaseElement {
     this._overlay = new Overlay(this._overlayContainer);
 
     // Add a title to the overlay.
-    this._overlay.add("h1", { location: "top" });
+    this._overlayTitle = this._overlay.add("h1", { location: "top" });
 
     // Add a description to the overlay.
     this._instructions = this._overlay.add("p", { location: "top" });
@@ -330,7 +354,7 @@ class ArScene extends BaseElement {
     this._proceedButton.addEventListener('touchstart', proceedHandler);
 
     // Add an stop button to the overlay.
-    this._stopButton = this._overlay.add("button", { text: "Exit" });
+    this._stopButton = this._overlay.add("button", { text: this._texts["exit-button"] });
 
     // Add event listeners to this button with a debounced callback. We want
     // this to just end the XR session. The event listener on the session will
@@ -358,11 +382,14 @@ class ArScene extends BaseElement {
     // Make sure the 3D object is not visible.
     this._object.setAttribute('visible', 'false');
 
+    // Update the text of the overlay title.
+    if (this._texts["placing-title"]) this._overlayTitle.textContent = this._texts["placing-title"];
+
     // Update the text on the proceed button.
-    this._proceedButton.textContent = "Place";
+    if (this._texts["placing-button"]) this._proceedButton.textContent = this._texts["placing-button"];
 
     // Update the text for the instructions.
-    this._instructions.textContent = "Select a location to place the object.";
+    if (this._texts["placing-description"]) this._instructions.textContent = this._texts["placing-description"];
   }
 
   /**
@@ -385,12 +412,21 @@ class ArScene extends BaseElement {
     // Make sure the object is visible.
     this._object.setAttribute('visible', 'true');
 
+    // Update the text of the overlay title.
+    if (this._texts["viewing-title"]) this._overlayTitle.textContent = this._texts["viewing-title"];
+
     // Update the text on the proceed button.
-    this._proceedButton.textContent = "Remove";
+    if (this._texts["viewing-button"]) this._proceedButton.textContent = this._texts["viewing-button"];
 
     // Update the text for the instructions.
-    this._instructions.textContent = "Take a moment to judge the size of that!";
+    if (this._texts["viewing-description"]) this._instructions.textContent = this._texts["viewing-description"];
   }
+
+  /**
+   *  Method that returns whether the augmented reality scene has loaded yet.
+   *  @returns  {boolean}
+   */
+  active = () => this._scene.renderStarted;
 
   /**
    *  Method for proceeding to the next step.
@@ -414,26 +450,12 @@ class ArScene extends BaseElement {
 
   /**
    *  Method to select a 3D object to show.
-   *  @param    {integer}     category    Number indicating the object category.
+   *  @param    {integer}     model     Number indicating the object category.
    *  @returns  {ArScene}
    */
-  select = (category) => {
+  select = (model) => {
 
-    // // Define the categories we can represent.
-    // const categories = {
-    //   0: { size: 0.2, color: 'red' },
-    //   1: { size: 0.5, color: 'yellow' },
-    //   2: { size: 1.0, color: 'blue'}
-    // }
-
-    // // Get the appropriate properties for this category.
-    // const properties = categories[category];
-
-    // // Update the object.
-    // this._object.setAttribute("width", properties.size);
-    // this._object.setAttribute("height", properties.size);
-    // this._object.setAttribute("depth", properties.size);
-    // this._object.setAttribute("color", properties.color);
+    // @TODO Use the model that is provided.
 
     // Immediately enter the augmented reality mode. This could fail, for
     // example if WebXR is not available or the user has not given permission.
@@ -450,11 +472,8 @@ class ArScene extends BaseElement {
    */
   stop = () => {
 
-    // Hide this object.
-    this.hide();
-
-    // Also hide the reticle. This will make sure that it is no longer running
-    // hit tests in the background.
+    // Hide the reticle. This will make sure that it is no longer running hit
+    // tests in the background.
     this._reticle.hide();
 
     // Trigger the end event.

@@ -49,21 +49,21 @@ const products = {
 // Wait for all libraries to load before we proceed.
 scripts.on('loaded-all', () => {
 
-  /**
-   *  Create an augmented reality session object.
-   *  @var      {ArScene}
-   */
-  const arScene = new ArScene(container);
+  // /**
+  //  *  Create an augmented reality session object.
+  //  *  @var      {ArScene}
+  //  */
+  // const arScene = new ArScene(container);
 
-  // Listen for errors from the ArScene object.
-  arScene.on("error", errorMessage => {
+  // // Listen for errors from the ArScene object.
+  // arScene.on("error", errorMessage => {
 
-    // These are unrecoverable errors, so we can remove the scene.
-    arScene.remove();
+  //   // These are unrecoverable errors, so we can remove the scene.
+  //   arScene.remove();
 
-    // We should show the apologoy to the user.
-    new Apology(container, errorMessage);
-  })
+  //   // We should show the apologoy to the user.
+  //   new Apology(container, errorMessage);
+  // })
 
   /**
     *  Create a barcode scanner object. We want to pass our container element so
@@ -83,7 +83,6 @@ scripts.on('loaded-all', () => {
     // easiest, most common error.
     new Apology(container, "Error: could not access camera");
   })
-
 
   // Get the overlay of the barcode scanner, so that we can configure it here.
   const scannerOverlay = scanner.overlay();
@@ -166,18 +165,18 @@ scripts.on('loaded-all', () => {
     selectButton.disabled = false;
   })
 
-  /**
-    *  Helper function for resetting the page to the original state.
-    *  @param  {Event}     event
-    */
-  const resetPage = event => {
+  // /**
+  //   *  Helper function for resetting the page to the original state.
+  //   *  @param  {Event}     event
+  //   */
+  // const resetPage = event => {
 
-    // Make sure that the barcode scanner is active and visible.
-    scanner.start().show();
-  }
+  //   // Make sure that the barcode scanner is active and visible.
+  //   scanner.start().show();
+  // }
 
-  // Listen for when the augmented reality session ends.
-  arScene.on('end', resetPage);
+  // // Listen for when the augmented reality session ends.
+  // arScene.on('end', resetPage);
 
   // // SHORTCUT FOR TESTING PURPOSES.
   // updateProduct({ code: 96181072 });

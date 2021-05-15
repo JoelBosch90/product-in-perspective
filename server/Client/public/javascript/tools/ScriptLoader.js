@@ -78,7 +78,7 @@ class ScriptLoader extends EventHandler {
     // Get the script element and the path to the Javascript library from the
     // event.
     const script = event.target;
-    const path = script.slug; // Move the script tag to our map of loaded scripts.
+    const path = script.slug; // Move the script element to our map of loaded scripts.
 
     this._loading.delete(path);
 
@@ -87,7 +87,7 @@ class ScriptLoader extends EventHandler {
 
     this.trigger("loaded", {
       path: path,
-      tag: script
+      element: script
     }); // Trigger the loaded-all event if that all scripts have loaded.
 
     if (!this._toLoad.length && !this._loading.size && !this._failed.size) this.trigger("loaded-all");

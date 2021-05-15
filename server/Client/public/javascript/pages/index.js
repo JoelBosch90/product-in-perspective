@@ -10,6 +10,7 @@ import { Apology } from "/javascript/widgets/Apology.js"; // Import components.
 import { Login } from "/javascript/components/Login.js";
 import { Registration } from "/javascript/components/Registration.js";
 import { PasswordForm } from "/javascript/components/PasswordForm.js";
+import { App } from "/javascript/components/App.js";
 import { AppList } from "/javascript/components/AppList.js";
 import { AppForm } from "/javascript/components/AppForm.js";
 import { ModelList } from "/javascript/components/ModelList.js";
@@ -43,7 +44,7 @@ const view = new View(container, {
  */
 
 const router = new Router(new Map([// This route will serve all apps.
-['/app/:appPath', AppForm], // These routes will serve the admin interface.
+['/app/:appPath', App], // These routes will serve the admin interface.
 ['/login', Login], ['/registration', Registration], ['/admin/profile', PasswordForm], ['/admin/app', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/model', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/product', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm]]), {
   // Protect the admin routes.
   protected: ['/admin']

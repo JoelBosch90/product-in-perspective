@@ -1,5 +1,5 @@
 // Import dependencies.
-import { ArSceneHitTest } from "/javascript/widgets/ArScene/HitTest.js";
+import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
 /**
  *  The definition of the Reticle class that can be used to create a reticle
@@ -9,7 +9,7 @@ import { ArSceneHitTest } from "/javascript/widgets/ArScene/HitTest.js";
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
- class ArSceneReticle {
+ class Reticle {
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -257,7 +257,7 @@ import { ArSceneHitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
   /**
    *  Method to show the scene.
-   *  @returns  {ArSceneReticle}
+   *  @returns  {Reticle}
    */
   show = () => {
 
@@ -272,7 +272,7 @@ import { ArSceneHitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
   /**
    *  Method to hide the scene.
-   *  @returns  {ArSceneReticle}
+   *  @returns  {Reticle}
    */
   hide = () => {
 
@@ -298,5 +298,5 @@ import { ArSceneHitTest } from "/javascript/widgets/ArScene/HitTest.js";
   }
 }
 
-// Export the ArSceneReticle class so it can be imported elsewhere.
-export { ArSceneReticle };
+// Export the Reticle class so it can be imported elsewhere.
+export { Reticle };

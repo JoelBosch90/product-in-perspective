@@ -204,14 +204,6 @@ input[type="file"] + label:not(:disabled):hover {
   filter: brightness(125%);
   transition: brightness var(--animation-quick);
 }
-button button,
-input[type="submit"] button,
-input[type="file"] + label button,
-button input[type="submit"],
-input[type="submit"] input[type="submit"],
-input[type="file"] + label input[type="submit"] {
-  margin-left: 0.5em;
-}
 /**
  *  Fieldset
  *    This file contains the base styling for a fieldset.
@@ -506,6 +498,9 @@ label {
   height: 100%;
   object-fit: cover;
 }
+.barcodescanner .barcodescanner-video > canvas {
+  display: none;
+}
 .barcodescanner .barcodescanner-overlay {
   position: absolute;
   left: 0;
@@ -540,6 +535,10 @@ label {
 .overlay .overlay-top > :empty,
 .overlay .overlay-bottom > :empty {
   display: none;
+}
+.overlay .overlay-top button,
+.overlay .overlay-bottom button {
+  margin: 0.25em;
 }
 *:fullscreen,
 *:-webkit-full-screen,
@@ -592,6 +591,24 @@ label {
   display: flex;
   gap: 1em;
   flex-wrap: wrap;
+}
+/**
+ *  Main styling for the Representation class.
+ */
+.representation {
+  width: 100%;
+  height: 100%;
+}
+/**
+ *  Main styling for the View class.
+ */
+.view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.view > * {
+  flex: 1;
 }
 /**
  *  This is the main import file to gather the styles for all pages.

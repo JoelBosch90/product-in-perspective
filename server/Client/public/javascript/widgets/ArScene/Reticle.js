@@ -1,5 +1,5 @@
 // Import dependencies.
-import { ArSceneHitTest } from "/javascript/widgets/ArScene/HitTest.js";
+import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 /**
  *  The definition of the Reticle class that can be used to create a reticle
  *  element in an Aframe scene that can be used to detect surfaces.
@@ -9,7 +9,7 @@ import { ArSceneHitTest } from "/javascript/widgets/ArScene/HitTest.js";
  *  Javascript classes.
  */
 
-class ArSceneReticle {
+class Reticle {
   /**
    *  Private variable that stores a reference to the container element in the
    *  DOM.
@@ -246,7 +246,7 @@ class ArSceneReticle {
   };
   /**
    *  Method to show the scene.
-   *  @returns  {ArSceneReticle}
+   *  @returns  {Reticle}
    */
 
   show = () => {
@@ -261,7 +261,7 @@ class ArSceneReticle {
   };
   /**
    *  Method to hide the scene.
-   *  @returns  {ArSceneReticle}
+   *  @returns  {Reticle}
    */
 
   hide = () => {
@@ -285,7 +285,7 @@ class ArSceneReticle {
 
     this._cache.clear();
   };
-} // Export the ArSceneReticle class so it can be imported elsewhere.
+} // Export the Reticle class so it can be imported elsewhere.
 
 
-export { ArSceneReticle };
+export { Reticle };

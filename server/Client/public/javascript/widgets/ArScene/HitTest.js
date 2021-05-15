@@ -9,7 +9,7 @@
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class ArSceneHitTest {
+class HitTest {
   /**
    *  Private variable that stores the renderer.
    *  @var      {WebGLRenderer}
@@ -171,7 +171,7 @@ class ArSceneHitTest {
     // custom classes, or uses any event handlers that need to be removed, but
     // we want this method here for consistency's sake.
   };
-} // Export the ArSceneHitTest class so it can be imported elsewhere.
+} // Export the HitTest class so it can be imported elsewhere.
 
 
-export { ArSceneHitTest };
+export { HitTest };

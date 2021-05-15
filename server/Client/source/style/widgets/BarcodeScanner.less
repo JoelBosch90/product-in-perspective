@@ -33,6 +33,15 @@
       // of it.
       object-fit: cover;
     }
+
+    // Target the canvas element that QuaggaJs might add.
+    > canvas
+    {
+
+      // We don't want to use it and it might actuall mess with the layout as it
+      // automatically gets a fixed size.
+      display: none;
+    }
   }
 
   // Target the overlay container.

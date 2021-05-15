@@ -1,0 +1,19 @@
+/**
+ *  Main styling for the View class.
+ */
+.view
+{
+  // Occupy all available space.
+  width: 100%;
+  height: 100%;
+
+  // Use Flexbox to create a simple layout.
+  display: flex;
+
+  // Select all direct siblings.
+  > * {
+
+    // Let it take up all available space.
+    flex: 1;
+  }
+}

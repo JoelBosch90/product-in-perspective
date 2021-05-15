@@ -30,11 +30,19 @@ const appSchema = new mongoose.Schema({
       unique: true,
     },
 
+    // For the augmented reality part, each app will feature an exit button.
+    // This allows a user to change the text for this button.
+    "exit-button": {
+      type: String,
+      required: [true, "Every app requires text for the exit button."],
+      unique: false,
+    },
+
     // The user can determine the texts of the title, description and button
     // while the user is scanning a product.
     "scanning-title": {
       type: String,
-      required: [true, "Every app requires a title for scanning mode."],
+      required: false,
     },
     "scanning-description": {
       type: String,
@@ -49,7 +57,7 @@ const appSchema = new mongoose.Schema({
     // while the user is trying to find a flat surface to place the 3D model.
     "placing-title": {
       type: String,
-      required: [true, "Every app requires a title for placing mode."],
+      required: false,
     },
     "placing-description": {
       type: String,
@@ -64,7 +72,7 @@ const appSchema = new mongoose.Schema({
     // while the user is viewing the 3D model.
     "viewing-title": {
       type: String,
-      required: [true, "Every app requires a title for viewing mode."],
+      required: false,
     },
     "viewing-description": {
       type: String,
@@ -93,7 +101,29 @@ appSchema.pre('remove', next => {
 
   // Remove all model entities the user created for this app.
   this.model('Model').deleteMany({ app: this._id }, next);
-})
+});
+
+// We also might want to find an app by it's path.
+appSchema.statics.findByIdOrPath = async function(id) {
+
+  // We're trying to find an app here.
+  let app = null;
+
+  // The first part could fail, since Mongoose might fail to cast the ID to an
+  // ObjectId and fail if it is a path.
+  try {
+
+    // First, try to find the app by ID.
+    app = await this.findOne({ _id: id });
+  } finally {
+
+    // If that doesn't work, try to find the app by path.
+    if (!app) app = await this.findOne({ path: id });
+
+    // Return the app that we managed to retrieve.
+    return app;
+  }
+}
 
 // Use the new schema for the app entity.
 const App = mongoose.model('App', appSchema);
