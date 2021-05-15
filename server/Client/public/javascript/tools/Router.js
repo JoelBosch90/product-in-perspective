@@ -65,8 +65,7 @@ class Router extends EventHandler {
 
 
   navigateToCurrent = () => {
-    console.log('popstate'); // Navigate to the path that is currently in the address bar.
-
+    // Navigate to the path that is currently in the address bar.
     this.navigateTo(window.location.pathname); // Allow chaining.
 
     return this;

@@ -49,8 +49,7 @@ class BaseElement extends EventHandler {
    */
 
   remove() {
-    console.log(this._container.classList); // Remove the container if it was ever initialized.
-
+    // Remove the container if it was ever initialized.
     if (this._container) this._container.remove(); // Call the EventHandler's remove function.
 
     super.remove();
