@@ -59,7 +59,9 @@ class AppList extends BaseElement {
         // the HTTP request.
         if (!response.ok) return this._errorHandler(apps.error); // Create a new cards object.
 
-        const cards = {}; // Create a app overview.
+        const cards = {}; // Create an object to map app ids to their paths for navigation.
+
+        const paths = {}; // Create a app overview.
 
         this._overview = new Overview(this._container, {
           title: "App overview",
@@ -78,7 +80,9 @@ class AppList extends BaseElement {
           }); // Add the card to our cards dictionary.
 
 
-          cards[app._id] = card;
+          cards[app._id] = card; // Remember the path for this app.
+
+          paths[app._id] = app.slug;
         } // Handle remove requests.
 
 
@@ -88,11 +92,13 @@ class AppList extends BaseElement {
             // the overview as well.
             if (response.ok) cards[id].remove();
           });
-        });
+        }); // Link the edit button to the edit form of the appropriate app.
 
-        this._overview.on('edit', id => void goTo('/admin/app/' + id));
 
-        this._overview.on('view', console.log); // Add the new element to the parent container.
+        this._overview.on('edit', id => void goTo('/admin/app/' + id)); // Link the view button to the URL of the appropiate app.
+
+
+        this._overview.on('view', id => void goTo('/app/' + paths[id])); // Add the new element to the parent container.
 
 
         parent.appendChild(this._container);

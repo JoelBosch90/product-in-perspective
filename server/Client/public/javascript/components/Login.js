@@ -1,6 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Form } from "/javascript/widgets/Form.js";
+import { goTo } from "/javascript/tools/goTo.js";
 /**
  *  The definition of the Login class component that can be used to load a login
  *  form.
@@ -69,9 +70,9 @@ class Login extends BaseElement {
     this._form.on("stored", response => {
       // @TODO Do this in a much safer way. Currently, this is unprotected
       // against cross site scripting!!!
-      localStorage.setItem('jwt', response.token); // Suggest moving to the login component.
+      localStorage.setItem('jwt', response.token); // Move to the list of apps after login.
 
-      this.trigger("navigate", "Login");
+      goTo('/admin/app');
     }); // Add the new element to the parent container.
 
 

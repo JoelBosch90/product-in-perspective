@@ -1,6 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Form } from "/javascript/widgets/Form.js";
+import { goTo } from "/javascript/tools/goTo.js";
 /**
  *  The definition of the PasswordForm class component that can be used to load
  *  a form to change a password.
@@ -59,7 +60,10 @@ class PasswordForm extends BaseElement {
           type: "submit"
         }
       }]
-    }); // Add the new element to the parent container.
+    }); // Go to the app list after a successful password change.
+
+    this._form.on("stored", () => void goTo('/admin/app')); // Add the new element to the parent container.
+
 
     parent.appendChild(this._container);
   }

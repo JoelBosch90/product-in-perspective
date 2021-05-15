@@ -100,12 +100,12 @@
    */
   app.get(path + '/all', async (request, response) => {
 
-    // // This is only available to an authenticated user.
-    // if (!request.context.authenticated) return response
-    //   .status(500)
-    //   .json({
-    //     error: 'Request not allowed.',
-    //   });
+    // This is only available to an authenticated user.
+    if (!request.context.authenticated) return response
+      .status(500)
+      .json({
+        error: 'Request not allowed.',
+      });
 
     // Get a list of all products for this user.
     const products = await request.context.models.Product.find({

@@ -17,14 +17,14 @@ const userSchema = new mongoose.Schema({
       type:       String,
       unique:     true,
       lowercase:  true,
-      required:   true,
+      required:   [true, "Every user requires an email address."],
     },
 
     // Users should be able to authenticate with their password. Thus every user
     // needs a password.
     password: {
       type:       String,
-      required:   true,
+      required:   [true, "Every user requires a password."],
     }
   },
 

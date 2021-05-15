@@ -84,6 +84,8 @@ class Request {
    */
   post = async (url = '', data = {}) => {
 
+    console.log(url, data);
+
     // Use fetch to perform the HTTP request.
     const response = await fetch(this._apiUrl + url, {
       method:         'POST',

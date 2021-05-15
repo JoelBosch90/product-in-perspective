@@ -180,7 +180,7 @@ class Api {
         // We shouldn't process anything but Javascript files here.
         else if (file.toLowerCase().endsWith('.js')) {
 
-          // Get the relative path in the endpoints directory without the
+          // Get the relative path in the endpoints directory without the '.js'
           // extension.
           const apiPath = fullPath.replace(endpointsDirectory, "").slice(0, -3);
 

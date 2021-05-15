@@ -10,24 +10,30 @@ const modelSchema = new mongoose.Schema({
 
     // Users recognize their models by their name. These names should be unique
     // per app, but does not need to be unique across all models.
-    name: { type: String, required: true },
+    name: {
+      type: String,
+      required: [true, "Every model requires a name."],
+    },
 
     // We want a place to store a location to the actual model file. Because
     // this is not yet implemented, this not yet required.
-    file: { type: String, required: false },
+    file: {
+      type: String,
+      required: false
+    },
 
     // Every model should be connected to a single app.
     app: {
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'App',
-      required: true,
+      required: [true, "Every model requires an app."],
     },
 
     // Every model should also be connected to a single user.
     user: {
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'User',
-      required: true,
+      required: [true, "Every model requires a user."],
     },
   },
 

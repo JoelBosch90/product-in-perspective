@@ -12,7 +12,7 @@ const modelSchema = new mongoose.Schema({
     // unique per model, but does not need to be unique across all products.
     name: {
       type:     String,
-      required: true,
+      required: [true, "Every model requires a name."],
     },
 
     // Every product should be identified by a single barcode. It should be
@@ -20,21 +20,21 @@ const modelSchema = new mongoose.Schema({
     barcode: {
       type:     Number,
       ref:      'Model',
-      required: true,
+      required: [true, "Every model requires a barcode."],
     },
 
     // Every product should be connected to a single model.
     model: {
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'Model',
-      required: true,
+      required: [true, "Every model requires a model."],
     },
 
     // Every product should also be connected to a single user.
     user: {
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'User',
-      required: true,
+      required: [true, "Every product requires a user."],
     },
   },
 

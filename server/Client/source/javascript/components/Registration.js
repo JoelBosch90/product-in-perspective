@@ -1,6 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Form } from "/javascript/widgets/Form.js";
+import { goTo } from "/javascript/tools/goTo.js";
 
 /**
  *  The definition of the Registration class component that can be used to load
@@ -87,12 +88,8 @@ class Registration extends BaseElement {
       ],
     });
 
-    // Listen for when the registration was successful.
-    this._form.on("stored", () => {
-
-      // Suggest moving to the login component.
-      this.trigger("navigate", "Login");
-    });
+    // Go to the login page after a successful registration.
+    this._form.on("stored", () => void goTo('/login'));
 
     // Add the new element to the parent container.
     parent.appendChild(this._container);

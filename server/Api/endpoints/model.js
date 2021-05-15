@@ -28,9 +28,6 @@ module.exports = function(app, path) {
       user: request.context.user,
     });
 
-    console.log(request.body, request.context);
-    console.log(models);
-
     // If a model with this name already exists for this app, we should throw an
     // error.
     if (models.find(model => model.name == request.body.name)) return response

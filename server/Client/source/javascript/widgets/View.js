@@ -24,7 +24,9 @@ class View extends BaseElement {
   _cacheSize = null;
 
   /**
-   *  Array for keeping track of the installed widgets.
+   *  Map for keeping track of the installed widgets. The keys in this map are
+   *  the classes, where the values are objects that contain both the instance
+   *  of the widget and the parameters that were used to construct it.
    *  @var      {Map}
    */
   _widgets = new Map();
@@ -41,9 +43,8 @@ class View extends BaseElement {
    *                                      times (the active one).
    *    @property   {Class}   Widget      An optional BaseElement widget that
    *                                      will be installed immediately.
-   *    @property   {object}  options     The additional option parameters for
-   *                                      the widget that is to be installed
-   *                                      immediately.
+   *    @property   {any}     params      The additional options that will be
+   *                                      passed to the widget.
    */
   constructor(parent, options = {}) {
 
@@ -58,9 +59,9 @@ class View extends BaseElement {
     this._container.classList.add("view");
 
     // If a widget was passed, install it immediately.
-    if (options.Widget) this.install(options.Widget, options.options);
+    if (options.Widget) this.install(options.Widget, ...options.params);
 
-    // Add the input element to the parent element.
+    // Add the view container to the parent element.
     parent.appendChild(this._container);
   }
 
@@ -69,10 +70,8 @@ class View extends BaseElement {
    *  @param   {Class}   Widget     The widget that will be installed as the
    *                                active widget. It should extend the
    *                                BaseElement class.
-   *  @param   {object}  params     The additional options that will be passed
-   *                                to the widget. These will be ignore if a
-   *                                widget with this class was already
-   *                                installed.
+   *  @param   {...any}  params     The additional options that will be passed
+   *                                to the widget.
    *  @returns {View}
    */
   install(Widget, ...params) {
@@ -80,22 +79,23 @@ class View extends BaseElement {
     // Check if we've installed a widget with this class before.
     if (!this._widgets.has(Widget)) {
 
-      // If not, create it.
-      const widget = new Widget(this._container, ...params);
+      // If not, create an instance of this widget.
+      const instance = new Widget(this._container, ...params);
 
       // Make sure we propagate all events that this widget triggers.
-      widget.bubbleTo(this);
+      instance.bubbleTo(this);
 
-      // And add it to the Map, using the class as a key.
-      this._widgets.set(Widget, widget);
+      // And add the widget and its parameters to the Map, using the class as a
+      // key.
+      this._widgets.set(Widget, { instance, params });
 
       // If we have more widgets that the maximum cache size allows, clear one
       // widget.
       if (this._widgets.size > this._cacheSize) this._cullWidget();
     }
 
-    // Now activate the the requested widget.
-    this._activate(Widget);
+    // Now activate the the requested widget with the requested parameters.
+    this._activate(Widget, params);
 
     // Allow chaining.
     return this;
@@ -113,15 +113,17 @@ class View extends BaseElement {
 
   /**
    *  Private method for activating a widget.
-   *  @param   {Class}    widget    The widget that will be activated.
+   *  @param   {Class}    Widget    The widget that will be activated.
+   *  @param   {object}   params    The additional options that were passed
+   *                                to the widget.
    */
-  _activate(Widget) {
+  _activate(Widget, params) {
 
-    // Cannot
+    // Cannot activate a widget if we don't have a Widget.
     if (!Widget) return;
 
     // Hide the widget that is currently active.
-    this._activeWidget().hide();
+    this._activeWidget().instance.hide();
 
     // First, get the instantiated widget.
     const widget = this._widgets.get(Widget);
@@ -129,12 +131,23 @@ class View extends BaseElement {
     // Now remove the previous entry for this widget from the Map.
     this._widgets.delete(Widget);
 
+    // If the parameters for this widget have changed, we need to create a new
+    // instance.
+    if (widget.params != params) {
+
+      // Remove the previous instance.
+      widget.instance.remove();
+
+      // Create the new instance of the same class.
+      widget.instance = new Widget(this._container, ...params);
+    }
+
     // And add it as the newest one. This will make sure that the widgets that
     // are not used are the first to be removed if the cache size is exceeded.
     this._widgets.set(Widget, widget);
 
     // Now show the newly activated widget.
-    widget.show();
+    widget.instance.show();
   }
 
   /**
@@ -143,14 +156,14 @@ class View extends BaseElement {
    */
   _cullWidget() {
 
-    // Get the first widget and its class constructor in the map.
+    // Get the first widget object and its class constructor in the map.
     const [Class, widget] = Array.from(this._widgets)[0];
 
-    // Use the class constructor to remove the widget from the map.
+    // Use the class constructor to remove the widget object from the map.
     this._widgets.delete(Class);
 
     // Now clean up the widget itself.
-    widget.remove();
+    widget.instance.remove();
   }
 
   /**
@@ -160,7 +173,7 @@ class View extends BaseElement {
   remove() {
 
     // Remove all installed widgets.
-    for (const [Class, widget] of this._widgets) widget.remove();
+    for (const [Class, widget] of this._widgets) widget.instance.remove();
 
     // Clear the map.
     this._widgets.clear();
