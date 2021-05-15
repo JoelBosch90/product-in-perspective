@@ -218,7 +218,11 @@ _loadBarcodeScanner = () => {
     });
 
     // Add a paragraph for displaying the scanned product to the user.
-    this._productDisplay = scannerOverlay.add("p");
+    this._productDisplay = scannerOverlay.add("p", {
+
+      // We want to clearly show the user when we scan products.
+      animated: true,
+    });
 
     // Add a select button to the overlay.
     this._selectButton = scannerOverlay.add("button", {
@@ -250,8 +254,6 @@ _loadBarcodeScanner = () => {
     */
   _processBarcode = data => {
 
-    console.log("_processBarcode", data);
-
     // If we cannot recognize this product, we can't do anything.
     if (!(data.code in this._products)) return;
 
@@ -264,8 +266,11 @@ _loadBarcodeScanner = () => {
     // Make sure we also remember the barcode of the shown product.
     this._shownProduct.code = data.code;
 
-    // Show the user the product name of the selected product.
-    this._productDisplay.textContent = this._shownProduct.name;
+    // Show the user the product name of the selected product. We want to remove
+    // the text first and reset it a moment later to trigger the animation
+    // effect.
+    this._productDisplay.textContent = '';
+    setTimeout(() => { this._productDisplay.textContent = this._shownProduct.name }, 200);
 
     // Enable the button if the scene is also ready..
     if (this._scene.active()) this._selectButton.disabled = false;

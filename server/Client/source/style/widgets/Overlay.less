@@ -46,7 +46,7 @@
     // Set a background to make our text more readable.
     background-color: var(--background);
 
-    // Target all empty elements inside the overlay groups.
+    // Target all empty children of the overlay groups.
     > :empty
     {
       // Hide them.
@@ -58,6 +58,36 @@
     {
       // Set margins so that buttons never touch each other.
       margin: 0.25em;
+    }
+
+    // Target children with the animated class.
+    > .animated
+    {
+      // We don't want this element to have any background by default.
+      background-color: transparent;
+
+      // We don't want any of the animation to escape this element.
+      overflow: hidden;
+
+      // We want to animate the changes for the element. This effect is
+      // supposed to catch the attention of the user, so it should not be too
+      // subtle.
+      transition:
+        background-color var(--animation-quick),
+        filter var(--animation-slow);
+
+      // Target them when they're empty.
+      &:empty
+      {
+        // Make sure this element is visible.
+        display: revert;
+
+        // Set the background color to something flashy.
+        background-color: var(--active-background);
+
+        // This effect makes the effect seem a little smoother.
+        filter: opacity(20%);
+      }
     }
   }
 }

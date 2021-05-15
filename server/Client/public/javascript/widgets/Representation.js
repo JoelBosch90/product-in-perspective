@@ -203,7 +203,10 @@ class Representation extends BaseElement {
       location: "top"
     }); // Add a paragraph for displaying the scanned product to the user.
 
-    this._productDisplay = scannerOverlay.add("p"); // Add a select button to the overlay.
+    this._productDisplay = scannerOverlay.add("p", {
+      // We want to clearly show the user when we scan products.
+      animated: true
+    }); // Add a select button to the overlay.
 
     this._selectButton = scannerOverlay.add("button", {
       text: this._texts["scanning-button"]
@@ -231,17 +234,21 @@ class Representation extends BaseElement {
     */
 
   _processBarcode = data => {
-    console.log("_processBarcode", data); // If we cannot recognize this product, we can't do anything.
-
+    // If we cannot recognize this product, we can't do anything.
     if (!(data.code in this._products)) return; // No need to process if we're already showing this product.
 
     if (this._shownProduct && data.code == this._shownProduct.code) return; // Update the shown product.
 
     this._shownProduct = this._products[data.code]; // Make sure we also remember the barcode of the shown product.
 
-    this._shownProduct.code = data.code; // Show the user the product name of the selected product.
+    this._shownProduct.code = data.code; // Show the user the product name of the selected product. We want to remove
+    // the text first and reset it a moment later to trigger the animation
+    // effect.
 
-    this._productDisplay.textContent = this._shownProduct.name; // Enable the button if the scene is also ready..
+    this._productDisplay.textContent = '';
+    setTimeout(() => {
+      this._productDisplay.textContent = this._shownProduct.name;
+    }, 200); // Enable the button if the scene is also ready..
 
     if (this._scene.active()) this._selectButton.disabled = false;
   };
