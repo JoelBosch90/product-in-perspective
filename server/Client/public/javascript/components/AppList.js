@@ -126,8 +126,7 @@ class AppList extends BaseElement {
    */
 
   remove() {
-    console.log("AppList::remove"); // Remove the Overview element once the request promise has resolved.
-
+    // Remove the Overview element once the request promise has resolved.
     if (this._requestPromise) this._requestPromise.then(() => {
       this._overview.remove();
     }); // Call the BaseElement's remove function.
