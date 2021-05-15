@@ -185,7 +185,7 @@ class AppForm extends BaseElement {
         {
           name: "submit",
           options: {
-            label:  "Create app",
+            label:  options.appId ? "Edit app" : "Create app",
             type:   "submit",
           },
         },

@@ -161,7 +161,7 @@ class AppForm extends BaseElement {
       buttons: [{
         name: "submit",
         options: {
-          label: "Create app",
+          label: options.appId ? "Edit app" : "Create app",
           type: "submit"
         }
       }]

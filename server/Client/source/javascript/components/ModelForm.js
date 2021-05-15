@@ -149,7 +149,7 @@ class ModelForm extends BaseElement {
         {
           name:   "submit",
           options: {
-            label:  "Create model",
+            label:  formOptions.modelId ? "Edit model" : "Create model",
             type:   "submit",
           },
         },

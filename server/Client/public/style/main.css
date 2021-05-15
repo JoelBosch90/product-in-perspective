@@ -212,7 +212,7 @@ input[type="file"] + label:not(:disabled):hover {
 fieldset {
   display: grid;
   grid-template-columns: auto;
-  gap: 1em;
+  gap: 1.25em;
   padding: 1em;
   border-color: var(--border-color);
   border-radius: 0.25em;
@@ -236,7 +236,7 @@ fieldset input + button {
 form {
   display: grid;
   grid-template-columns: auto;
-  gap: 1em;
+  gap: 1.25em;
   padding: 2em;
   max-width: min(100%, 30em);
 }
@@ -424,6 +424,7 @@ select {
 }
 .input-field textarea {
   resize: vertical;
+  display: block;
 }
 /**
  *  Text

@@ -285,5 +285,10 @@ select {
     // We want to give users some freedom to size the box themselves, but only
     // vertically.
     resize: vertical;
+
+    // Textareas have extra space reserved for descenders because they are
+    // inline-block elements. However, this looks like extra margin we don't
+    // want to show and behaves inconsistenly.
+    display: block;
   }
 }

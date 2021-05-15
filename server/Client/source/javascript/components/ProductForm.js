@@ -149,7 +149,7 @@ class ProductForm extends BaseElement {
         {
           name:   "submit",
           options: {
-            label:  "Create model",
+            label:  formOptions.productId ? "Edit product" : "Create product",
             type:   "submit",
           },
         },
