@@ -22,10 +22,12 @@ const appSchema = new mongoose.Schema({
       required: false,
     },
 
-    // The slug determines the location of where this app will be hosted.
-    slug: {
+    // The path determines the location of where this app will be hosted. It is
+    // important that this is unique across the all apps.
+    path: {
       type: String,
-      required: [true, "Every app requires a slug."],
+      required: [true, "Every app requires a path."],
+      unique: true,
     },
 
     // The user can determine the texts of the title, description and button

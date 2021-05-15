@@ -68,9 +68,9 @@ class AppForm extends BaseElement {
           type: "textarea"
         }
       }, {
-        name: "slug",
+        name: "path",
         options: {
-          label: "Slug",
+          label: "Path",
           type: "text",
           required: true
         }

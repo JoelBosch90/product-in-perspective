@@ -97,7 +97,7 @@ class AppList extends BaseElement {
             cards[app._id] = card;
 
             // Remember the path for this app.
-            paths[app._id] = app.slug;
+            paths[app._id] = app.path;
           }
 
           // Handle remove requests.

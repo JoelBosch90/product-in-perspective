@@ -122,20 +122,28 @@ module.exports = function(app, path) {
    */
   app.get(path + '/:appId', async (request, response) => {
 
-    // Get the requested app.
-    const app = await request.context.models.App.findOne({
+    // Get the requested app, assuming the provided ID is an ID.
+    const appById = await request.context.models.App.findOne({
       _id: request.params.appId
     });
 
-    // Check if the app exists.
-    if (!app) return response
+    // If we can find the app by ID, send that one.
+    if (appById) return response.send(appById);
+
+    // Get the requested app, assuming the provided ID is an path.
+    const appByPath = await request.context.models.App.findOne({
+      path: request.params.appId
+    });
+
+    // Otherwise, we return the app we found by the name of the path.
+    if (appByPath) return response.send(appByPath);
+
+    // If we couldn't find the app at all, return an error.
+    return response
       .status(404)
       .json({
         error: 'App could not be found.',
       });
-
-    // Send back the entire list with all their information.
-    return response.send(app);
   });
 
   /**
