@@ -64,7 +64,7 @@ class ProductList extends BaseElement {
 
     // First, request a list of all products. Store the promise.
     this._requestPromise = this._request.get('/products')
-      .catch(this._overview.showError)
+      .catch(error => void this._overview.showError(error))
       .then(response => {
 
         // Get access to the JSON object.
@@ -97,7 +97,7 @@ class ProductList extends BaseElement {
           // Handle remove requests.
           this._overview.on('remove', id => {
             this._request.delete('/product/' + id)
-              .catch(this._overview.showError)
+              .catch(error => void this._overview.showError(error))
               .then(response => {
 
                 // If it was deleted from the database, we should remove it from

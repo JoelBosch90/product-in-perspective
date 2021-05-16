@@ -64,7 +64,7 @@ class AppList extends BaseElement {
 
     // First, request a list of all apps. Store the promise.
     this._requestPromise = this._request.get('/apps')
-      .catch(this._overview.showError)
+      .catch(error => void this._overview.showError(error))
       .then(response => {
 
         // Get access to the JSON object.
@@ -103,7 +103,7 @@ class AppList extends BaseElement {
           // Handle remove requests.
           this._overview.on('remove', id => {
             this._request.delete('/app/' + id)
-              .catch(this._overview.showError)
+              .catch(error => void this._overview.showError(error))
               .then(response => {
 
                 // If it was deleted from the database, we should remove it from

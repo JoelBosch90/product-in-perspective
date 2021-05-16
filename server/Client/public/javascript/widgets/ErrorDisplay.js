@@ -34,7 +34,9 @@ class ErrorDisplay extends BaseElement {
 
 
   add = error => {
-    // Create a paragraph.
+    // We don't know how to deal with anything other than strings at this point.
+    if (typeof error != "string") return; // Create a paragraph.
+
     const p = document.createElement("p"); // Install the error text.
 
     p.textContent = "Error: " + error.toLowerCase(); // Add the error to the display.

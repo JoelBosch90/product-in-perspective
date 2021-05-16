@@ -84,7 +84,7 @@ class ProductForm extends BaseElement {
 
     // First, request a list of all models. Store the promise.
     this._modelsRequest = this._request.get('/models')
-      .catch(this._form.showError)
+      .catch(error => void this._form.showError(error))
       .then(response => {
 
         // Get access to the JSON object.
@@ -105,7 +105,7 @@ class ProductForm extends BaseElement {
 
     // Secondlly, request a list of all apps. Store the promise.
     this._appsRequest = this._request.get('/apps')
-      .catch(this._form.showError)
+      .catch(error => void this._form.showError(error))
       .then(response => {
 
         // Get access to the JSON object.
@@ -188,17 +188,6 @@ class ProductForm extends BaseElement {
 
     // When the product was stored successfully, return to the product overview.
     this._form.on("stored", () => void goTo('/admin/product'));
-  }
-
-  /**
-   *  Private method for handling errors.
-   *  @param    {Error}     error   Object describing the error that has
-   *                                occurred.
-   */
-  _errorHandler = error => {
-
-    // Use the form to show the errors.
-    this._form.showError(error);
   }
 
   /**

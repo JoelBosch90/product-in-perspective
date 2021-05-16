@@ -26,7 +26,7 @@ We use systemctl to run the production database.
 
 ## Symlinks
 Inside the `server/Client/public` folder, there should be symlinks to
-`source/html`, `source/models`, and `source/iamges`. These are not in de git
+`source/html`, `source/models`, and `source/images`. These are not in de git
 repository because these symlinks depend on the folder structure of the local
 machine. You should add them manually.
 
