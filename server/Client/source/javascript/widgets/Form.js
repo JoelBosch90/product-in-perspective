@@ -5,6 +5,7 @@ import { FormInput } from "/javascript/widgets/Form/Input.js";
 import { FormFieldset } from "/javascript/widgets/Form/Fieldset.js";
 import { Button } from "/javascript/widgets/Button.js";
 import { Title } from "/javascript/widgets/Title.js";
+import { ErrorDisplay } from "/javascript/widgets/ErrorDisplay.js";
 
 /**
  *  The definition of the Form class that can be used to create a form element.
@@ -29,6 +30,12 @@ class Form extends BaseElement {
    *  @var      {Title}
    */
   _title = null;
+
+  /**
+   *  Element that displays error messages.
+   *  @var      {ErrorDisplay}
+   */
+  _errorDisplay = null;
 
   /**
    *  Object that is used as a dictionary for keeping track of the inputs in the
@@ -115,6 +122,9 @@ class Form extends BaseElement {
     // Add the title if requested.
     if (options.title) this.title(options.title);
 
+    // Add an ErrorDisplay under the main title.
+    this._errorDisplay = new ErrorDisplay(this._container);
+
     // Add the center class to the form if requested.
     if (options.center) this._container.classList.add("center");
 
@@ -126,7 +136,7 @@ class Form extends BaseElement {
     // If we got a GET parameter, we can try to prefill data in this form.
     if (options.params && options.params.get) this._request.get(options.params.get)
       .then(this._prefill)
-      .catch(this._errorHandler);
+      .catch(this.showError);
 
     // Add the form to the parent element.
     parent.appendChild(this._container);
@@ -271,13 +281,13 @@ class Form extends BaseElement {
     // If we have the parameters for a PUT request, perform the PUT request.
     if (this._params.put) return this._request.put(this._params.put, values)
       .then(this._submitResponseHandler)
-      .catch(this._errorHandler);
+      .catch(this.showError);
 
     // If we don't have the parameters for a PUT request, but we do have the
     // parameters for a POST request, perform the POST request.
     if (this._params.post) return this._request.post(this._params.post, values)
       .then(this._submitResponseHandler)
-      .catch(this._errorHandler);
+      .catch(this.showError);
   }
 
   /**
@@ -291,7 +301,7 @@ class Form extends BaseElement {
 
       // Use the form's error handling if an error has occurred with the HTTP
       // request.
-      if (!response.ok) return this._errorHandler(json.error);
+      if (!response.ok) return this.showError(json.error);
 
       // Otherwise, we can trigger the 'stored' event.
       this.trigger("stored", json);
@@ -299,15 +309,17 @@ class Form extends BaseElement {
   }
 
   /**
-   *  Private method for handling errors.
-   *  @param    {Error}     error   Object describing the error that has
-   *                                occurred.
-   *  @TODO     Implement user friendly error handling.
+   *  Method for showing errors.
+   *  @param    {string}      error   Error message.
+   *  @returns  {Form}
    */
-  _errorHandler = error => {
+  showError = error => {
 
-    // For now we want to simply log the error.
-    console.error(error);
+    // Clear the error display to show the new error.
+    this._errorDisplay.clear().add(error);
+
+    // Allow chaining.
+    return this;
   }
 
   /**
@@ -321,7 +333,7 @@ class Form extends BaseElement {
 
       // Use the form's error handling if an error has occurred with the HTTP
       // request.
-      if (!response.ok) return this._errorHandler(json.error);
+      if (!response.ok) return this.showError(json.error);
 
       // Prefill all data.
       this.values(json);
@@ -333,11 +345,11 @@ class Form extends BaseElement {
    *  form.
    *
    *  @getter
-   *    @return   {object}
+   *    @returns  {object}
    *
    *  @setter
    *    @param    {object}  newData  The new data to be used as inputs.
-   *    @return   {Form}
+   *    @returns  {Form}
    */
   values = newData => {
 

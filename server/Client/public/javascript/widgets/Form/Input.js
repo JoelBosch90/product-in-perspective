@@ -276,6 +276,18 @@ class FormInput extends BaseElement {
     this._container = new FormSelect(parent, options);
   };
   /**
+   *  Method for adding an option element to the select element.
+   *  @param    {...any}    params       See FormSelect::addOption.
+   *  @returns  {Element}
+   */
+
+  addOption = (...params) => {
+    // Can't add options if we're not a select input.
+    if (!this._container instanceof FormSelect) return; // Expose the option object.
+
+    return this._container.addOption(...params);
+  };
+  /**
    *  Method for getting the current value of this element. Can be used as both
    *  a getter and a setter.
    *

@@ -41,10 +41,9 @@ class ModelList extends BaseElement {
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
-   *  @param    {array}     options
    */
 
-  constructor(parent, options = {}) {
+  constructor(parent) {
     // Call the base class constructor first.
     super(); // Create a container for this component.
 
@@ -53,21 +52,21 @@ class ModelList extends BaseElement {
     this._container.classList.add("modellist"); // Create a new request object.
 
 
-    this._request = new Request(); // First, request a list of all models. Store the promise.
+    this._request = new Request(); // Create a model overview.
 
-    this._requestPromise = this._request.get('/models').catch(this._errorHandler).then(response => {
+    this._overview = new Overview(this._container, {
+      title: "Model overview",
+      center: true
+    }); // First, request a list of all models. Store the promise.
+
+    this._requestPromise = this._request.get('/models').catch(this._overview.showError).then(response => {
       // Get access to the JSON object.
       if (response) return response.json().then(models => {
         // Use this component's error handling if an error has occurred with
         // the HTTP request.
-        if (!response.ok) return this._errorHandler(models.error); // Create a new cards object.
+        if (!response.ok) return this._overview.showError(models.error); // Create a new cards object.
 
-        const cards = {}; // Create a model overview.
-
-        this._overview = new Overview(this._container, {
-          title: "Model overview",
-          center: true
-        }); // Loop through all of the models.
+        const cards = {}; // Loop through all of the models.
 
         for (const model of models) {
           // Create a new card for each model.
@@ -86,7 +85,7 @@ class ModelList extends BaseElement {
 
 
         this._overview.on('remove', id => {
-          this._request.delete('/model/' + id).catch(this._errorHandler).then(response => {
+          this._request.delete('/model/' + id).catch(this._overview.showError).then(response => {
             // If it was deleted from the database, we should remove it from
             // the overview as well.
             if (response.ok) cards[id].remove();
@@ -101,27 +100,14 @@ class ModelList extends BaseElement {
     });
   }
   /**
-   *  Private method for handling errors.
-   *  @param    {Error}     error   Object describing the error that has
-   *                                occurred.
-   *  @TODO     Implement user friendly error handling.
-   */
-
-
-  _errorHandler = error => {
-    // For now we want to simply log the error.
-    console.error(error);
-  };
-  /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
    */
 
+
   remove() {
     // Remove the Overview element once the request promise has resolved.
-    if (this._requestPromise) this._requestPromise.then(() => {
-      this._overview.remove();
-    }); // Call the BaseElement's remove function.
+    if (this._requestPromise) this._requestPromise.then(() => void this._overview.remove()); // Call the BaseElement's remove function.
 
     super.remove();
   }

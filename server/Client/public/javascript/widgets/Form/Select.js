@@ -103,7 +103,7 @@ class FormSelect extends BaseElement {
    *                                  communicated to the API endpoint.
    *  @param    {string}  label       This is the label of the options that is
    *                                  shown to the user.
-   *  @returns  {FormSelect}
+   *  @returns  {Element}
    */
 
   addOption = (label, value) => {

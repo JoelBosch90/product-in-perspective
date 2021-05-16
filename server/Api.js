@@ -4,10 +4,10 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const jwt = require("jsonwebtoken");
-
-// Get access to the Database class.
-const Database = require('./Database.js');
 const { models } = require('mongoose');
+
+// Import dependencies.
+const Database = require('./Database.js');
 
 /**
  *  The definition of the Api class component that is used to process all API
@@ -121,6 +121,14 @@ class Api {
    *  @param    {EventEmitter}    app     The express application object.
    */
    _installAuthentication = app => {
+
+    /**
+     *
+     *  @param    {IncomingMessage} request   Information object about the
+     *                                        request.
+     *  @param    {ServerResponse}  response  Object to construct the response
+     *                                        message.
+     */
     app.use(async (request, response, next) => {
 
       // Check if we have an access token.
@@ -134,6 +142,8 @@ class Api {
         jwt.verify(token, this._config.database.secret, (error, decoded) => {
 
           // If verification fails, we won't add the special access variables.
+          // If authentication is required, this will cause the endpoint to
+          // fail.
           if (error) return;
 
           // Create or expand the context for each request.

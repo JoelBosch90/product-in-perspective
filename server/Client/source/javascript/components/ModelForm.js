@@ -58,51 +58,19 @@ class ModelForm extends BaseElement {
     // Create a new request object.
     this._request = new Request();
 
-    // First, request a list of all apps. Store the promise.
-    this._requestPromise = this._request.get('/apps')
-      .catch(this.errorHandler)
-      .then(response => {
+    // Create the form.
+    this._createForm(options);
 
-        // Get access to the JSON object.
-        response.json().then(apps => {
-
-          // Use the form's error handling if an error has occurred with the
-          // HTTP request.
-          if (!response.ok) return this.errorHandler(apps.error);
-
-          // Create a new options array.
-          const appOptions = [];
-
-          // Loop through all of the apps.
-          for (const app of apps) {
-
-            // Create a new option for each app.
-            const appOption = {};
-
-            // We want users to be able to select the app ID based on the name.
-            appOption.value = app._id;
-            appOption.label = app.name;
-
-            // Add the option to the array.
-            appOptions.push(appOption);
-          }
-
-          // Create the form.
-          this._createForm(appOptions, options);
-
-          // Add the new element to the parent container.
-          parent.appendChild(this._container);
-        });
-      });
+    // Add this componenet to the parent container.
+    parent.appendChild(this._container);
   }
 
   /**
    *  Private method to create the form and add it to the container.
-   *  @param    {array}     appOptions    An array of apps to choose from.
    *  @param    {object}    formOptions   Optional parameters.
    *    @property {string}    modelId       ID that identifies a model.
    */
-  _createForm = (appOptions, formOptions) => {
+  _createForm = (formOptions) => {
 
     // Do we have the ID for a specific model?
     const params = formOptions.modelId
@@ -135,14 +103,6 @@ class ModelForm extends BaseElement {
             type:   "file",
           },
         },
-        {
-          name:   "app",
-          required: true,
-          options:  {
-            type:     "select",
-            options:  appOptions,
-          },
-        },
       ],
       fieldsets: [],
       buttons: [
@@ -156,21 +116,8 @@ class ModelForm extends BaseElement {
       ],
     });
 
-
     // When the model was stored successfully, return to the model overview.
     this._form.on("stored", () => void goTo('/admin/model'));
-  }
-
-  /**
-   *  Private method for handling errors.
-   *  @param    {Error}     error   Object describing the error that has
-   *                                occurred.
-   *  @TODO     Implement user friendly error handling.
-   */
-  _errorHandler = error => {
-
-    // For now we want to simply log the error.
-    console.error(error);
   }
 
   /**
@@ -180,7 +127,7 @@ class ModelForm extends BaseElement {
   remove() {
 
     // Remove the Form element once the request promise has resolved.
-    this._requestPromise.then(() => { this._form.remove(); });
+    this._form.remove();
 
     // Call the BaseElement's remove function.
     super.remove();

@@ -34,8 +34,9 @@ const container = document.body;
 const view = new View(container, {
   cacheSize: 1,
   Widget: Apology,
-  params: ["Loading..."]
-});
+  params: ["Loading..."] // Listen for any unrecoverable errors and show the message to the user.
+
+}).on("error", error => void view.install(Apology, error));
 /**
  *  Create a new Router instance. The Router will listen for any changes to the
  *  URL, whether manually by the user, or programmatically with the goTo()

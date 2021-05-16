@@ -28,16 +28,34 @@ class ProductForm extends BaseElement {
   _form = null;
 
   /**
+   *  Reference to the Select input object for the models.
+   *  @var      {Select}
+   */
+  _modelsSelect = null;
+
+  /**
+   *  Reference to the Select input object for the products.
+   *  @var      {Select}
+   */
+  _productsSelect = null;
+
+  /**
    *  Reference to the request object.
    *  @var      {Request}
    */
   _request = null;
 
   /**
+   *  Reference to the API request for the models.
+   *  @var      {Promise}
+   */
+  _modelsRequest = null;
+
+  /**
    *  Reference to the API request for the apps.
    *  @var      {Promise}
    */
-  _requestPromise = null;
+  _appsRequest = null;
 
   /**
    *  Class constructor.
@@ -58,9 +76,15 @@ class ProductForm extends BaseElement {
     // Create a new request object.
     this._request = new Request();
 
+    // Create the form.
+    this._createForm(options);
+
+    // Add the new element to the parent container.
+    parent.appendChild(this._container);
+
     // First, request a list of all models. Store the promise.
-    this._requestPromise = this._request.get('/models')
-      .catch(this._errorHandler)
+    this._modelsRequest = this._request.get('/models')
+      .catch(this._form.showError)
       .then(response => {
 
         // Get access to the JSON object.
@@ -68,42 +92,45 @@ class ProductForm extends BaseElement {
 
           // Use this component's error handling if an error has occurred with
           // the HTTP request.
-          if (!response.ok) return this._errorHandler(models.error);
-
-          // Create a new options array.
-          const modelOptions = [];
+          if (!response.ok) return this._form.showError(models.error);
 
           // Loop through all of the models.
           for (const model of models) {
 
-            // Create a new option for each model.
-            const modelOption = {};
-
-            // We want users to be able to select the model ID based on the
-            // name.
-            modelOption.value = model._id;
-            modelOption.label = model.name;
-
-            // Add the option to the array.
-            modelOptions.push(modelOption);
+            // Add the model to the select input.
+            this._modelsSelect.addOption(model.name, model._id);
           }
+        });
+      });
 
-          // Create the form.
-          this._createForm(modelOptions, options);
+    // Secondlly, request a list of all apps. Store the promise.
+    this._appsRequest = this._request.get('/apps')
+      .catch(this._form.showError)
+      .then(response => {
 
-          // Add the new element to the parent container.
-          parent.appendChild(this._container);
+        // Get access to the JSON object.
+        response.json().then(apps => {
+
+          // Use this component's error handling if an error has occurred with
+          // the HTTP request.
+          if (!response.ok) return this._form.showError(apps.error);
+
+          // Loop through all of the apps.
+          for (const app of apps) {
+
+            // Add the app to the select input.
+            this._appsSelect.addOption(app.name, app._id);
+          }
         });
       });
   }
 
   /**
    *  Private method to create the form and add it to the container.
-   *  @param    {array}     modelOptions    An array of models to choose from.
    *  @param    {object}    formOptions     Optional parameters.
    *    @property {string}    productId       ID that identifies a product.
    */
-  _createForm = (modelOptions, formOptions) => {
+  _createForm = (formOptions) => {
 
     // Do we have the ID for a specific product?
     const params = formOptions.productId
@@ -136,24 +163,27 @@ class ProductForm extends BaseElement {
             required: true,
           },
         },
-        {
-          name:   "model",
-          options:  {
-            label:  "Select model ...",
-            type:   "select",
-            options: modelOptions,
-          },
-        },
       ],
-      buttons: [
-        {
-          name:   "submit",
-          options: {
-            label:  formOptions.productId ? "Edit product" : "Create product",
-            type:   "submit",
-          },
-        },
-      ],
+    });
+
+    // Create the select input for the models seperately so that we can save a
+    // reference that we can load the options to later on.
+    this._modelsSelect = this._form.addInput("model", {
+      label:  "Select model ...",
+      type:   "select",
+    });
+
+    // Create the select input for the apps seperately so that we can save a
+    // reference that we can load the options to later on.
+    this._appsSelect = this._form.addInput("app", {
+      label:  "Select app ..",
+      type:   "select",
+    });
+
+    // We want to add the button at the bottom of the form.
+    this._form.addButton("submit", {
+      label:  formOptions.productId ? "Edit product" : "Create product",
+      type:   "submit",
     });
 
     // When the product was stored successfully, return to the product overview.
@@ -164,12 +194,11 @@ class ProductForm extends BaseElement {
    *  Private method for handling errors.
    *  @param    {Error}     error   Object describing the error that has
    *                                occurred.
-   *  @TODO     Implement user friendly error handling.
    */
   _errorHandler = error => {
 
-    // For now we want to simply log the error.
-    console.error(error);
+    // Use the form to show the errors.
+    this._form.showError(error);
   }
 
   /**
@@ -178,8 +207,8 @@ class ProductForm extends BaseElement {
    */
   remove() {
 
-    // Remove the Form element once the request promise has resolved.
-    this._requestPromise.then(() => { this._form.remove(); });
+    // Remove the Form element once the all requests have been resolved.
+    Promise.all([this._modelsRequest, this._appsRequest]).then(() => { this._form.remove(); });
 
     // Call the BaseElement's remove function.
     super.remove();

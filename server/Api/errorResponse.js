@@ -8,6 +8,8 @@
  */
 module.exports = errorResponse = (response, status, error) => {
 
+  console.log(error);
+
   // Did we not get an error message or error object? Throw a general error.
   if (!error) return response.status(500).json({ error: "Unknown error occurred." });
 
@@ -18,6 +20,10 @@ module.exports = errorResponse = (response, status, error) => {
   // If MongoDB could not match the object id, it means the requested object
   // could not be found.
   if (error.kind == "ObjectId") return response.status(404).json({ error: "Could not find object." });
+
+  // Check for duplicate key errors.
+  if (error.keyValue && error.keyValue.barcode) return response.status(409).json({ error: "This barcode is already used for this app." });
+  if (error.keyValue && error.keyValue.name) return response.status(409).json({ error: "This name is already taken." });
 
   // If the error object is something we don't recognize, we shouldn't leak it
   // to the client.

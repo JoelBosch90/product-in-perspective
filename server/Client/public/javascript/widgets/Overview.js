@@ -2,6 +2,7 @@
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { OverviewCard } from "/javascript/widgets/Overview/Card.js";
 import { Title } from "/javascript/widgets/Title.js";
+import { ErrorDisplay } from "/javascript/widgets/ErrorDisplay.js";
 /**
  *  The definition of the Overview class that can be used to create a overview
  *  element.
@@ -18,6 +19,12 @@ class Overview extends BaseElement {
    *  @var      {Title}
    */
   _title = null;
+  /**
+   *  Element that displays error messages.
+   *  @var      {ErrorDisplay}
+   */
+
+  _errorDisplay = null;
   /**
    *  Array of all the cards that are listed in the overview.
    *  @var      {array}
@@ -48,7 +55,9 @@ class Overview extends BaseElement {
     this._container.classList.add("overview"); // Add the title if requested.
 
 
-    if (options.title) this.title(options.title); // Add the center class to the overview if requested.
+    if (options.title) this.title(options.title); // Add an ErrorDisplay under the main title.
+
+    this._errorDisplay = new ErrorDisplay(this._container); // Add the center class to the overview if requested.
 
     if (options.center) this._container.classList.add("center"); // Add all provided cards to the overview.
 
@@ -107,6 +116,19 @@ class Overview extends BaseElement {
     card.bubbleTo(this); // Expose the card object.
 
     return card;
+  };
+  /**
+   *  Method for showing errors.
+   *  @param    {string}      error   Error message.
+   *  @returns  {Overview}
+   */
+
+  showError = error => {
+    // Clear the error display to show the new error.
+    this._errorDisplay.clear().add(error); // Allow chaining.
+
+
+    return this;
   };
   /**
    *  Method to remove this object and clean up after itself. We have to use

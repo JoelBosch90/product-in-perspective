@@ -43,9 +43,8 @@ class AppList extends BaseElement {
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
-   *  @param    {array}     options
    */
-  constructor(parent, options = {}) {
+  constructor(parent) {
 
     // Call the base class constructor first.
     super();
@@ -57,9 +56,15 @@ class AppList extends BaseElement {
     // Create a new request object.
     this._request = new Request();
 
+    // Create a app overview.
+    this._overview = new Overview(this._container, {
+      title: "App overview",
+      center: true,
+    });
+
     // First, request a list of all apps. Store the promise.
     this._requestPromise = this._request.get('/apps')
-      .catch(this._errorHandler)
+      .catch(this._overview.showError)
       .then(response => {
 
         // Get access to the JSON object.
@@ -67,19 +72,13 @@ class AppList extends BaseElement {
 
           // Use this component's error handling if an error has occurred with
           // the HTTP request.
-          if (!response.ok) return this._errorHandler(apps.error);
+          if (!response.ok) return this._overview.showError(apps.error);
 
           // Create a new cards object.
           const cards = {};
 
           // Create an object to map app ids to their paths for navigation.
           const paths = {};
-
-          // Create a app overview.
-          this._overview = new Overview(this._container, {
-            title: "App overview",
-            center: true,
-          });
 
           // Loop through all of the apps.
           for (const app of apps) {
@@ -104,7 +103,7 @@ class AppList extends BaseElement {
           // Handle remove requests.
           this._overview.on('remove', id => {
             this._request.delete('/app/' + id)
-              .catch(this._errorHandler)
+              .catch(this._overview.showError)
               .then(response => {
 
                 // If it was deleted from the database, we should remove it from
@@ -126,25 +125,13 @@ class AppList extends BaseElement {
   }
 
   /**
-   *  Private method for handling errors.
-   *  @param    {Error}     error   Object describing the error that has
-   *                                occurred.
-   *  @TODO     Implement user friendly error handling.
-   */
-  _errorHandler = error => {
-
-    // For now we want to simply log the error.
-    console.error(error);
-  }
-
-  /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
    */
   remove() {
 
     // Remove the Overview element once the request promise has resolved.
-    if (this._requestPromise) this._requestPromise.then(() => { this._overview.remove(); });
+    if (this._requestPromise) this._requestPromise.then(() => void this._overview.remove());
 
     // Call the BaseElement's remove function.
     super.remove();

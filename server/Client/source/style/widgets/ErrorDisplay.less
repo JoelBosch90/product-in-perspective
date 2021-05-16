@@ -1,0 +1,22 @@
+/**
+ *  ErrorDisplay
+ *    This file installs styling for the ErrorDisplay widget.
+ */
+
+// Target the container.
+.error-display {
+
+  // Target individual errors.
+  p {
+
+  // Show the errors in a colour that indicates a problem to be fixed.
+  color: var(--danger-color);
+  }
+
+  // Target the error display when there are no errors.
+  &:empty {
+
+    // Don't affect the document flow.
+    display: none;
+  }
+}
