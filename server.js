@@ -10,8 +10,6 @@ require('dotenv').config();
 const Api = require('./server/Api.js');
 const Client = require('./server/Client.js');
 
-console.log(process.env);
-
 // Start serving the API.
 const api = new Api({
 

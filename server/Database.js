@@ -38,13 +38,27 @@ class Database {
 
   /**
    *  Method for connecting to the database.
-   *  @returns
+   *  @returns  {Promise}
    */
-  connect = () => mongoose.connect(`mongodb://${this._config.user}:${this._config.password}@${this._config.url}`);
+  connect = () => {
+
+    // If there a user was passed in the config, that means that we're running
+    // in production.
+    const connectUrl = this._config.user
+
+      // In production, we need to authenticate when connecting to the database.
+      ? `mongodb://${this._config.user}:${this._config.password}@${this._config.url}`
+
+      // In development, this is not needed. We can load the URL as is.
+      : `mongodb://${this._config.url}`
+
+    // Use the URL to connect to the database. Return the connection promise.
+    return mongoose.connect(connectUrl);
+  }
 
   /**
    *  Method for exposing the database models.
-   *  @returns
+   *  @returns  {object}
    */
   models = () => {
 

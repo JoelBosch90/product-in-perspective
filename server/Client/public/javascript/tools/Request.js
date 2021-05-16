@@ -1,3 +1,5 @@
+// Import settings.
+import { CONFIG } from "/javascript/config.js";
 /**
  *  The definition of the Request class that can be used to perform HTTP
  *  requests.
@@ -6,12 +8,17 @@
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
+
 class Request {
   /**
    *  This is a path to the location of the API.
    *  @var      {string}
    */
+<<<<<<< HEAD
   _apiUrl = 'https://joelbosch.nl/api';
+=======
+  _apiUrl = CONFIG.apiUrl;
+>>>>>>> development
   /**
    *  Class constructor.
    */

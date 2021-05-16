@@ -167,16 +167,29 @@ class View extends BaseElement {
   }
 
   /**
-   *  Method to remove this object and clean up after itself. We have to use
-   *  non-arrow function or we'd lose the super context.
+   *  Method to clean the view of all installed widgets.
+   *  @returns  {View}
    */
-  remove() {
+  clear() {
 
     // Remove all installed widgets.
     for (const [Class, widget] of this._widgets) widget.instance.remove();
 
     // Clear the map.
     this._widgets.clear();
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Method to remove this object and clean up after itself. We have to use
+   *  non-arrow function or we'd lose the super context.
+   */
+  remove() {
+
+    // First clear the view of all installed widgets.
+    this.clear();
 
     // Call the BaseElement's remove function.
     super.remove();
