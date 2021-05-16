@@ -60,8 +60,7 @@ class AppList extends BaseElement {
     }); // First, request a list of all apps. Store the promise.
 
     this._requestPromise = this._request.get('/apps').catch(error => void this._overview.showError(error)).then(response => {
-      console.log(response); // Get access to the JSON object.
-
+      // Get access to the JSON object.
       if (response) return response.json().then(apps => {
         // Use this component's error handling if an error has occurred with
         // the HTTP request.
@@ -90,7 +89,7 @@ class AppList extends BaseElement {
 
 
         this._overview.on('remove', id => {
-          this._request.delete('/app/' + id).catch(this._overview.showError).then(response => {
+          this._request.delete('/app/' + id).catch(error => void this._overview.showError(error)).then(response => {
             // If it was deleted from the database, we should remove it from
             // the overview as well.
             if (response.ok) cards[id].remove();

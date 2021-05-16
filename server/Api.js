@@ -195,7 +195,7 @@ class Api {
           const apiPath = fullPath.replace(endpointsDirectory, "").slice(0, -3);
 
           // Import this endpoint and supply the path to this endpoint.
-          require(fullPath)(app, apiPath);
+          require(fullPath)(app, '/api' + apiPath);
         }
       }
     };
