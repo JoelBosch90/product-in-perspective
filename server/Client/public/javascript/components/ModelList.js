@@ -59,7 +59,7 @@ class ModelList extends BaseElement {
       center: true
     }); // First, request a list of all models. Store the promise.
 
-    this._requestPromise = this._request.get('/models').catch(this._overview.showError).then(response => {
+    this._requestPromise = this._request.get('/models').catch(error => void this._overview.showError(error)).then(response => {
       // Get access to the JSON object.
       if (response) return response.json().then(models => {
         // Use this component's error handling if an error has occurred with
@@ -85,7 +85,7 @@ class ModelList extends BaseElement {
 
 
         this._overview.on('remove', id => {
-          this._request.delete('/model/' + id).catch(this._overview.showError).then(response => {
+          this._request.delete('/model/' + id).catch(error => void this._overview.showError(error)).then(response => {
             // If it was deleted from the database, we should remove it from
             // the overview as well.
             if (response.ok) cards[id].remove();

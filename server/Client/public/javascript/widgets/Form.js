@@ -124,7 +124,7 @@ class Form extends BaseElement {
     if (options.fieldsets) for (const fieldset of options.fieldsets) this.addFieldset(fieldset.name, fieldset.options);
     if (options.buttons) for (const button of options.buttons) this.addButton(button.name, button.options); // If we got a GET parameter, we can try to prefill data in this form.
 
-    if (options.params && options.params.get) this._request.get(options.params.get).then(this._prefill).catch(this.showError); // Add the form to the parent element.
+    if (options.params && options.params.get) this._request.get(options.params.get).then(this._prefill).catch(error => this.showError(error)); // Add the form to the parent element.
 
     parent.appendChild(this._container);
   }
@@ -251,10 +251,10 @@ class Form extends BaseElement {
 
     if (!this._params) return; // If we have the parameters for a PUT request, perform the PUT request.
 
-    if (this._params.put) return this._request.put(this._params.put, values).then(this._submitResponseHandler).catch(this.showError); // If we don't have the parameters for a PUT request, but we do have the
+    if (this._params.put) return this._request.put(this._params.put, values).then(this._submitResponseHandler).catch(error => this.showError(error)); // If we don't have the parameters for a PUT request, but we do have the
     // parameters for a POST request, perform the POST request.
 
-    if (this._params.post) return this._request.post(this._params.post, values).then(this._submitResponseHandler).catch(this.showError);
+    if (this._params.post) return this._request.post(this._params.post, values).then(this._submitResponseHandler).catch(error => this.showError(error));
   };
   /**
    *  Private method for handling an HTTP submit request response.

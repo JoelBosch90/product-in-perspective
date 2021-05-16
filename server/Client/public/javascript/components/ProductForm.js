@@ -79,7 +79,7 @@ class ProductForm extends BaseElement {
 
     parent.appendChild(this._container); // First, request a list of all models. Store the promise.
 
-    this._modelsRequest = this._request.get('/models').catch(this._form.showError).then(response => {
+    this._modelsRequest = this._request.get('/models').catch(error => void this._form.showError(error)).then(response => {
       // Get access to the JSON object.
       response.json().then(models => {
         // Use this component's error handling if an error has occurred with
@@ -93,7 +93,7 @@ class ProductForm extends BaseElement {
       });
     }); // Secondlly, request a list of all apps. Store the promise.
 
-    this._appsRequest = this._request.get('/apps').catch(this._form.showError).then(response => {
+    this._appsRequest = this._request.get('/apps').catch(error => void this._form.showError(error)).then(response => {
       // Get access to the JSON object.
       response.json().then(apps => {
         // Use this component's error handling if an error has occurred with
@@ -165,16 +165,6 @@ class ProductForm extends BaseElement {
 
 
     this._form.on("stored", () => void goTo('/admin/product'));
-  };
-  /**
-   *  Private method for handling errors.
-   *  @param    {Error}     error   Object describing the error that has
-   *                                occurred.
-   */
-
-  _errorHandler = error => {
-    // Use the form to show the errors.
-    this._form.showError(error);
   };
   /**
    *  Method to remove this object and clean up after itself. We have to use

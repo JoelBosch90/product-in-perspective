@@ -46,7 +46,7 @@ const view = new View(container, {
 
 const router = new Router(new Map([// This route will serve all apps.
 ['/app/:appPath', App], // These routes will serve the admin interface.
-['/login', Login], ['/registration', Registration], ['/admin/profile', PasswordForm], ['/admin/app', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/model', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/product', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm]]), {
+['/login', Login], ['/register', Registration], ['/admin/profile', PasswordForm], ['/admin/app', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/model', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/product', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm]]), {
   // Protect the admin routes.
   protected: ['/admin']
 }) // Make sure that we pass on any navigation requests to the View widget.

@@ -12,7 +12,7 @@ class Request {
    *  This is a path to the location of the API.
    *  @var      {string}
    */
-  _apiUrl = 'https://joelbosch.nl:3000';
+  _apiUrl = 'https://joelbosch.nl/api';
 
   /**
    *  Class constructor.
