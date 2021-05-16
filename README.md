@@ -30,6 +30,14 @@ Inside the `server/Client/public` folder, there should be symlinks to
 repository because these symlinks depend on the folder structure of the local
 machine. You should add them manually.
 
+## Client side config file.
+Inside the `server/Client/source/javascript` directory (and the corresponding
+`server/Client/public/javascript` directory), there should be a `config.js` file
+that exports an object called `CONFIG`. This allows us to automatically access
+different API endpoints depending on our environment. The `CONFIG` object should
+have the following properties:
+CONFIG.apiUrl   - String that describes the location of the API.
+
 ## Set up your local environment variable.
 The server side of this service will require a few variables that likely depend
 on local settings. You can set these settings in a .env file. This file should

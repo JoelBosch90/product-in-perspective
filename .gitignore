@@ -134,6 +134,10 @@ node_modules
 # src/models/
 
 # Ignore symlinks.
-dist/html
-dist/models
-dist/images
+server/Client/public/html
+server/Client/public/models
+server/Client/public/images
+
+# Ignore the javascript config file.
+server/Client/source/javascript/config.js
+server/Client/public/javascript/config.js
