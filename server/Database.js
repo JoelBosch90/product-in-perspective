@@ -40,7 +40,7 @@ class Database {
    *  Method for connecting to the database.
    *  @returns
    */
-  connect = () => mongoose.connect(this._config.url);
+  connect = () => mongoose.connect(`mongodb://${this._config.user}:${this._config.password}@${this._config.url}`);
 
   /**
    *  Method for exposing the database models.
