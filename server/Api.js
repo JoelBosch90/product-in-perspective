@@ -82,8 +82,6 @@ class Api {
     // Install new middleware on the Express app.
     app.use((request, response, next) => {
 
-      console.log(request);
-
       // Create or expand the context for each request.
       request.context = Object.assign({}, request.context, {
 

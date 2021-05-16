@@ -8,8 +8,6 @@
  */
 module.exports = errorResponse = (response, status, error) => {
 
-  console.log(error);
-
   // Did we not get an error message or error object? Throw a general error.
   if (!error) return response.status(500).json({ error: "Unknown error occurred." });
 
