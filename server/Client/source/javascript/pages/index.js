@@ -54,7 +54,7 @@ const router = new Router(new Map([
 
   // These routes will serve the admin interface.
   ['/login', Login],
-  ['/registration', Registration],
+  ['/register', Registration],
   ['/admin/profile', PasswordForm],
   ['/admin/app', AppList],
   ['/admin/app/new', AppForm],
