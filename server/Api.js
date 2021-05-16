@@ -82,6 +82,8 @@ class Api {
     // Install new middleware on the Express app.
     app.use((request, response, next) => {
 
+      console.log(request);
+
       // Create or expand the context for each request.
       request.context = Object.assign({}, request.context, {
 
@@ -195,7 +197,7 @@ class Api {
           const apiPath = fullPath.replace(endpointsDirectory, "").slice(0, -3);
 
           // Import this endpoint and supply the path to this endpoint.
-          require(fullPath)(app, apiPath);
+          require(fullPath)(app, '/api' + apiPath);
         }
       }
     };
