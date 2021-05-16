@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema({
     // and it should unique across all users.
     email: {
       type:       String,
-      unique:     true,
-      lowercase:  true,
+      unique:     [true, "An account for this email address already exists"],
+      lowercase:  [true, "Your email address cannot contain upper case characters"],
       required:   [true, "Every user requires an email address."],
     },
 
@@ -47,8 +47,8 @@ userSchema.methods.checkPassword = function(password, callback) {
   });
 }
 
-// Install an extra method for checking the user password.
-userSchema.methods.createToken = function(password, callback) {
+// Install an extra method for creating a JSON web token.
+userSchema.methods.createToken = function() {
 
   // Create a new JWT for authentication.
   return jwt.sign({ id: this._id }, process.env.DB_TOKEN_SECRET, {

@@ -1,3 +1,6 @@
+// Import dependencies.
+const errorResponse = require("../errorResponse");
+
 /**
  *  This function acts as an API endpoint for acts involving models.
  *  @param    {EventEmitter}  app       The express application object.
@@ -9,6 +12,11 @@ module.exports = function(app, path) {
 
   /**
    *  This is the endpoint to create a new model.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -16,37 +24,37 @@ module.exports = function(app, path) {
   app.post(path, async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Get a list of all models for this user and the selected app.
-    const models = await request.context.models.Model.find({
-      app:  request.body.app,
-      user: request.context.user,
-    });
+    // The database might throw an error.
+    try {
 
-    // If a model with this name already exists for this app, we should throw an
-    // error.
-    if (models.find(model => model.name == request.body.name)) return response
-      .status(400)
-      .json({
-        error: 'A model with this name already exists.',
-      });
+      // Now we can add the new model to the database.
+      const model = await request.context.models.Model.create(Object.assign(request.body, {
+        user: request.context.user
+      }));
 
-    // Now we can add the new model to the database.
-    const created = await request.context.models.Model.create(Object.assign(request.body, {
-      user: request.context.user
-    }));
+      // Check if the model was indeed created.
+      if (!model) errorResponse(response, 500, "Model could not be created.");
 
-    // Confirm that the request was successfully processed.
-    return response.send(!!created);
+      // Confirm that the request was successfully processed.
+      return response.send(true);
+
+    // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to edit an existing model.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -54,94 +62,73 @@ module.exports = function(app, path) {
   app.put(path + '/:modelId', async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Get a list of all models for this user and the selected app.
-    const models = await request.context.models.Model.find({
-      app:  request.body.app,
-      user: request.context.user
-    });
+    // The database might throw an error.
+    try {
 
-    // See if a model with this name already exists. If it is not the model that
-    // we're currently editing, we should throw an error.
-    const sameName = models.find(model => model.name == request.body.name);
-    if (sameName && sameName._id != request.params.modelId) return response
-      .status(400)
-      .json({
-        error: 'A model with this name already exists.',
-      });
+      // Now we can update the model.
+      const modified = await request.context.models.Model.updateOne({
+        _id:  request.params.modelId,
+        user: request.context.user
+      }, request.body);
 
-    // Now we can update the model.
-    const modified = await request.context.models.Model.updateOne({
-      _id:  request.params.modelId,
-      user: request.context.user
-    }, request.body);
+      // Check if the model was indeed modified.
+      if (modified.nModified <= 0) return errorResponse(response, 500, "Could not edit model.");
 
-    // Check if the model was successfully modified.
-    if (modified.nModified == 0) return response
-      .status(404)
-      .json({
-        error: 'Model could not be found.',
-      });
+      // Confirm that the request was successfully processed.
+      return response.send(true);
 
-    // Confirm that the request was successfully processed.
-    return response.send(modified.nModified > 0);
-  });
+    // Listen for any errors that the database might throw.
+    } catch (error) {
 
-  /**
-   *  This is the endpoint to get access to all models that a user created.
-   *
-   *  Authentication level required:
-   *      authenticated
-   */
-  app.get(path + '/all', async (request, response) => {
-
-    // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
-
-    // Get a list of all models for this user.
-    const models = await request.context.models.Model.find({
-      user: request.context.user
-    });
-
-    // Send back the entire list with all their information.
-    return response.send(models);
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to get access to one single model.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      none
    */
   app.get(path + '/:modelId', async (request, response) => {
 
-    // Get the requested model.
-    const model = await request.context.models.Model.findOne({
-      _id: request.params.modelId
-    });
+    // The database might throw an error.
+    try {
 
-    // Check if the model exists.
-    if (!model) return response
-      .status(404)
-      .json({
-        error: 'Model could not be found.',
+      // Get the requested model.
+      const model = await request.context.models.Model.findOne({
+        _id: request.params.modelId
       });
 
-    // Send back the entire list with all their information.
-    return response.send(model);
+      // Check if we actually have the model.
+      if (!model) return errorResponse(response, 404, "Could not find model.");
+
+      // Send back the model.
+      return response.send(model);
+
+    // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to delete one single model.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -149,29 +136,31 @@ module.exports = function(app, path) {
   app.delete(path + '/:modelId', async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Remove the requested model. Make sure we never remove anything by another
-    // user.
-    const modified = await request.context.models.Model.remove({
-      _id:  request.params.modelId,
-      user: request.context.user
+    // The database might throw an error.
+    try {
 
-    // Make sure we don't accidentally remove more than one model.
-    }, { justOne: true });
+      // Remove the requested model. Make sure we never remove anything by another
+      // user.
+      const modified = await request.context.models.Model.remove({
+        _id:  request.params.modelId,
+        user: request.context.user
 
-    // Check if the model was successfully deleted.
-    if (modified.deletedCount == 0) return response
-      .status(404)
-      .json({
-        error: 'Model could not be found.',
-      });
+      // Make sure we don't accidentally remove more than one model.
+      }, { justOne: true });
 
-    // Confirm that the request was successfully processed.
-    return response.send(modified.deletedCount > 0);
+      // Check if the model was successfully deleted.
+      if (modified.deletedCount <= 0) return errorResponse(response, 404, "Could not find model.");
+
+      // Confirm that the request was successfully processed.
+      return response.send(true);
+
+    // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 }

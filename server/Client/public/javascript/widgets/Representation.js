@@ -267,7 +267,7 @@ class Representation extends BaseElement {
 
   _loadProducts = path => {
     // Request all products. Store the resulting promise for cleanup purposes.
-    this._productsPromise = this._request.get('/app/products/' + path) // Propagate errors.
+    this._productsPromise = this._request.get('/app/' + path + '/products') // Propagate errors.
     .catch(error => void this.trigger('error', error)) // Wait for the HTTP response.
     .then(response => {
       // Get access to the JSON object.

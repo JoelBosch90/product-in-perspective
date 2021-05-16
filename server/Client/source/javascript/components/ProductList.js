@@ -58,7 +58,7 @@ class ProductList extends BaseElement {
     this._request = new Request();
 
     // First, request a list of all products. Store the promise.
-    this._requestPromise = this._request.get('/product/all')
+    this._requestPromise = this._request.get('/products')
       .catch(this._errorHandler)
       .then(response => {
 

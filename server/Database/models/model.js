@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const modelSchema = new mongoose.Schema({
 
     // Users recognize their models by their name. These names should be unique
-    // per app, but does not need to be unique across all models.
+    // per user, but do not need to be unique across all models.
     name: {
       type: String,
       required: [true, "Every model requires a name."],
@@ -22,14 +22,7 @@ const modelSchema = new mongoose.Schema({
       required: false
     },
 
-    // Every model should be connected to a single app.
-    app: {
-      type:     mongoose.Schema.Types.ObjectId,
-      ref:      'App',
-      required: [true, "Every model requires an app."],
-    },
-
-    // Every model should also be connected to a single user.
+    // Every model should be connected to a single user.
     user: {
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'User',
@@ -41,13 +34,10 @@ const modelSchema = new mongoose.Schema({
   { timestamps: true },
 );
 
-// We want to make sure that when a model is removed, all related entities are
-// also removed.
-modelSchema.pre('remove', next => {
-
-  // Remove all product entities the user created for this model.
-  this.model('Product').deleteMany({ model: this._id }, next);
-})
+// Model names should be unique per user.
+modelSchema.index({ name: 1, user: 1 }, {
+  unique: [true, "A model with this name already exists."]
+});
 
 // Use the new schema for the model entity.
 const Model = mongoose.model('Model', modelSchema);

@@ -1,3 +1,6 @@
+// Import dependencies.
+const errorResponse = require("../errorResponse");
+
 /**
  *  This function acts as an API endpoint for acts involving products.
  *  @param    {EventEmitter}  app       The express application object.
@@ -9,6 +12,11 @@
 
   /**
    *  This is the endpoint to create a new product.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -16,37 +24,37 @@
   app.post(path, async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Get a list of all products for this user.
-    const products = await request.context.models.Product.find({
-      model:  request.body.model,
-      user:   request.context.user,
-    });
+    // The database might throw an error.
+    try {
 
-    // If a product with this name already exists for this model, we should
-    // throw an error.
-    if (products.find(product => product.name == request.body.name)) return response
-      .status(400)
-      .json({
-        error: 'A product with this name already exists.',
-      });
+      // Now we can add the new product to the database.
+      const product = await request.context.models.Product.create(Object.assign(request.body, {
+        user: request.context.user
+      }));
 
-    // Now we can add the new product to the database.
-    const created = await request.context.models.Product.create(Object.assign(request.body, {
-      user: request.context.user
-    }));
+      // Check if we did indeed create the product.
+      if (!product) return  errorResponse(response, 404, "Product could not be created.");
 
-    // Confirm that the request was successfully processed.
-    return response.send(!!created);
+      // Send back the product.
+      return response.send(product);
+
+    // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to edit an existing product.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -54,94 +62,73 @@
   app.put(path + '/:productId', async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Get a list of all products for this user.
-    const products = await request.context.models.Product.find({
-      model: request.body.model,
-      user: request.context.user,
-    });
+    // The database might throw an error.
+    try {
 
-    // See if a product with this name already exists. If it is not the product
-    // that we're currently editing, we should throw an error.
-    const sameName = products.find(product => product.name == request.body.name);
-    if (sameName && sameName._id != request.params.productId) return response
-      .status(400)
-      .json({
-        error: 'A product with this name already exists.',
-      });
+      // Now we can update the product.
+      const modified = await request.context.models.Product.updateOne({
+        _id:  request.params.productId,
+        user: request.context.user
+      }, request.body);
 
-    // Now we can update the product.
-    const modified = await request.context.models.Product.updateOne({
-      _id:  request.params.productId,
-      user: request.context.user
-    }, request.body);
+      // Check if we did indeed find the product.
+      if (modified.nModified <= 0) return  errorResponse(response, 404, "Product could not be found.");
 
-    // Check if the product was successfully modified.
-    if (modified.nModified == 0) return response
-      .status(404)
-      .json({
-        error: 'Product could not be found.',
-      });
+      // Confirm success.
+      return response.send(true);
 
-    // Confirm that the request was successfully processed.
-    return response.send(modified.nModified > 0);
-  });
+    // Listen for any errors that the database might throw.
+    } catch (error) {
 
-  /**
-   *  This is the endpoint to get access to all products that a user created.
-   *
-   *  Authentication level required:
-   *      authenticated
-   */
-  app.get(path + '/all', async (request, response) => {
-
-    // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
-
-    // Get a list of all products for this user.
-    const products = await request.context.models.Product.find({
-      // user: request.context.user
-    });
-
-    // Send back the entire list with all their information.
-    return response.send(products);
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to get access to one single product.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      none
    */
   app.get(path + '/:productId', async (request, response) => {
 
-    // Get the requested product.
-    const product = await request.context.models.Product.findOne({
-      _id: request.params.productId
-    });
+    // The database might throw an error.
+    try {
 
-    // Check if the product exists.
-    if (!product) return response
-      .status(404)
-      .json({
-        error: 'Product could not be found.',
+      // Get the requested product.
+      const product = await request.context.models.Product.findOne({
+        _id: request.params.productId
       });
 
-    // Send back the entire list with all their information.
-    return response.send(product);
+      // Check if we did indeed find the product.
+      if (!product) return  errorResponse(response, 404, "Product could not be found.");
+
+      // Return the product.
+      return response.send(product);
+
+    // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to delete one single product.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -149,29 +136,31 @@
   app.delete(path + '/:productId', async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Remove the requested product. Make sure we never remove anything by
-    // another user.
-    const modified = await request.context.models.Product.remove({
-      _id:  request.params.productId,
-      user: request.context.user
+    // The database might throw an error.
+    try {
 
-    // Make sure we don't accidentally remove more than one product.
-    }, { justOne: true });
+      // Remove the requested product. Make sure we never remove anything by
+      // another user.
+      const modified = await request.context.models.Product.remove({
+        _id:  request.params.productId,
+        user: request.context.user
 
-    // Check if the product was successfully deleted.
-    if (modified.deletedCount == 0) return response
-      .status(404)
-      .json({
-        error: 'Product could not be found.',
-      });
+      // Make sure we don't accidentally remove more than one product.
+      }, { justOne: true });
 
-    // Confirm that the request was successfully processed.
-    return response.send(modified.deletedCount > 0);
+      // Check if we did indeed delete the product.
+      if (modified.deletedCount <= 0) return  errorResponse(response, 404, "Product could not be found.");
+
+      // Confirm success.
+      return response.send(true);
+
+    // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 }

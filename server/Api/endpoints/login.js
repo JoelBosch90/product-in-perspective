@@ -1,3 +1,6 @@
+// Import dependencies.
+const errorResponse = require("../errorResponse");
+
 /**
  *  This function acts as an API endpoint for actings involving users.
  *  @param    {EventEmitter}  app       The express application object.
@@ -9,68 +12,55 @@ module.exports = function(app, path) {
 
   /**
    *  This is the endpoint for the login procedure to get the JWT.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      none
    */
   app.post(path, async (request, response) => {
 
-    // Check that we have an email address to login.
-    if (!request.body.email) return response
-      .status(400)
-      .json({
-        error: 'An email address is required.',
+    // The database might throw an error.
+    try {
+
+      // Get the user for this email addresss.
+      const user = await request.context.models.User.findOne({
+        email: request.body.email,
       });
 
-    // Check that we have a password to login.
-    if (!request.body.password) return response
-      .status(400)
-      .json({
-        error: 'A password is required.',
-      });
+      // If we couldn't find the user, we want to throw an error. We don't want
+      // to give away any information about what email address is in our
+      // database if we don't have to, so we tell the user that the password is
+      // incorrect for this email address.
+      if (!user) errorResponse(response, 400, "Password incorrect.");
 
-    // Get the user for this email addresss.
-    const user = await request.context.models.User.findOne({
-      email: request.body.email,
-    });
+      // Check if the provided password matches the hash that is stored in the
+      // database.
+      user.checkPassword(request.body.password, (error, isMatch) => {
 
-    /**
-     *  Helper function for throwing an incorrect password error.
-     *  @returns  {ServerResponse}
-     */
-    const passwordIncorrect = () => response
-      .status(401)
-      .setHeader('WWW-Authetnicate', 'Basic')
-      .json({
-        error: 'This password is incorrect.',
-      });
+        // Throw a generic error if an error occurred while checking the password.
+        if (error) return errorResponse(response, 500, "Could not authenticate.");
 
-    // If we couldn't find the user, we want to throw an error. We don't want to
-    // give away any information about what email address is in our database, so
-    // we tell the user that the password is incorrect for this email address.
-    if (!user) return passwordIncorrect();
+        // Throw the incorrect password error if the password does not match the
+        // hash.
+        if (!isMatch) errorResponse(response, 400, "Password incorrect.");
 
-    // Check if the provided password matches the hash that is stored in the
-    // database.
-    user.checkPassword(request.body.password, (error, isMatch) => {
-
-      // Throw a generic error if an error occurred while checking the password.
-      if (error) return response
-        .status(400)
-        .json({
-          error: 'Error occurred: could not login.',
+        // Send back the user's ID and token for confirmation if login was
+        // successful.
+        return response.send({
+          id:     user._id,
+          token:  user.createToken(),
         });
-
-      // Throw the incorrect password error if the password does not match the
-      // hash.
-      if (!isMatch) return passwordIncorrect();
-
-      // Send back the user's ID and token for confirmation if login was
-      // successful.
-      return response.send({
-        id:     user._id,
-        token:  user.createToken(),
       });
-    })
+
+     // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 }

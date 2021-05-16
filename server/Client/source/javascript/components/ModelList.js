@@ -58,7 +58,7 @@ class ModelList extends BaseElement {
     this._request = new Request();
 
     // First, request a list of all models. Store the promise.
-    this._requestPromise = this._request.get('/model/all')
+    this._requestPromise = this._request.get('/models')
       .catch(this._errorHandler)
       .then(response => {
 

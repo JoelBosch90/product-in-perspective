@@ -1,3 +1,6 @@
+// Import dependencies.
+const errorResponse = require("../errorResponse");
+
 /**
  *  This function acts as an API endpoint for acts involving apps.
  *  @param    {EventEmitter}  app       The express application object.
@@ -9,6 +12,11 @@ module.exports = function(app, path) {
 
   /**
    *  This is the endpoint to create a new app.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -16,36 +24,34 @@ module.exports = function(app, path) {
   app.post(path, async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Get a list of all apps for this user.
-    const apps = await request.context.models.App.find({
-      user: request.context.user
-    });
+    // The database might throw an error in case of a conflict.
+    try {
 
-    // If an app with this name already exists for this user, we should throw an
-    // error.
-    if (apps.find(app => app.name == request.body.name)) return response
-      .status(400)
-      .json({
-        error: 'An app with this name already exists.',
-      });
+      // Create the new app for this user.
+      await request.context.models.App.create(Object.assign(request.body, {
+        user: request.context.user
+      }));
 
-    // Now we can add the new app to the database.
-    const created = await request.context.models.App.create(Object.assign(request.body, {
-      user: request.context.user
-    }));
+      // Confirm that the request was successfully processed.
+      return response.send(true);
 
-    // Confirm that the request was successfully processed.
-    return response.send(!!created);
+    // Listen for any conflict errors that the database might throw.
+    } catch (error) {
+
+      // Return the conflict error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to edit an existing app.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -53,92 +59,72 @@ module.exports = function(app, path) {
   app.put(path + '/:appId', async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Get a list of all apps for this user.
-    const apps = await request.context.models.App.find({
-      user: request.context.user
-    });
+    // The database might throw an error in case of a conflict.
+    try {
 
-    // See if an app with this name already exists. If it is not the app that
-    // we're currently editing, we should throw an error.
-    const sameName = apps.find(app => app.name == request.body.name);
-    if (sameName && sameName._id != request.params.appId) return response
-      .status(400)
-      .json({
-        error: 'An app with this name already exists.',
-      });
+      // Try to update the app. Make sure we're only ever updating one and never
+      // another user's app.
+      const modified = await request.context.models.App.updateOne({
+        _id:  request.params.appId,
+        user: request.context.user
+      }, request.body);
 
-    // Now we can update the app.
-    const modified = await request.context.models.App.updateOne({
-      _id:  request.params.appId,
-      user: request.context.user
-    }, request.body);
+      // Return an error if we could not find the app.
+      if (modified.nModified <= 0) return errorResponse(response, 404, "App not found.");
 
-    // Check if the app was successfully modified.
-    if (modified.nModified == 0) return response
-      .status(404)
-      .json({
-        error: 'App could not be found.',
-      });
+      // Confirm that the request was successfully processed.
+      return response.send(true);
 
-    // Confirm that the request was successfully processed.
-    return response.send(modified.nModified > 0);
-  });
+    // Listen for any conflict errors that the database might throw.
+    } catch (error) {
 
-  /**
-   *  This is the endpoint to get access to all apps that a user created.
-   *
-   *  Authentication level required:
-   *      authenticated
-   */
-  app.get(path + '/all', async (request, response) => {
-
-    // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
-
-    // Get a list of all apps for this user.
-    const apps = await request.context.models.App.find({
-      user: request.context.user
-    });
-
-    // Send back the entire list with all their information.
-    return response.send(apps);
+      // Return the conflict error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to get access to one single app.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      none
    */
   app.get(path + '/:appId', async (request, response) => {
 
-    // We don't know if an app id or a path was provided, but we should be able
-    // to find the app with either.
-    const app = await request.context.models.App.findByIdOrPath(request.params.appId);
+    // The database might throw an error if it cannot find the app.
+    try {
 
-    // If we couldn't find the app at all, return an error.
-    if (!app) return response
-      .status(404)
-      .json({
-        error: 'App could not be found.',
-      });
+      // Try to to find the app by id or by path.
+      const app = await request.context.models.App.findByIdOrPath(request.params.appId)
 
-    // Send back the app we found.
-    return response.send(app);
+      // Return an error if we could not find the app.
+      if (!app) return errorResponse(response, 404, "App not found.");
+
+      return response.send(app);
+
+    // Listen for any errors that the database might throw if we can't find the
+    // app.
+    } catch (error) {
+
+      // Return the error if the app could not be found.
+      return errorResponse(response, 400, error);
+    }
   });
 
   /**
    *  This is the endpoint to delete one single app.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
    *
    *  Authentication level required:
    *      authenticated
@@ -146,29 +132,70 @@ module.exports = function(app, path) {
   app.delete(path + '/:appId', async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return response
-      .status(500)
-      .json({
-        error: 'Request not allowed.',
-      });
+    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Remove the requested app. Make sure we never remove anything by another
-    // user.
-    const modified = await request.context.models.App.remove({
-      _id:  request.params.appId,
-      user: request.context.user
+    // The database might throw an error.
+    try {
 
-    // Make sure we don't accidentally remove more than one app.
-    }, { justOne: true });
+      // Try to delete the app. Make sure we're only ever updating one and never
+      // another user's app.
+      const modified = await request.context.models.App.remove({
+        _id:  request.params.appId,
+        user: request.context.user
 
-    // Check if the app was successfully deleted.
-    if (modified.deletedCount == 0) return response
-      .status(404)
-      .json({
-        error: 'App could not be found.',
-      });
+      // Make sure we don't accidentally remove more than one app.
+      }, { justOne: true });
 
-    // Confirm that the request was successfully processed.
-    return response.send(modified.deletedCount > 0);
+      // Return an error if we could not find the app.
+      if (modified.deletedCount <= 0) return errorResponse(response, 404, "App not found.");
+
+      // Confirm that the request was successfully processed.
+      return response.send(true);
+
+    // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
+  });
+
+  /**
+   *  This is the endpoint to get access to all products that a user created for
+   *  one specific app.
+   *  @param    {IncomingMessage} request   Information object about the
+   *                                        request.
+   *  @param    {ServerResponse}  response  Object to construct the response
+   *                                        message.
+   *  @returns  {ServerResponse}
+   *
+   *  Authentication level required:
+   *      authenticated
+   */
+  app.get(path + '/:appId/products' , async (request, response) => {
+
+    // The database might throw an error.
+    try {
+
+      // We don't know if an app id or a path was provided, but we need the app
+      // ID. Luckily, we can uniquely identify an app by either. From that, we can
+      // then extract the ID.
+      const app = await request.context.models.App.findByIdOrPath(request.params.appId);
+
+      // Return an error if we could not find the app.
+      if (!app) return errorResponse(response, 404, "App not found.");
+
+      // Get a list of all products for this app.
+      const products = await request.context.models.Product.find({ app: app._id });
+
+      // Send back the entire list.
+      return response.send(products);
+
+    // Listen for any errors that the database might throw.
+    } catch (error) {
+
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
   });
 }

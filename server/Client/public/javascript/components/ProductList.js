@@ -55,7 +55,7 @@ class ProductList extends BaseElement {
 
     this._request = new Request(); // First, request a list of all products. Store the promise.
 
-    this._requestPromise = this._request.get('/product/all').catch(this._errorHandler).then(response => {
+    this._requestPromise = this._request.get('/products').catch(this._errorHandler).then(response => {
       // Get access to the JSON object.
       if (response) return response.json().then(products => {
         // Use this component's error handling if an error has occurred with

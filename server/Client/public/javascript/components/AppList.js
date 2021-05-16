@@ -55,7 +55,7 @@ class AppList extends BaseElement {
 
     this._request = new Request(); // First, request a list of all apps. Store the promise.
 
-    this._requestPromise = this._request.get('/app/all').catch(this._errorHandler).then(response => {
+    this._requestPromise = this._request.get('/apps').catch(this._errorHandler).then(response => {
       // Get access to the JSON object.
       if (response) return response.json().then(apps => {
         // Use this component's error handling if an error has occurred with

@@ -59,7 +59,7 @@ class ModelForm extends BaseElement {
     this._request = new Request();
 
     // First, request a list of all apps. Store the promise.
-    this._requestPromise = this._request.get('/app/all')
+    this._requestPromise = this._request.get('/apps')
       .catch(this.errorHandler)
       .then(response => {
 

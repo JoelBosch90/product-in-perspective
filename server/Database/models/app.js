@@ -27,7 +27,7 @@ const appSchema = new mongoose.Schema({
     path: {
       type: String,
       required: [true, "Every app requires a path."],
-      unique: true,
+      unique: [true, "An app with this path already exists."],
     },
 
     // For the augmented reality part, each app will feature an exit button.
@@ -95,7 +95,12 @@ const appSchema = new mongoose.Schema({
   { timestamps: true },
 );
 
-// We want to make sure that when an app is removed, all related entities are
+// App names should be unique per user.
+appSchema.index({ name: 1, user: 1 }, {
+  unique: [true, "An app with this name already exists."]
+});
+
+// We want to make sure that when an app is removed, all related products are
 // also removed.
 appSchema.pre('remove', next => {
 

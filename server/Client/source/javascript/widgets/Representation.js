@@ -291,7 +291,7 @@ _loadBarcodeScanner = () => {
   _loadProducts = path => {
 
     // Request all products. Store the resulting promise for cleanup purposes.
-    this._productsPromise = this._request.get('/app/products/' + path)
+    this._productsPromise = this._request.get('/app/' + path + '/products')
 
       // Propagate errors.
       .catch(error => void this.trigger('error', error))
