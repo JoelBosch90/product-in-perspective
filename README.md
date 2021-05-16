@@ -20,11 +20,15 @@ We use PM2 to run the production server. You may want to restart it after
 changing the server.js file.
 `pm2 restart server`
 
+## Restart production database
+We use systemctl to run the production database.
+`sudo systemctl restart mongod`
+
 ## Symlinks
-Inside the dist folder, there should be symlinks to `src/html`, `src/models`,
-and `src/html`. These are not in de git repository because these symlinks
-depends on the folder structure of the local machine. You should add them
-manually.
+Inside the `server/Client/public` folder, there should be symlinks to
+`source/html`, `source/models`, and `source/iamges`. These are not in de git
+repository because these symlinks depend on the folder structure of the local
+machine. You should add them manually.
 
 ## Set up your local environment variable.
 The server side of this service will require a few variables that likely depend

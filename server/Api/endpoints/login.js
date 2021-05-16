@@ -35,7 +35,7 @@ module.exports = function(app, path) {
       // to give away any information about what email address is in our
       // database if we don't have to, so we tell the user that the password is
       // incorrect for this email address.
-      if (!user) errorResponse(response, 400, "Password incorrect.");
+      if (!user) return errorResponse(response, 400, "Password incorrect.");
 
       // Check if the provided password matches the hash that is stored in the
       // database.
