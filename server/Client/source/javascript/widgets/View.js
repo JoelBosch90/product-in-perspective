@@ -128,10 +128,6 @@ class View extends BaseElement {
    */
   _activate(Widget, params) {
 
-    console.log("List", this._widgets);
-    console.log("Activating", Widget, params);
-    console.log("Last widget", this._activeWidget());
-
     // Cannot activate a widget if we don't have a Widget.
     if (!Widget) return;
 

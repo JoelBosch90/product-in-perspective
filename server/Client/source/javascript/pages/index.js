@@ -43,7 +43,7 @@ const menu = new Menu(container, {
     ['Apps', '/admin/apps'],
     ['Models', '/admin/models'],
     ['Products', '/admin/products'],
-    ['Profile', '/admin/login'],
+    ['Profile', '/admin/profile'],
   ]),
 
   // Add quick shortcuts to allow the users to quickly create new objects.
