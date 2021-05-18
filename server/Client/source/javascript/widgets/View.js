@@ -1,5 +1,6 @@
 // Import dependencies
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { equal } from "/javascript/tools/equal.js";
 
 /**
  *  The definition of the View class that can be used as a container for other
@@ -142,7 +143,10 @@ class View extends BaseElement {
 
     // If the parameters for this widget have changed, we need to create a new
     // instance.
-    if (widget.params != params) {
+    if (!equal(widget.params, params)) {
+
+      // Remember the new parameters.
+      widget.params = params;
 
       // Remove the previous instance.
       widget.instance.remove();

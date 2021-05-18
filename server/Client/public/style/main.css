@@ -626,7 +626,7 @@ label {
 .overview {
   display: grid;
   grid-template-columns: auto;
-  gap: 2em;
+  gap: 1.25em;
   padding: 0 2em;
   margin: 2em 0;
   max-width: min(100%, 30em);
