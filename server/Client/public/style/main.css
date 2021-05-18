@@ -627,11 +627,13 @@ label {
   display: grid;
   grid-template-columns: auto;
   gap: 2em;
-  padding: 2em;
+  padding: 0 2em;
+  margin: 2em 0;
   max-width: min(100%, 30em);
 }
 .overview.center {
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 /**
  *  Card
