@@ -560,7 +560,8 @@ label {
 }
 .menu .navigation > * {
   flex-grow: 1;
-  border-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 .menu .shortcuts {
   padding-left: 2em;
