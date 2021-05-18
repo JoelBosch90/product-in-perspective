@@ -3,8 +3,9 @@
  *  that arranges routing for the login and the different form pages.
  */
 // Import dependencies.
-import { Router } from "/javascript/tools/Router.js";
+import { Menu } from "/javascript/widgets/Menu.js";
 import { View } from "/javascript/widgets/View.js";
+import { Router } from "/javascript/tools/Router.js";
 import { Apology } from "/javascript/widgets/Apology.js"; // Import components.
 
 import { Login } from "/javascript/components/Login.js";
@@ -25,18 +26,32 @@ import { ProductForm } from "/javascript/components/ProductForm.js";
 
 const container = document.body;
 /**
+ *  Create a new menu to help admin users navigate.
+ *  @var    {Menu}
+ */
+
+const menu = new Menu(container, {
+  // Show the menu only on the admin pages.
+  pages: ['/admin'],
+  // Wen want to help the user easily navigate to all overviews, and to the
+  // profile page to edit his account information.
+  navigation: new Map([['Apps', '/admin/apps'], ['Models', '/admin/models'], ['Products', '/admin/products'], ['Profile', '/admin/login']]),
+  // Add quick shortcuts to allow the users to quickly create new objects.
+  shortcuts: new Map([['Add app', '/admin/app/new'], ['Add model', '/admin/model/new'], ['Add product', '/admin/product/new']])
+});
+/**
  *  Create a new View instance to show components. The View will automatically
  *  clean up previously installed components if we install a new one so that we
  *  always have one active.
  *  @var      {View}
  */
 
-const component = new View(container, {
-  cacheSize: 1,
+const view = new View(container, {
+  cacheSize: 10,
   Widget: Apology,
   params: ["Loading..."] // Listen for any unrecoverable errors and show the message to the user.
 
-}).on("error", error => void component.install(Apology, error));
+}).on("error", error => void view.install(Apology, error));
 /**
  *  Create a new Router instance. The Router will listen for any changes to the
  *  URL, whether manually by the user, or programmatically with the goTo()
@@ -46,12 +61,12 @@ const component = new View(container, {
 
 const router = new Router(new Map([// This route will serve all apps.
 ['/app/:appPath', App], // These routes will serve the admin interface.
-['/login', Login], ['/register', Registration], ['/admin/profile', PasswordForm], ['/admin/app', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/model', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/product', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm]]), {
+['/', Login], ['/login', Login], ['/register', Registration], ['/admin/profile', PasswordForm], ['/admin/apps', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/models', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/products', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm]]), {
   // Protect the admin routes.
   protected: ['/admin']
 }) // Make sure that we pass on any navigation requests to the View widget.
-.on("navigate", page => void component.install(page.component, page.options)) // Show an apology if the route could not be found.
-.on("not-found", () => void component.install(Apology, "This page could not be found.")) // Show an apology if the user is trying to access a protected route they are
+.on("navigate", page => void view.install(page.component, page.options)) // Show an apology if the route could not be found.
+.on("not-found", () => void view.install(Apology, "This page could not be found.")) // Show an apology if the user is trying to access a protected route they are
 // not allowed to access.
-.on("not-allowed", () => void component.install(Apology, "You are not allowed to view this page.")) // Make sure we initially honor the current URL request.
+.on("not-allowed", () => void view.install(Apology, "You are not allowed to view this page.")) // Make sure we initially honor the current URL request.
 .navigateToCurrent();

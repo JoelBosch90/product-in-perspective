@@ -74,7 +74,13 @@ class View extends BaseElement {
   install(Widget, ...params) {
     // Check if we've installed a widget with this class before.
     if (!this._widgets.has(Widget)) {
-      // If not, create an instance of this widget.
+      // If we're adding a new widget, we'll also activate it. But we never want
+      // more than one widget active, so we should hide the currently active
+      // widget first.
+      const active = this._activeWidget();
+
+      if (active) active.instance.hide(); // If not, create an instance of this widget.
+
       const instance = new Widget(this._container, ...params); // Make sure we propagate all events that this widget triggers.
 
       instance.bubbleTo(this); // And add the widget and its parameters to the Map, using the class as a
@@ -98,13 +104,14 @@ class View extends BaseElement {
   }
   /**
    *  Private method for exposing the currently active widget.
-   *  @returns  {BaseElement}
+   *  @returns  {BaseElement|false}
    */
 
 
   _activeWidget() {
     // Return the last widget in the map.
-    return Array.from(this._widgets).pop()[1];
+    if (this._widgets.size) return Array.from(this._widgets).pop()[1]; // Return false if there is no active widget.
+    else return false;
   }
   /**
    *  Private method for activating a widget.
@@ -115,7 +122,10 @@ class View extends BaseElement {
 
 
   _activate(Widget, params) {
-    // Cannot activate a widget if we don't have a Widget.
+    console.log("List", this._widgets);
+    console.log("Activating", Widget, params);
+    console.log("Last widget", this._activeWidget()); // Cannot activate a widget if we don't have a Widget.
+
     if (!Widget) return; // Hide the widget that is currently active.
 
     this._activeWidget().instance.hide(); // First, get the instantiated widget.

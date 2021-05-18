@@ -1,0 +1,14 @@
+/**
+ *  Extra treatment for the hidden attribute.
+ */
+
+// Target all elements that have the hidden attribute.
+[hidden]
+{
+  // In terms of the cascade, the hidden attribute is extremely weak, which
+  // means that any class that gets any other value for the display attribute
+  // ignores this hidden attribute. In our app we rely on hiding elements quite
+  // a bit so this becomes problematic. It fix this, we can artificially raise
+  // the importance of the hidden attribute here.
+  display: none !important;
+}
