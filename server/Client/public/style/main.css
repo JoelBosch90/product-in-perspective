@@ -256,13 +256,8 @@ form {
   display: grid;
   grid-template-columns: auto;
   gap: 1.25em;
-  padding: 0 2em;
-  margin: 2em 0;
-  max-width: min(100%, 30em);
-}
-form.center {
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 /**
  *  Header
@@ -627,13 +622,8 @@ label {
   display: grid;
   grid-template-columns: auto;
   gap: 1.25em;
-  padding: 0 2em;
-  margin: 2em 0;
-  max-width: min(100%, 30em);
-}
-.overview.center {
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 /**
  *  Card
@@ -676,11 +666,16 @@ label {
   height: 100%;
 }
 /**
- *  Main styling for the View class.
+ *  View
+ *    Main styling for the View class.
  */
 .view {
   width: 100%;
   height: 100%;
+  padding: 0 2em;
+  max-width: min(100%, 30em);
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
 }
 .view > * {

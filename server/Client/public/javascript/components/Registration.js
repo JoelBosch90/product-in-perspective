@@ -81,7 +81,17 @@ class Registration extends BaseElement {
       }]
     }); // Go to the login page after a successful registration.
 
-    this._form.on("stored", () => void goTo('/login')); // Add the new element to the parent container.
+    this._form.on("stored", () => void goTo('/login')); // Create a new link for navigating the login page.
+
+
+    const link = document.createElement('a');
+    link.addEventListener('click', () => void goTo('/login'));
+    link.textContent = "Already an account? Login here."; // Add the link to a new paragraph and add that paragraph to the container.
+
+    const paragraph = document.createElement('p');
+    paragraph.appendChild(link);
+
+    this._container.appendChild(paragraph); // Add the new element to the parent container.
 
 
     parent.appendChild(this._container);

@@ -51,7 +51,7 @@ const view = new View(container, {
   // but we do want to cache some components to limit the number of requests
   // that are made and the amount of Javascript computation that needs to be
   // done.
-  cacheSize: 10,
+  cacheSize: 15,
   // By default, we want to install an apology that indicates that we're loading
   // the next component through the router.
   Widget: Apology,
@@ -67,7 +67,7 @@ const view = new View(container, {
 
 const router = new Router(new Map([// This route will serve all apps.
 ['/app/:appPath', App], // These routes will serve the admin interface.
-['/', Login], ['/login', Login], ['/register', Registration], ['/admin/profile', PasswordForm], ['/admin/apps', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/models', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/products', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm]]), {
+['/', Login], ['/login', Login], ['/register', Registration], ['/admin', AppList], ['/admin/apps', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/models', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/products', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm], ['/admin/profile', PasswordForm]]), {
   // Protect the admin routes.
   protected: ['/admin']
 }) // Make sure that we pass on any navigation requests to the View widget.

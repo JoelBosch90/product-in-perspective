@@ -76,7 +76,17 @@ class Login extends BaseElement {
       localStorage.setItem('jwt', response.token); // Move to the list of apps after login.
 
       goTo('/admin/apps');
-    }); // Add the new element to the parent container.
+    }); // Create a new link for navigating the register page.
+
+
+    const link = document.createElement('a');
+    link.addEventListener('click', () => void goTo('/register'));
+    link.textContent = "No account? Register one here."; // Add the link to a new paragraph and add that paragraph to the container.
+
+    const paragraph = document.createElement('p');
+    paragraph.appendChild(link);
+
+    this._container.appendChild(paragraph); // Add the new element to the parent container.
 
 
     parent.appendChild(this._container);

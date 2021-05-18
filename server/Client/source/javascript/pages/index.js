@@ -66,7 +66,7 @@ const view = new View(container, {
   // but we do want to cache some components to limit the number of requests
   // that are made and the amount of Javascript computation that needs to be
   // done.
-  cacheSize:  10,
+  cacheSize:  15,
 
   // By default, we want to install an apology that indicates that we're loading
   // the next component through the router.
@@ -91,7 +91,7 @@ const router = new Router(new Map([
   ['/', Login],
   ['/login', Login],
   ['/register', Registration],
-  ['/admin/profile', PasswordForm],
+  ['/admin', AppList],
   ['/admin/apps', AppList],
   ['/admin/app/new', AppForm],
   ['/admin/app/:appId', AppForm],
@@ -101,6 +101,7 @@ const router = new Router(new Map([
   ['/admin/products', ProductList],
   ['/admin/product/new', ProductForm],
   ['/admin/product/:productId', ProductForm],
+  ['/admin/profile', PasswordForm],
 ]), {
 
   // Protect the admin routes.
