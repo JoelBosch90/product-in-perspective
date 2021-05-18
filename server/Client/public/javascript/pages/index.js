@@ -47,7 +47,13 @@ const menu = new Menu(container, {
  */
 
 const view = new View(container, {
+  // We want to limit the amount of components we cache to limit memory usage,
+  // but we do want to cache some components to limit the number of requests
+  // that are made and the amount of Javascript computation that needs to be
+  // done.
   cacheSize: 10,
+  // By default, we want to install an apology that indicates that we're loading
+  // the next component through the router.
   Widget: Apology,
   params: ["Loading..."] // Listen for any unrecoverable errors and show the message to the user.
 

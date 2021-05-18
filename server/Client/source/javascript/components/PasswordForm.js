@@ -73,7 +73,7 @@ class PasswordForm extends BaseElement {
     });
 
     // Go to the app list after a successful password change.
-    this._form.on("stored", () => void goTo('/admin/app'));
+    this._form.on("stored", () => void goTo('/admin/apps'));
 
     // Add the new element to the parent container.
     parent.appendChild(this._container);

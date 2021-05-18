@@ -167,7 +167,7 @@ class AppForm extends BaseElement {
       }]
     }); // When the app was stored successfully, return to the app overview.
 
-    this._form.on("stored", () => void goTo('/admin/app')); // Add the new element to the parent container.
+    this._form.on("stored", () => void goTo('/admin/apps')); // Add the new element to the parent container.
 
 
     parent.appendChild(this._container);

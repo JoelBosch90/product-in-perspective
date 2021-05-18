@@ -8,6 +8,7 @@ const { models } = require('mongoose');
 
 // Import dependencies.
 const Database = require('./Database.js');
+const Storage = require('./Storage.js');
 
 /**
  *  The definition of the Api class component that is used to process all API
@@ -78,6 +79,31 @@ class Api {
 
     // Start the new database.
     this._database = new Database(this._config.database);
+
+    // Install new middleware on the Express app.
+    app.use((request, response, next) => {
+
+      // Create or expand the context for each request.
+      request.context = Object.assign({}, request.context, {
+
+        // Add the database models to the context of each request for easy
+        // access.
+        models: this._database.models(),
+      });
+
+      // Show that we're done here and can continue processing the request.
+      next();
+    });
+  }
+
+  /**
+   *  Private method to connect to the object storage.
+   *  @param    {EventEmitter}    app     The express application object.
+   */
+  _connectStorage = app => {
+
+    // Start the new object storage.
+    this._storage = new Storage(this._config.storage);
 
     // Install new middleware on the Express app.
     app.use((request, response, next) => {

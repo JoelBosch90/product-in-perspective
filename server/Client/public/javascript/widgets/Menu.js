@@ -53,7 +53,10 @@ class Menu extends BaseElement {
     this._addAnchor(shortcuts, options.shortcuts); // Start listening for URL changes.
 
 
-    window.addEventListener('popstate', this._processPathChange); // App both menu components to the container.
+    window.addEventListener('popstate', this._processPathChange); // Process the initital path.
+
+    this._processPathChange(); // App both menu components to the container.
+
 
     this._container.appendChild(navigation);
 

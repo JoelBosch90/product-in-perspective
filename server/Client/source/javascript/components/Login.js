@@ -85,7 +85,7 @@ class Login extends BaseElement {
       localStorage.setItem('jwt', response.token);
 
       // Move to the list of apps after login.
-      goTo('/admin/app');
+      goTo('/admin/apps');
     });
 
     // Add the new element to the parent container.

@@ -75,7 +75,7 @@ class Login extends BaseElement {
       // against cross site scripting!!!
       localStorage.setItem('jwt', response.token); // Move to the list of apps after login.
 
-      goTo('/admin/app');
+      goTo('/admin/apps');
     }); // Add the new element to the parent container.
 
 
