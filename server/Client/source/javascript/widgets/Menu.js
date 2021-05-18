@@ -109,11 +109,24 @@ class Menu extends BaseElement {
       // Make the anchor tag look like a button.
       anchor.classList.add("button");
 
+      // While we will overwrite clicks on the anchor tag, we should still add
+      // the href so that it can use all other uses of an anchor tag, like copy
+      // link on right click and open in different tab with middle mouse click.
+      anchor.setAttribute("href", location);
+
       // Add the text.
       anchor.textContent = text;
 
       // Navigate to the right page when this anchor is clicked.
-      anchor.addEventListener("click", () => void goTo(location));
+      anchor.addEventListener("click", event => {
+
+        // We don't want to use the regular click event on anchor tags to
+        // navigate, as that will reload the page.
+        event.preventDefault();
+
+        // Instead we use our own goTo function to navigate.
+        goTo(location);
+      });
 
       // Add the anchor to the navigation menu.
       parent.append(anchor);
