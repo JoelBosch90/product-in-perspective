@@ -108,7 +108,7 @@ class ModelForm extends BaseElement {
       }]
     }); // When the model was stored successfully, return to the model overview.
 
-    this._form.on("stored", () => void goTo('/admin/model'));
+    this._form.on("stored", () => void goTo('/admin/models'));
   };
   /**
    *  Method to remove this object and clean up after itself. We have to use

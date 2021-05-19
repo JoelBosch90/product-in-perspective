@@ -164,7 +164,7 @@ class ProductForm extends BaseElement {
     }); // When the product was stored successfully, return to the product overview.
 
 
-    this._form.on("stored", () => void goTo('/admin/product'));
+    this._form.on("stored", () => void goTo('/admin/products'));
   };
   /**
    *  Method to remove this object and clean up after itself. We have to use

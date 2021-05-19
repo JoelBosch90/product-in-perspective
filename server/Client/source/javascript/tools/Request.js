@@ -87,6 +87,11 @@ class Request {
    */
   post = async (url = '', data = {}) => {
 
+    // Get a FormData object.
+    const formData = new FormData(data);
+
+    console.log(formData);
+
     // Use fetch to perform the HTTP request.
     const response = await fetch(this._apiUrl + url, {
       method:         'POST',
@@ -101,6 +106,22 @@ class Request {
       referrerPolicy: 'no-referrer',
       body:           JSON.stringify(data),
     });
+
+    // @TODO Remove previous code for reference.
+    // // Use fetch to perform the HTTP request.
+    // const response = await fetch(this._apiUrl + url, {
+    //   method:         'POST',
+    //   mode:           'cors',
+    //   cache:          'no-cache',
+    //   credentials:    'omit',
+    //   headers:      {
+    //     'Content-Type':   'application/json',
+    //     'x-access-token': localStorage.getItem('jwt'),
+    //   },
+    //   redirect:       'follow',
+    //   referrerPolicy: 'no-referrer',
+    //   body:           JSON.stringify(data),
+    // });
 
     // Return the response.
     return response;

@@ -125,10 +125,10 @@ class Representation extends BaseElement {
         // Get access to the JSON object.
         if (response) return response.json().then(texts => {
           // Store the texts.
-          this._texts = texts; // Add the representing mode styling to the HTML tag.
+          this._texts = texts; // We need to at a class to facilitate fullscreen capabilities.
 
-          const html = document.getElementsByTagName("html")[0];
-          html.classList.add("representing"); // Now start the barcode scanner and the augmented reality scene.
+          this._enableFullscreen(); // Now start the barcode scanner and the augmented reality scene.
+
 
           this._loadBarcodeScanner();
 
@@ -149,9 +149,39 @@ class Representation extends BaseElement {
     parent.appendChild(this._container);
   }
   /**
-   *  Private method to load the augmented reality scene.
+   *  In order to facilitate fullscreen, we're immitating the 'a-fullscreen'
+   *  class that Aframe likes to add to the HTML element, but we only want to
+   *  use this class when showing the prepresentation, so we're not using their
+   *  'a-fullscreen' class, but compensate with own instead.
+   *
+   *  This method sets that class on the HTML element.
    */
 
+
+  _enableFullscreen = () => {
+    // Get the HTML element.
+    const html = document.getElementsByTagName("html")[0]; // Add the representing mode styling to the HTML tag.
+
+    html.classList.add("fullscreen");
+  };
+  /**
+   *  In order to facilitate fullscreen, we're immitating the 'a-fullscreen'
+   *  class that Aframe likes to add to the HTML element, but we only want to
+   *  use this class when showing the prepresentation, so we're not using their
+   *  'a-fullscreen' class, but compensate with own instead.
+   *
+   *  This method removes that class from the HTML element.
+   */
+
+  _disableFullscreen = () => {
+    // Get the HTML element.
+    const html = document.getElementsByTagName("html")[0]; // Remove the representing mode styling from the HTML tag.
+
+    html.classList.remove("fullscreen");
+  };
+  /**
+   *  Private method to load the augmented reality scene.
+   */
 
   _loadArScene = () => {
     // Create a new augmented reality scene.
@@ -296,16 +326,43 @@ class Representation extends BaseElement {
     .catch(error => void this.trigger('error', error));
   };
   /**
+   *  Method to show this element.
+   *  @returns  {Representation}
+   */
+
+  show() {
+    // Make sure we're in fullscreen mode.
+    this._enableFullscreen(); // Use the BaseElement's show method to actually show this widget.
+
+
+    super.show(); // Allow chaining.
+
+    return this;
+  }
+  /**
+   *  Method to hide this element.
+   *  @returns  {Representation}
+   */
+
+
+  hide() {
+    // Make sure we exit fullscreen mode.
+    this._disableFullscreen(); // Use the BaseElement's hide method to actually hide this widget.
+
+
+    super.hide(); // Allow chaining.
+
+    return this;
+  }
+  /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
    */
 
-  remove() {
-    // Immediately hide this widget.
-    this.hide(); // Remove the representing mode class from the HTML tag.
 
-    const html = document.getElementsByTagName("html")[0];
-    html.classList.remove("representing"); // Stop listening for the scene to end.
+  remove() {
+    // Immediately hide this widget before we start removing it.
+    this.hide(); // Stop listening for the scene to end.
 
     if (this._scene) this._scene.off("end", this._onSceneEnd); // Remove all classes that we've initialized.
 
