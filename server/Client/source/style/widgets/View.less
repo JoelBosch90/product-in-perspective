@@ -11,6 +11,9 @@
   // Make sure the view doesn't touch the sides of the screen.
   padding: 0 2em;
 
+  // We don't want these paddings to increase the size of the view beyond 100%.
+  box-sizing: border-box;
+
   // We want to limit the width of the view so that users don't have to read
   // lines of text that are too wide.
   max-width: min(100%, 30em);
