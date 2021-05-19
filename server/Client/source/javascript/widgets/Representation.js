@@ -136,6 +136,10 @@ class Representation extends BaseElement {
           // Store the texts.
           this._texts = texts;
 
+          // Add the representing mode styling to the HTML tag.
+          const html = document.getElementsByTagName("html")[0];
+          html.classList.add("representing");
+
           // Now start the barcode scanner and the augmented reality scene.
           this._loadBarcodeScanner()
           this._loadArScene();
@@ -331,6 +335,13 @@ _loadBarcodeScanner = () => {
    *  non-arrow function or we'd lose the super context.
    */
   remove() {
+
+    // Immediately hide this widget.
+    this.hide();
+
+    // Remove the representing mode class from the HTML tag.
+    const html = document.getElementsByTagName("html")[0];
+    html.classList.remove("representing");
 
     // Stop listening for the scene to end.
     if (this._scene) this._scene.off("end", this._onSceneEnd);

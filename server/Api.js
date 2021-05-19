@@ -37,7 +37,7 @@ class Api {
    *  @param    {object}    config      The configuration object.
    *    @property {object}    api         The API part of the configuration.
    *      @property {string}    host        The API application host.
-   *      @property {integer}   port        The API application port.
+   *      @property {number}    port        The API application port.
    *    @property {object}    database    The database credentials.
    *      @property {string}    name        The name of the database.
    *      @property {string}    user        The username for connecting to the
@@ -46,6 +46,13 @@ class Api {
    *                                        database.
    *      @property {string}    secret      The database secret for creating
    *                                        tokens.
+   *    @property {object}    strorage    The object storage credentials.
+   *      @property {string}    url         The URL for connecting to the object
+   *                                        storage.
+   *      @property {number}    port        The port for connecting to the
+   *                                        object storage.
+   *      @property {string}    accessKey   The access key for the storage.
+   *      @property {string}    secretKey   The secret key for the storage.
    */
   constructor(config) {
 
@@ -57,6 +64,9 @@ class Api {
 
     // Connect to the database.
     this._connectDatabase(app);
+
+    // Connect to the object storage.
+    this._connectStorage(app);
 
     // Install external middleware.
     this._installMiddelware(app, express);
@@ -104,21 +114,6 @@ class Api {
 
     // Start the new object storage.
     this._storage = new Storage(this._config.storage);
-
-    // Install new middleware on the Express app.
-    app.use((request, response, next) => {
-
-      // Create or expand the context for each request.
-      request.context = Object.assign({}, request.context, {
-
-        // Add the database models to the context of each request for easy
-        // access.
-        models: this._database.models(),
-      });
-
-      // Show that we're done here and can continue processing the request.
-      next();
-    });
   }
 
   /**
@@ -220,8 +215,9 @@ class Api {
           // extension.
           const apiPath = fullPath.replace(endpointsDirectory, "").slice(0, -3);
 
-          // Import this endpoint and supply the path to this endpoint.
-          require(fullPath)(app, '/api' + apiPath);
+          // Import this endpoint and supply the path to this endpoint, and the
+          // storage client.
+          require(fullPath)(app, '/api' + apiPath, this._storage.client());
         }
       }
     };
@@ -239,14 +235,18 @@ class Api {
     // First, wait for the database to connect.
     this._database.connect().then(async () => {
 
-      // Then start listening at the API port.
-      app.listen(this._config.api.port, () => {
+      // Make sure that the object storage is set up correctly.
+      this._storage.verify().then(async () => {
 
-        // Tell the command terminal where we're listening for incoming
-        // requests.
-        console.log(
-          `Hosting API at ${this._config.api.host}:${this._config.api.port}.`
-        );
+        // Then start listening at the API port.
+        app.listen(this._config.api.port, () => {
+
+          // Tell the command terminal where we're listening for incoming
+          // requests.
+          console.log(
+            `Hosting API at ${this._config.api.host}:${this._config.api.port}.`
+          );
+        });
       });
     });
   }

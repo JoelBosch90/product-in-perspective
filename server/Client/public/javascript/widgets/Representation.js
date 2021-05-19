@@ -125,7 +125,10 @@ class Representation extends BaseElement {
         // Get access to the JSON object.
         if (response) return response.json().then(texts => {
           // Store the texts.
-          this._texts = texts; // Now start the barcode scanner and the augmented reality scene.
+          this._texts = texts; // Add the representing mode styling to the HTML tag.
+
+          const html = document.getElementsByTagName("html")[0];
+          html.classList.add("representing"); // Now start the barcode scanner and the augmented reality scene.
 
           this._loadBarcodeScanner();
 
@@ -298,7 +301,12 @@ class Representation extends BaseElement {
    */
 
   remove() {
-    // Stop listening for the scene to end.
+    // Immediately hide this widget.
+    this.hide(); // Remove the representing mode class from the HTML tag.
+
+    const html = document.getElementsByTagName("html")[0];
+    html.classList.remove("representing"); // Stop listening for the scene to end.
+
     if (this._scene) this._scene.off("end", this._onSceneEnd); // Remove all classes that we've initialized.
 
     if (this._scanner) this._scanner.remove();

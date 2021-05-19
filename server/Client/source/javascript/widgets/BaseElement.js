@@ -25,7 +25,7 @@ class BaseElement extends EventHandler {
    *  Method to show this element.
    *  @returns  {BaseElement}
    */
-  show = () => {
+  show() {
 
     // Make sure we're not hiding.
     this._container.removeAttribute('hidden');
@@ -38,7 +38,7 @@ class BaseElement extends EventHandler {
    *  Method to hide this element.
    *  @returns  {BaseElement}
    */
-  hide = () => {
+  hide() {
 
     // Make sure we're hiding.
     this._container.setAttribute('hidden', '');

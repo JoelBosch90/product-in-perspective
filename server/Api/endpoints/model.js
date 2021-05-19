@@ -7,8 +7,9 @@ const errorResponse = require("../errorResponse");
  *  @param    {string}        path      The path to this endpoint. All routes
  *                                      that are processed here should start
  *                                      with this path.
+ *  @param    {Minio.Client}  storage   The object storage.
  */
-module.exports = function(app, path) {
+module.exports = function(app, path, storage) {
 
   /**
    *  This is the endpoint to create a new model.
@@ -21,10 +22,15 @@ module.exports = function(app, path) {
    *  Authentication level required:
    *      authenticated
    */
-  app.post(path, async (request, response) => {
+  app.post(path, storage.single('model'), async (request, response) => {
 
     // This is only available to an authenticated user.
     if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
+
+    console.log(request);
+
+    // When creating a new model, we will need a new file.
+    if (!request.file) return  errorResponse(response, 400, "Model file is missing.");
 
     // The database might throw an error.
     try {

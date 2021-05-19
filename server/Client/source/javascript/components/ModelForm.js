@@ -99,7 +99,7 @@ class ModelForm extends BaseElement {
           name:   "model",
           options:  {
             label:  "Upload model ...",
-            accept: ".glTF",
+            // accept: ".glTF",
             type:   "file",
           },
         },

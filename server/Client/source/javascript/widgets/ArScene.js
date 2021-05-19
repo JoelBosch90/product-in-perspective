@@ -3,6 +3,7 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overlay } from "/javascript/widgets/Overlay.js";
 import { Reticle} from "/javascript/widgets/ArScene/Reticle.js";
 import { debounce } from "/javascript/tools/debounce.js";
+import { AttributeObserver } from "/javascript/tools/AttributeObserver.js";
 
 /**
  *  The definition of the ArScene class that can be used to create an an
@@ -98,6 +99,13 @@ class ArScene extends BaseElement {
   _texts = null;
 
   /**
+   *  Private variable that stores the attribute observer that we use to remove
+   *  the 'a-fullscreen' class that Aframe likes to add to the HTML element.
+   *  @var      {AttributeObserver}
+   */
+  _observer = null;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element on which the
    *                                  overlay interface will be installed.
@@ -179,6 +187,14 @@ class ArScene extends BaseElement {
     // Add the scene to the parent container.
     parent.prepend(this._scene);
 
+    // Aframe may attempt to add 'a-fullscreen to the HTML element on the page.
+    // This class helps create a fullscreen orientation, but it sacrifices
+    // scrolling. Because we're in a single page application, this might mess up
+    // different parts of the application, so we want to remove this class so
+    // that we can offload this responsibility elsewhere (like the
+    // Representation class).
+    this._preventClass("html", "a-fullscreen");
+
     // Check to see if the renderer has already started. If so, we can
     // immediately initialize the scene.
     if (this._scene.renderStarted) this._initScene();
@@ -187,6 +203,40 @@ class ArScene extends BaseElement {
     else this._scene.addEventListener("loaded", () => void this._initScene());
   }
 
+  /**
+   *  Private method to watch a single DOM element and remove a certain class
+   *  from that element as soon as it appears. It will only prevent this
+   *  behaviour once.
+   *  @param  {string}    tagName     Name of the DOM element tag.
+   *  @param  {string}    className   Name of the class that should be
+   *                                  prevented.
+   */
+  _preventClass = (tagName, className) => {
+
+    // Get the first occurrence of this tag.
+    const tag = document.getElementsByTagName(tagName)[0];
+
+    // Create a new attribute observer to observe changes in the DOM.
+    this._observer = new AttributeObserver();
+
+    // Start observing our element.
+    this._observer.on(tag, mutation => {
+
+      // No need to observe anything but class changes.
+      if (mutation.attributeName != "class") return;
+
+      // If the HTML element does not yet have the specific class, we should
+      // keep waiting.
+      if (!tag.classList.contains(className)) return;
+
+      // Remove the class.
+      tag.classList.remove(className);
+
+      // After we've removed the class we can stop observing the HTML element
+      // and we no longer need the attribute observer.
+      this._observer.remove();
+    });
+  }
 
   /**
    *  Private method for initializing the scene by adding event listeners and
@@ -493,17 +543,18 @@ class ArScene extends BaseElement {
     this.stop();
 
     // Remove the other objects we've used.
-    this._overlay.remove();
-    this._reticle.remove();
+    if (this._overlay) this._overlay.remove();
+    if (this._reticle) this._reticle.remove();
+    if (this._observer) this._observer.remove();
 
     // Remove all DOM elements we've stored.
-    this._scene.remove();
-    this._object.remove();
-    this._overlayContainer.remove();
-    this._interface.remove();
-    this._proceedButton.remove();
-    this._stopButton.remove();
-    this._instructions.remove();
+    if (this._scene) this._scene.remove();
+    if (this._object) this._object.remove();
+    if (this._overlayContainer) this._overlayContainer.remove();
+    if (this._interface) this._interface.remove();
+    if (this._proceedButton) this._proceedButton.remove();
+    if (this._stopButton) this._stopButton.remove();
+    if (this._instructions) this._instructions.remove();
 
     // Call the original remove method.
     super.remove();

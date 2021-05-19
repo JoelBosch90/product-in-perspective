@@ -1,11 +1,10 @@
 // Load libaries.
-const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
+const Minio = require("minio");
+const multer = require('multer');
 
 /**
- *  The definition of the Database class component that acts as the interface
- *  for the database.
+ *  The definition of the Storage class component that acts as the interface
+ *  for the object storage.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
@@ -20,86 +19,84 @@ class Storage {
   _config = {};
 
   /**
+   *  Reference to the object storage client.
+   *  @var      {Minio.Client}
+   */
+  _client = {};
+
+  /**
    *  Class constructor.
    *  @param    {object}    config      The configuration object.
-   *    @property {string}    name        The name of the database.
-   *    @property {string}    user        The username for connecting to the
-   *                                      database.
-   *    @property {string}    password    The password for connecting to the
-   *                                      database.
-   *    @property {string}    secret      The database secret for creating
-   *                                      tokens.
+   *    @property {string}    url         The URL for connecting to the object
+   *                                      storage.
+   *    @property {number}    port        The port for connecting to the
+   *                                      object storage.
+   *    @property {string}    accessKey   The access key for the storage.
+   *    @property {string}    secretKey   The secret key for the storage.
    */
   constructor(config) {
 
     // Store the configuration.
     this._config = config;
+
+    // Create a new object storage client.
+    // this._client = new Minio.Client({
+    //   endPoint:   this._config.url,
+    //   port:       Number(this._config.port),
+    //   useSSL:     true,
+    //   accessKey:  this._config.accessKey,
+    //   secretKey:  this._config.secretKey,
+    // });
+
+    // TEST with disk storage.
+    // @TODO Replace with object storage.
+    this._client = multer({
+      storage: multer.diskStorage({
+
+        // For now, let's store in a temporary folder.
+        destination: (request, file, callback) => {
+          callback(null, '/tmp/uploads');
+        },
+
+        // And use the name of the file with the current date to create somewhat
+        // unique names.
+        filename: (request, file, callback) => {
+          callback(null, file.fieldname + '-' + Date.now());
+        },
+      }),
+    });
   }
 
   /**
-   *  Method for connecting to the database.
+   *  Method exposing the object storage client.
+   *  @returns  {Minio.Client}
+   */
+  client = () => {
+
+    // Return the instance of the Minio client.
+    return this._client;
+  }
+
+  /**
+   *  Method for verifying that the buckets that we need are available.
    *  @returns  {Promise}
    */
-  connect = () => {
+  verify = () => {
 
-    // If there a user was passed in the config, that means that we're running
-    // in production.
-    const connectUrl = this._config.user
+    // Return a new promise.
+    return new Promise((resolve, reject) => {
 
-      // In production, we need to authenticate when connecting to the database.
-      ? `mongodb://${this._config.user}:${this._config.password}@${this._config.url}`
+      // // Verify that the buckets we need exist within the object storage.
+      // this._client.bucketExists("test", error => {
 
-      // In development, this is not needed. We can load the URL as is.
-      : `mongodb://${this._config.url}`
+      //   // If we get an error, pass it on in the rejection.
+      //   if (error) return reject(error);
 
-    // Use the URL to connect to the database. Return the connection promise.
-    return mongoose.connect(connectUrl);
-  }
-
-  /**
-   *  Method for exposing the database models.
-   *  @returns  {object}
-   */
-  models = () => {
-
-    // Start building an object for all model classes.
-    const models = {};
-
-    /**
-     *  Helper function to read a directory so that we can call it recursively.
-     *  @param    {string}        directory     Name of the directory.
-     */
-    const readDirectory = directory => {
-
-      // Get the files in this directory.
-      const files = fs.readdirSync(directory);
-
-      // Loop through all the files.
-      for (const file of files) {
-
-        // Get the full path to the file by adding the directory.
-        const fullPath = path.join(directory, file);
-
-        // If this is a directory, we should explore it recursively instead.
-        if (fs.lstatSync(fullPath).isDirectory()) readDirectory(fullPath);
-
-        // Ignore all but Javascript files.
-        else if (file.toLowerCase().endsWith('.js')) {
-
-          // Get the model.
-          const model = require(fullPath);
-
-          // Add the model to the object.
-          Object.assign(models, { [model.modelName]: model })
-        }
-      }
-    };
-
-    // Start by reading the top level models directory.
-    readDirectory(__dirname + '/Storage/models');
-
-    // Return the object that contains all model classes.
-    return models;
+        // Otherwise we can simply resolve the promise to say everything checks
+        // out.
+        return resolve(true);
+      // });
+    });
   }
 }
 
