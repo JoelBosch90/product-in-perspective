@@ -1,5 +1,5 @@
 // Load libaries.
-const Minio = require("minio");
+// const Minio = require("minio");
 const multer = require('multer');
 
 /**
