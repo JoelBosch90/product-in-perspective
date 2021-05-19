@@ -130,14 +130,9 @@ dmypy.json
 # No need to copy over all node modules.
 node_modules
 
-# Ignore the models directory.
-# src/models/
-
-# Ignore symlinks.
-server/Client/public/html
-server/Client/public/models
-server/Client/public/images
-
 # Ignore the javascript config file.
 server/Client/source/javascript/config.js
 server/Client/public/javascript/config.js
+
+# Ignore the temporary file upload directory.
+server/Api/endpoints/tmp

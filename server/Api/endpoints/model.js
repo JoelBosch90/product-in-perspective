@@ -1,5 +1,6 @@
 // Import dependencies.
 const errorResponse = require("../errorResponse");
+const saveEncodedFile = require("../saveEncodedFile");
 
 /**
  *  This function acts as an API endpoint for acts involving models.
@@ -7,9 +8,8 @@ const errorResponse = require("../errorResponse");
  *  @param    {string}        path      The path to this endpoint. All routes
  *                                      that are processed here should start
  *                                      with this path.
- *  @param    {Minio.Client}  storage   The object storage.
  */
-module.exports = function(app, path, storage) {
+module.exports = function(app, path) {
 
   /**
    *  This is the endpoint to create a new model.
@@ -22,29 +22,39 @@ module.exports = function(app, path, storage) {
    *  Authentication level required:
    *      authenticated
    */
-  app.post(path, storage.single('model'), async (request, response) => {
+  app.post(path, async (request, response) => {
 
     // This is only available to an authenticated user.
     if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    console.log(request);
-
-    // When creating a new model, we will need a new file.
-    if (!request.file) return  errorResponse(response, 400, "Model file is missing.");
+    // We need the model to proceed.
+    if (!request.body.model) return errorResponse(response, 400, "Model file is missing.");
 
     // The database might throw an error.
     try {
 
-      // Now we can add the new model to the database.
-      const model = await request.context.models.Model.create(Object.assign(request.body, {
-        user: request.context.user
-      }));
+      // We want to create a unique filename. It seems acceptably unlikely that
+      // the same user is going to post two images at the exact same time, so
+      // a format involving the user ID and the date will do.
+      const path = __dirname + '/tmp/' + request.context.user + '-at-' + Date.now() + '.png';
 
-      // Check if the model was indeed created.
-      if (!model) errorResponse(response, 500, "Model could not be created.");
+      // First, store the file, then store the model in the database.
+      saveEncodedFile(path, request.body.model).then(async () => {
 
-      // Confirm that the request was successfully processed.
-      return response.send(true);
+        // We want to store the path to the model.
+        request.body.file = path;
+
+        // Now we can add the new model to the database.
+        const model = await request.context.models.Model.create(Object.assign(request.body, {
+          user: request.context.user
+        }));
+
+        // Check if the model was indeed created.
+        if (!model) errorResponse(response, 500, "Model could not be created.");
+
+        // Confirm that the request was successfully processed.
+        return response.send(true);
+      });
 
     // Listen for any errors that the database might throw.
     } catch (error) {

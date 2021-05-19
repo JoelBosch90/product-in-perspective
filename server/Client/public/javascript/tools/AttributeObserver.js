@@ -70,7 +70,9 @@ class AttributeObserver {
 
 
   remove() {
-    // Disconnect the observer.
+    // Can't remove anything if it has already been removed.
+    if (!this._observer) return; // Disconnect the observer.
+
     this._observer.disconnect(); // Remove the reference to the observer so that it can be garbage collected.
 
 

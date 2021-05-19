@@ -4,7 +4,6 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const jwt = require("jsonwebtoken");
-const { models } = require('mongoose');
 
 // Import dependencies.
 const Database = require('./Database.js');
@@ -114,6 +113,21 @@ class Api {
 
     // Start the new object storage.
     this._storage = new Storage(this._config.storage);
+
+    // Install new middleware on the Express app.
+    app.use((request, response, next) => {
+
+      // Create or expand the context for each request.
+      request.context = Object.assign({}, request.context, {
+
+        // Add the storage client to the context of each request for easy
+        // access.
+        storage: this._storage.client(),
+      });
+
+      // Show that we're done here and can continue processing the request.
+      next();
+    });
   }
 
   /**
@@ -129,12 +143,10 @@ class Api {
 
     // We need to get access to the request data in the request's body object.
     // In this API, we want to use JSON objects to communicate with the client.
-    app.use(express.json());
-    app.use(express.urlencoded({
-
-      // We want to be able to use nested objects.
-      extended: true
-    }));
+    // The GLTF models we want users to be able to upload can be quite big, so
+    // we want to support filesizes of at least 25 MB.
+    app.use(express.json({ limit: '25mb' }));
+    app.use(express.urlencoded({ limit: '25mb', extended: true }));
   }
 
   /**
@@ -215,9 +227,8 @@ class Api {
           // extension.
           const apiPath = fullPath.replace(endpointsDirectory, "").slice(0, -3);
 
-          // Import this endpoint and supply the path to this endpoint, and the
-          // storage client.
-          require(fullPath)(app, '/api' + apiPath, this._storage.client());
+          // Import this endpoint and supply the path to this endpoint.
+          require(fullPath)(app, '/api' + apiPath);
         }
       }
     };

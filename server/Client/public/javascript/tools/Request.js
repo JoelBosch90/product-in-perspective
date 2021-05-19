@@ -30,7 +30,7 @@ class Request {
 
   get = async (url = '') => {
     // Use fetch to perform the HTTP request.
-    const response = await fetch(this._apiUrl + url, {
+    return fetch(this._apiUrl + url, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
@@ -41,9 +41,7 @@ class Request {
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer'
-    }); // Return the response.
-
-    return response;
+    });
   };
   /**
    *  Method for performing a PUT request. Returns a promise that will
@@ -56,7 +54,7 @@ class Request {
 
   put = async (url = '', data = {}) => {
     // Use fetch to perform the HTTP request.
-    const response = await fetch(this._apiUrl + url, {
+    return fetch(this._apiUrl + url, {
       method: 'PUT',
       mode: 'cors',
       cache: 'no-cache',
@@ -67,10 +65,8 @@ class Request {
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
-      body: JSON.stringify(data)
-    }); // Return the response.
-
-    return response;
+      body: this._prepareData(data)
+    });
   };
   /**
    *  Method for performing a POST request. Returns a promise that will
@@ -82,22 +78,24 @@ class Request {
    */
 
   post = async (url = '', data = {}) => {
-    // Use fetch to perform the HTTP request.
-    const response = await fetch(this._apiUrl + url, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'omit',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': localStorage.getItem('jwt')
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify(data)
-    }); // Return the response.
+    console.log("Request::post", url, data);
+    return this._encodeFiles(data).then(encoded => {
+      console.log("Request::post", url, encoded); // Use fetch to perform the HTTP request.
 
-    return response;
+      return fetch(this._apiUrl + url, {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'omit',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': localStorage.getItem('jwt')
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(encoded)
+      });
+    });
   };
   /**
    *  Method for performing a DELETE request. Returns a promise that will
@@ -108,7 +106,7 @@ class Request {
 
   delete = async (url = '') => {
     // Use fetch to perform the HTTP request.
-    const response = await fetch(this._apiUrl + url, {
+    return fetch(this._apiUrl + url, {
       method: 'DELETE',
       mode: 'cors',
       cache: 'no-cache',
@@ -119,9 +117,64 @@ class Request {
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer'
-    }); // Return the response.
+    });
+  };
+  /**
+   *  Private helper method to go through an object's entries and encode all
+   *  files in the object.
+   *  @param    {Object}    object    The object that might contain file
+   *                                  entries.
+   *  @returns  {Promise}
+   */
 
-    return response;
+  _encodeFiles = async object => {
+    // Return a promise that resolves into the encoded object.
+    return new Promise((resolve, reject) => {
+      // Encoding files might fail.
+      try {
+        // We want to start a new object.
+        const encoded = {}; // Gather an array of promises for encoding files.
+
+        const promises = []; // Loop through all the object entries to build the new object.
+
+        for (const [key, value] of Object.entries(object)) {
+          // If the input value is a file, we want to encode it as a base64
+          // string that we can send along in an HTTP request.
+          if (value instanceof File) promises.push(this._encodeFile(value).then(dataString => {
+            encoded[key] = dataString;
+          })); // Otherwise, we can use it as is.
+          else encoded[key] = value;
+        } // Return the new object we built after all files have been encoded.
+
+
+        Promise.all(promises).then(() => void resolve(encoded)); // Reject the promise if any errors occur.
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+  /**
+   *  Private helper method to encode files using base64.
+   *  @param    {File}      file    The file to encode.
+   *  @return   {Promise}
+   */
+
+  _encodeFile = async file => {
+    // Return a Promise that resolves into the data string.
+    return new Promise((resolve, reject) => {
+      // Get a file reader object that to read our file.
+      const reader = new FileReader(); // Install an event listener to process the result.
+
+      reader.onload = () => void resolve(reader.result); // Install event listeners to listen for when we fail to read the file.
+
+
+      reader.onerror = error => void reject(error);
+
+      reader.onabort = abort => void reject(abort); // Now read the file as a data URL.
+
+
+      reader.readAsDataURL(file);
+    });
   };
   /**
    *  There is nothing to remove here, but this method is expected on every
