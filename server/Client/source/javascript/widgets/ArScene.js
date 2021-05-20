@@ -3,6 +3,7 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overlay } from "/javascript/widgets/Overlay.js";
 import { Reticle} from "/javascript/widgets/ArScene/Reticle.js";
 import { debounce } from "/javascript/tools/debounce.js";
+import { Request } from "/javascript/tools/Request.js";
 import { AttributeObserver } from "/javascript/tools/AttributeObserver.js";
 
 /**
@@ -21,6 +22,12 @@ import { AttributeObserver } from "/javascript/tools/AttributeObserver.js";
  *  Javascript classes.
  */
 class ArScene extends BaseElement {
+
+  /**
+   *  This is the object that can make the HTTP requests needed in this class.
+   *  @var      {Request}
+   */
+  _request = null;
 
   /**
    *  Private variable that keeps track of the current mode of the scene. We
@@ -46,7 +53,14 @@ class ArScene extends BaseElement {
    *  Private variable that stores a reference to the Aframe 3D object.
    *  @var      {Element}
    */
-  _object = null;
+  _model = null;
+
+  /**
+   *  Private variable that stores a reference to the container that houses all
+   *  assets that are used for the 3D object.
+   *  @var      {Element}
+   */
+  _assets = null;
 
   /**
    *  Private variable that stores a reference to the Overlay object.
@@ -127,6 +141,9 @@ class ArScene extends BaseElement {
     // Store the texts we need to use.
     this._texts = texts;
 
+    // We need to be able to make HTTP requests later to load the models.
+    this._request = new Request();
+
     // Initialize the interface.
     this._initInterface(parent);
   }
@@ -177,9 +194,6 @@ class ArScene extends BaseElement {
 
     // Add a reticle to the scene.
     this._reticle = new Reticle(this._scene);
-
-    // Add a 3D object to the scene.
-    this._insertObject(this._scene);
 
     // Add the overlay to the scene.
     this._addOverlayToScene(this._scene);
@@ -294,68 +308,13 @@ class ArScene extends BaseElement {
   }
 
   /**
-   *  Private method for loading the assets in the scene.
-   *  @param    {Element}   scene   The Aframe scene to which the object is
-   *                                added.
-   *
-   *  @TODO     Get the assets from an API call.
-   */
-  _loadAssets = (scene) => {
-
-    // Create an element for the list of assets.
-    const assets = document.createElement("a-assets");
-
-    // Some of our models might take a while to load, so we need to increase the
-    // timeout.
-    assets.setAttribute("timeout", "5000");
-
-    // Add the 3D model to the list of assets.
-    // Currently using this example:
-    // https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/Duck
-    const model = document.createElement("a-asset-item");
-    model.setAttribute("src", "/models/duck/Duck.gltf");
-    model.id = "arscene-model";
-
-    // Add all assets to the list.
-    assets.appendChild(model);
-
-    // Add the assets to the scene.
-    scene.appendChild(assets);
-  }
-
-  /**
-   *  Private method for adding an object in an Aframe scene.
-   *  @param    {Element}   scene   The Aframe scene to which the object is
-   *                                added.
-   */
-  _insertObject = (scene) => {
-
-    // First, load the assets.
-    this._loadAssets(scene);
-
-    // Create an Aframe box element.
-    this._object = document.createElement("a-gltf-model");
-    this._object.classList.add("arscene-object");
-
-    // Attach a relevant default model with sensible dimensions.
-    this._object.setAttribute("src", "#arscene-model");
-    this._object.setAttribute("scale", "0.1 0.1 0.1");
-
-    // It should be hidden until it is placed in the scene by the user.
-    this._object.setAttribute("visible", "false");
-
-    // Add the object to the scene.
-    scene.appendChild(this._object);
-  }
-
-  /**
    *  Private method for adding a interface in an Aframe scene. This interface
    *  is an object in augmented reality that is attached to the camera view that
    *  we can attach the overlay to.
    *  @param    {Element}   scene   The Aframe scene to which the interface is
    *                                added.
    */
-  _addOverlayToScene = (scene) => {
+  _addOverlayToScene = scene => {
 
     // Create an Aframe camera element. To add the overlay to the scene, we can
     // create an interface in a camera object that we can mount the overlay to.
@@ -430,7 +389,7 @@ class ArScene extends BaseElement {
     this._reticle.show();
 
     // Make sure the 3D object is not visible.
-    this._object.setAttribute('visible', 'false');
+    this._model.setAttribute('visible', 'false');
 
     // Update the text of the overlay title.
     if (this._texts["placing-title"]) this._overlayTitle.textContent = this._texts["placing-title"];
@@ -456,11 +415,11 @@ class ArScene extends BaseElement {
 
     // We can copy the orientation of the reticle to place the object in the
     // scene.
-    this._object.setAttribute("position", this._reticle.position());
-    this._object.setAttribute("rotation", this._reticle.rotation());
+    this._model.setAttribute("position", this._reticle.position());
+    this._model.setAttribute("rotation", this._reticle.rotation());
 
     // Make sure the object is visible.
-    this._object.setAttribute('visible', 'true');
+    this._model.setAttribute('visible', 'true');
 
     // Update the text of the overlay title.
     if (this._texts["viewing-title"]) this._overlayTitle.textContent = this._texts["viewing-title"];
@@ -500,20 +459,64 @@ class ArScene extends BaseElement {
 
   /**
    *  Method to select a 3D object to show.
-   *  @param    {integer}     model     Number indicating the object category.
+   *  @param    {Object}    product     Object container the properties of the
+   *                                    selected product.
    *  @returns  {ArScene}
    */
-  select = (model) => {
+  select = product => {
 
-    // @TODO Use the model that is provided.
+    // We need to get the actual model for this product.
+    this._request.get('/model/' + product.model).then(response => {
 
-    // Immediately enter the augmented reality mode. This could fail, for
-    // example if WebXR is not available or the user has not given permission.
-    try { this._scene.enterAR(); }
-    catch (error) { this._handleError(error); }
+      // Get access to the JSON object.
+      response.json().then(model => {
 
-    // Show the scene and allow chaining.
-    return this.show();
+        // Use the the ArScene error handler for errors.
+        if (!response.ok) return this._handleError(model.error);
+
+        console.log(model);
+
+        // Add the 3D model to the scene.
+        this._insertModel(model.url);
+
+        // Immediately enter the augmented reality mode. This could fail, for
+        // example if WebXR is not available or the user has not given
+        // permission.
+        try { this._scene.enterAR(); }
+        catch (error) { this._handleError(error); }
+
+        // Then show the scene.
+        this.show();
+      });
+    });
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Private method for adding an object in an Aframe scene.
+   *  @param    {string}    source    This is path to the model that we can
+   *                                  load into the asset.
+   */
+   _insertModel = source => {
+
+    // Create an Aframe GLTF element.
+    this._model = document.createElement("a-gltf-model");
+    this._model.classList.add("arscene-object");
+
+    // Load the source directly onto the model.
+    this._model.setAttribute("src", source);
+
+    // For now, set some small dimensions manually.
+    // @TODO determine size dynamically.
+    this._model.setAttribute("scale", "0.1 0.1 0.1");
+
+    // It should be hidden until it is placed in the scene by the user.
+    this._model.setAttribute("visible", "false");
+
+    // Add the object to the scene.
+    this._scene.appendChild(this._model);
   }
 
   /**
@@ -546,10 +549,12 @@ class ArScene extends BaseElement {
     if (this._overlay) this._overlay.remove();
     if (this._reticle) this._reticle.remove();
     if (this._observer) this._observer.remove();
+    if (this._request) this._request.remove();
 
     // Remove all DOM elements we've stored.
     if (this._scene) this._scene.remove();
-    if (this._object) this._object.remove();
+    if (this._model) this._model.remove();
+    if (this._assets) this._assets.remove();
     if (this._overlayContainer) this._overlayContainer.remove();
     if (this._interface) this._interface.remove();
     if (this._proceedButton) this._proceedButton.remove();

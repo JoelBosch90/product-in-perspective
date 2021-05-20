@@ -335,8 +335,6 @@ class Form extends BaseElement {
       // request.
       if (!response.ok) return this.showError(json.error);
 
-      console.log("Form::_prefill", json);
-
       // Prefill all data.
       this.values(json);
     });

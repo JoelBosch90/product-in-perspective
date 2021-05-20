@@ -26,12 +26,19 @@ module.exports = function(app, path) {
     // This is only available to an authenticated user.
     if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
+    // Check if the model could be a valid GLTF model.
+    if (!request.body.model.startsWith("data:application/octet-stream")) {
+
+      // If not, return an error.
+      return errorResponse(response, 400, "Not a valid glTF model.");
+    }
+
     // The database might throw an error.
     try {
 
       // We want to store any model that was provided and save its location in
       // the database.
-      request.body.file = await request.context.storage.store(request.body.model);
+      request.body.file = await request.context.storage.store(request.body.model, 'gltf');
 
       // Now we can add the new model to the database.
       const model = await request.context.models.Model.create(Object.assign(request.body, {
@@ -68,12 +75,32 @@ module.exports = function(app, path) {
     // This is only available to an authenticated user.
     if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
+    // If a model is provided, check if it could be a valid GLTF model.
+    if (request.body.model && !request.body.model.startsWith("data:application/octet-stream")) {
+
+      // If not, return an error.
+      return errorResponse(response, 400, "Not a valid glTF model.");
+    }
+
     // The database might throw an error.
     try {
 
+      // Get the storage object.
+      const storage = request.context.storage;
+
       // We want to store any model that was provided and save its location in
       // the database.
-      request.body.file = await request.context.storage.store(request.body.model);
+      request.body.file = await storage.store(request.body.model, 'gltf');
+
+      // Get the model.
+      const model = await request.context.models.Model.findOne({
+        _id:  request.params.modelId,
+        user: request.context.user
+      });
+
+      // If we have a new file to store, remove the previous one from object
+      // storage.
+      if (request.body.file) storage.delete(model._doc.file);
 
       // Now we can update the model.
       const modified = await request.context.models.Model.updateOne({
@@ -153,6 +180,15 @@ module.exports = function(app, path) {
 
     // The database might throw an error.
     try {
+
+      // Get the model.
+      const model = await request.context.models.Model.findOne({
+        _id:  request.params.modelId,
+        user: request.context.user
+      });
+
+      // Make sure we remove the object from our object storage.
+      request.context.storage.delete(model._doc.file);
 
       // Remove the requested model. Make sure we never remove anything by another
       // user.

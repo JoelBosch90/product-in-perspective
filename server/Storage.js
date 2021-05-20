@@ -55,7 +55,7 @@ class Storage {
     this._client = new Minio.Client({
       endPoint:   this._config.url,
       port:       Number(this._config.port),
-      useSSL:     true,
+      useSSL:     false,
       accessKey:  this._config.accessKey,
       secretKey:  this._config.secretKey,
     });
@@ -87,31 +87,45 @@ class Storage {
    *  This is a method that takes a base64 encoded file that we received through
    *  an HTTP request, decodes the file, stores it and then returns the path to
    *  reach that file.
-   *  @param    {File}      file     The base64 encoded file that we received.
+   *  @param    {File}      file        The base64 encoded file that we
+   *                                    received.
+   *  @param    {string}    extension   The extension that this file should get.
    *  @returns  {Promise}
    */
-  store = async file => {
+  store = async (file, extension) => {
 
     // If no file was provided, we have nothing to store.
     if (!file) return;
 
     // First, we want to temporarily store the file on hard disk before we
     // transfer it to the object storage.
-    const tempPath = await this._storeTempFile(file);
+    const tempPath = await this._storeTempFile(file, extension);
 
     // Get the last part after the '/tmp/' directory from the temporary path go
     // get the file name.
     const fileName = tempPath.split('/tmp/').pop();
 
-    console.log(this._bucket, fileName, tempPath);
-
     // Store the file in our object storage.
     await this._client.fPutObject(this._bucket, fileName, tempPath);
+
+    // Remove the temporary file again.
+    this._removeTempFile(tempPath);
 
     // Return the filename use for retrieving the file.
     return fileName;
   }
 
+  /**
+   *  This is a method that attempts to remove the file with this file name, if
+   *  it exists.
+   *  @param    {string}    fileName    The name of the file.
+   *  @returns  {Promise}
+   */
+  delete = async fileName => {
+
+    // Remove the file.
+    return this._client.removeObject(this._bucket, fileName);
+  }
 
   /**
    *  Get a presigned temporary URL that points to the request file.
@@ -126,13 +140,37 @@ class Storage {
   }
 
   /**
+   *  Method to remove a file that is temporarily stored on hard disk.
+   *  @param    {string}    path      The path where the temporary file can be
+   *                                  found.
+   *  @returns  {Promise}
+   */
+  _removeTempFile = path => {
+
+    // Return a promise.
+    return new Promise((resolve, reject) => {
+
+      // Try to remove the file.
+      fs.unlink(path, error => {
+
+        // Pass on any errors that might occur.
+        if (error) return reject(error);
+
+        // Resolve to true to indicate success.
+        return resolve(true);
+      })
+    });
+  }
+
+  /**
    *  Private helper method that decodes a base64 encoded file back to a file
    *  and attempts to store it in a temporary folder. It will return a promise
    *  that will resolve into the filepath on success.
-   *  @param    {string}      file    The base64 encoded file.
+   *  @param    {string}    file        The base64 encoded file.
+   *  @param    {string}    extension   The extension that this file should get.
    *  @returns  {Promise}
    */
-  _storeTempFile = file => {
+  _storeTempFile = (file, extension) => {
 
     // Return a promise.
     return new Promise((resolve, reject) => {
@@ -143,7 +181,7 @@ class Storage {
       const random = crypto.randomBytes(10).toString('hex');
 
       // Build the entire filename string.
-      const path = __dirname + '/Storage/tmp/' + random + '-at-' + Date.now() + '.png';
+      const path = __dirname + '/Storage/tmp/' + random + '-at-' + Date.now() + '.' + extension;
 
       // Strip off the metadata header.
       const decoded = file.split(";base64,").pop();

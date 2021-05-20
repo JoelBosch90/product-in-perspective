@@ -89,7 +89,16 @@ class Api {
     // Start the new database.
     this._database = new Database(this._config.database);
 
-    // Install new middleware on the Express app.
+    /**
+     * Install new middleware on the Express app.
+     *  @param    {IncomingMessage} request   Information object about the
+     *                                        request.
+     *  @param    {ServerResponse}  response  Object to construct the response
+     *                                        message.
+     *  @param    {Function}        next      Executing this callback function
+     *                                        will allow for the request to be
+     *                                        processed further.
+     */
     app.use((request, response, next) => {
 
       // Create or expand the context for each request.
@@ -114,7 +123,16 @@ class Api {
     // Start the new object storage to store our models.
     this._storage = new Storage("models", this._config.storage);
 
-    // Install new middleware on the Express app.
+    /**
+     * Install new middleware on the Express app.
+     *  @param    {IncomingMessage} request   Information object about the
+     *                                        request.
+     *  @param    {ServerResponse}  response  Object to construct the response
+     *                                        message.
+     *  @param    {Function}        next      Executing this callback function
+     *                                        will allow for the request to be
+     *                                        processed further.
+     */
     app.use((request, response, next) => {
 
       // Create or expand the context for each request.
@@ -140,12 +158,22 @@ class Api {
     // Use the CORS library to manage CORS headers for external connections.
     app.use(cors());
 
+    // Express allows for files up to 100kb by default. Big models can easily
+    // grow larger than that. Even though these files shouldn't be too large as
+    // they need to work well on the web; we still want to allow for larger
+    // files.
+    const limit = '5mb';
+
     // We need to get access to the request data in the request's body object.
-    // In this API, we want to use JSON objects to communicate with the client.
-    // The GLTF models we want users to be able to upload can be quite big, so
-    // we want to support filesizes of at least 25 MB.
-    app.use(express.json({ limit: '25mb' }));
-    app.use(express.urlencoded({ limit: '25mb', extended: true }));
+    // In this API, we want to exclusively use JSON objects to communicate with
+    // the client.
+    app.use(express.json({ limit }));
+    app.use(express.urlencoded({
+      limit,
+
+      // We do want to use nested objects.
+      extended: true,
+    }));
   }
 
   /**
@@ -155,11 +183,14 @@ class Api {
    _installAuthentication = app => {
 
     /**
-     *
+     * Install new middleware on the Express app.
      *  @param    {IncomingMessage} request   Information object about the
      *                                        request.
      *  @param    {ServerResponse}  response  Object to construct the response
      *                                        message.
+     *  @param    {Function}        next      Executing this callback function
+     *                                        will allow for the request to be
+     *                                        processed further.
      */
     app.use(async (request, response, next) => {
 

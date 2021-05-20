@@ -266,7 +266,7 @@ class Representation extends BaseElement {
     this._scanner.stop().hide(); // Start and show the augmented reality session instead.
 
 
-    this._scene.select(this._shownProduct.model);
+    this._scene.select(this._shownProduct);
   };
   /**
     *  Private method for processing a scanned barcode.
@@ -305,12 +305,9 @@ class Representation extends BaseElement {
     .then(response => {
       // Get access to the JSON object.
       if (response) return response.json().then(products => {
-        // Loop through all product and add the name and model to our product
+        // Loop through all products and add the name and model to our product
         // dictionary, using the barcode as the key.
-        for (const product of products) this._products[product.barcode] = {
-          name: product.name,
-          model: product.modelName
-        };
+        for (const product of products) this._products[product.barcode] = product;
       });
     });
   };

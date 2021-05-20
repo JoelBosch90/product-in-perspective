@@ -294,8 +294,7 @@ class Form extends BaseElement {
     response.json().then(json => {
       // Use the form's error handling if an error has occurred with the HTTP
       // request.
-      if (!response.ok) return this.showError(json.error);
-      console.log("Form::_prefill", json); // Prefill all data.
+      if (!response.ok) return this.showError(json.error); // Prefill all data.
 
       this.values(json);
     });
