@@ -240,18 +240,16 @@ class Form extends BaseElement {
    */
 
   submit = event => {
-    console.log("Form::submit"); // We don't ever want to reload a page to submit a form. So we prevent the
+    // We don't ever want to reload a page to submit a form. So we prevent the
     // default submit behaviour here if this method was called an part of an
     // event listener.
-
     if (event) event.preventDefault(); // Get the values from the form.
 
     const values = this.values(); // Trigger the submit event and provide the submitted values.
 
     this.trigger('submit', values); // We cannot perform any HTTP requests without parameters.
 
-    if (!this._params) return;
-    console.log("Form::submit values", values); // If we have the parameters for a PUT request, perform the PUT request.
+    if (!this._params) return; // If we have the parameters for a PUT request, perform the PUT request.
 
     if (this._params.put) return this._request.put(this._params.put, values).then(this._submitResponseHandler).catch(error => this.showError(error)); // If we don't have the parameters for a PUT request, but we do have the
     // parameters for a POST request, perform the POST request.
@@ -296,7 +294,8 @@ class Form extends BaseElement {
     response.json().then(json => {
       // Use the form's error handling if an error has occurred with the HTTP
       // request.
-      if (!response.ok) return this.showError(json.error); // Prefill all data.
+      if (!response.ok) return this.showError(json.error);
+      console.log("Form::_prefill", json); // Prefill all data.
 
       this.values(json);
     });

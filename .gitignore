@@ -135,4 +135,9 @@ server/Client/source/javascript/config.js
 server/Client/public/javascript/config.js
 
 # Ignore the temporary file upload directory.
-server/Api/endpoints/tmp
+server/Storage/tmp
+
+# Ignore all the files inside the minio directory.
+server/Storage/minio/*
+minio.1
+minio.service

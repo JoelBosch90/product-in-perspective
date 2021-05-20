@@ -7,6 +7,7 @@
     "aframe": "^1.2.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^9.0.1",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -37,6 +38,7 @@
     "copy-html": "/bin/cp -rf server/Client/source/html/* server/Client/public/html",
     "copy-static": "npm run copy-images & npm run copy-models & npm run copy-html",
     "build": "npm run build-style & npm run build-js & npm run copy-static",
+    "start-dev-storage": "sudo -u minio-user minio server -C /etc/minio --address localhost:9000 server/Storage/minio/",
     "start-dev-database": "mongod",
     "start-dev-api": "nodemon server.js",
     "start-dev": "npm run start-dev-database & ( sleep 3 && npm run start-dev-api )"

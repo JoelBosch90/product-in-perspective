@@ -111,8 +111,8 @@ class Api {
    */
   _connectStorage = app => {
 
-    // Start the new object storage.
-    this._storage = new Storage(this._config.storage);
+    // Start the new object storage to store our models.
+    this._storage = new Storage("models", this._config.storage);
 
     // Install new middleware on the Express app.
     app.use((request, response, next) => {
@@ -120,9 +120,8 @@ class Api {
       // Create or expand the context for each request.
       request.context = Object.assign({}, request.context, {
 
-        // Add the storage client to the context of each request for easy
-        // access.
-        storage: this._storage.client(),
+        // Add the storage to the context of each request for easy access.
+        storage: this._storage,
       });
 
       // Show that we're done here and can continue processing the request.

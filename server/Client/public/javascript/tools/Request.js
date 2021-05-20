@@ -53,19 +53,23 @@ class Request {
    */
 
   put = async (url = '', data = {}) => {
-    // Use fetch to perform the HTTP request.
-    return fetch(this._apiUrl + url, {
-      method: 'PUT',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'omit',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': localStorage.getItem('jwt')
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: this._prepareData(data)
+    // First, encode all files in the data as we can only send over strings in
+    // JSON format.
+    return this._encodeFiles(data).then(encoded => {
+      // Use fetch to perform the HTTP request.
+      return fetch(this._apiUrl + url, {
+        method: 'PUT',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'omit',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': localStorage.getItem('jwt')
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(encoded)
+      });
     });
   };
   /**
@@ -78,10 +82,10 @@ class Request {
    */
 
   post = async (url = '', data = {}) => {
-    console.log("Request::post", url, data);
+    // First, encode all files in the data as we can only send over strings in
+    // JSON format.
     return this._encodeFiles(data).then(encoded => {
-      console.log("Request::post", url, encoded); // Use fetch to perform the HTTP request.
-
+      // Use fetch to perform the HTTP request.
       return fetch(this._apiUrl + url, {
         method: 'POST',
         mode: 'cors',

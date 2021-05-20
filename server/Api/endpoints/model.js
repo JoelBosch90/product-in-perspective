@@ -1,6 +1,5 @@
 // Import dependencies.
 const errorResponse = require("../errorResponse");
-const saveEncodedFile = require("../saveEncodedFile");
 
 /**
  *  This function acts as an API endpoint for acts involving models.
@@ -27,34 +26,23 @@ module.exports = function(app, path) {
     // This is only available to an authenticated user.
     if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // We need the model to proceed.
-    if (!request.body.model) return errorResponse(response, 400, "Model file is missing.");
-
     // The database might throw an error.
     try {
 
-      // We want to create a unique filename. It seems acceptably unlikely that
-      // the same user is going to post two images at the exact same time, so
-      // a format involving the user ID and the date will do.
-      const path = __dirname + '/tmp/' + request.context.user + '-at-' + Date.now() + '.png';
+      // We want to store any model that was provided and save its location in
+      // the database.
+      request.body.file = await request.context.storage.store(request.body.model);
 
-      // First, store the file, then store the model in the database.
-      saveEncodedFile(path, request.body.model).then(async () => {
+      // Now we can add the new model to the database.
+      const model = await request.context.models.Model.create(Object.assign(request.body, {
+        user: request.context.user
+      }));
 
-        // We want to store the path to the model.
-        request.body.file = path;
+      // Check if the model was indeed created.
+      if (!model) errorResponse(response, 500, "Model could not be created.");
 
-        // Now we can add the new model to the database.
-        const model = await request.context.models.Model.create(Object.assign(request.body, {
-          user: request.context.user
-        }));
-
-        // Check if the model was indeed created.
-        if (!model) errorResponse(response, 500, "Model could not be created.");
-
-        // Confirm that the request was successfully processed.
-        return response.send(true);
-      });
+      // Confirm that the request was successfully processed.
+      return response.send(true);
 
     // Listen for any errors that the database might throw.
     } catch (error) {
@@ -83,6 +71,10 @@ module.exports = function(app, path) {
     // The database might throw an error.
     try {
 
+      // We want to store any model that was provided and save its location in
+      // the database.
+      request.body.file = await request.context.storage.store(request.body.model);
+
       // Now we can update the model.
       const modified = await request.context.models.Model.updateOne({
         _id:  request.params.modelId,
@@ -97,6 +89,8 @@ module.exports = function(app, path) {
 
     // Listen for any errors that the database might throw.
     } catch (error) {
+
+      console.log(error);
 
       // Return the error to the client.
       return errorResponse(response, 400, error);
@@ -127,8 +121,11 @@ module.exports = function(app, path) {
       // Check if we actually have the model.
       if (!model) return errorResponse(response, 404, "Could not find model.");
 
-      // Send back the model.
-      return response.send(model);
+      // Get the URL to the file.
+      const url = await request.context.storage.retrieveUrl(model.file);
+
+      // Send back the model with the URL to the file.
+      return response.send(Object.assign({}, model._doc, { url }));
 
     // Listen for any errors that the database might throw.
     } catch (error) {

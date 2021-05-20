@@ -15,11 +15,10 @@ const modelSchema = new mongoose.Schema({
       required: [true, "Every model requires a name."],
     },
 
-    // We want a place to store a location to the actual model file. Because
-    // this is not yet implemented, this not yet required.
+    // We want a place to store a location to the actual model file.
     file: {
       type: String,
-      required: false
+      required: [true, "The model file is missing."],
     },
 
     // Every model should be connected to a single user.
