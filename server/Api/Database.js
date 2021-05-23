@@ -41,7 +41,7 @@ class Database {
    *  @returns  {Promise}
    */
   connect = () => {
-
+    
     // If there a user was passed in the config, that means that we're running
     // in production.
     const connectUrl = this._config.user

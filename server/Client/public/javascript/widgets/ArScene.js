@@ -446,29 +446,25 @@ class ArScene extends BaseElement {
    */
 
   select = product => {
-    // We need to get the actual model for this product.
-    this._request.get('/model/' + product.model).then(response => {
-      // Get access to the JSON object.
-      response.json().then(model => {
-        // Use the the ArScene error handler for errors.
-        if (!response.ok) return this._handleError(model.error);
-        console.log(model); // Add the 3D model to the scene.
+    // Immediately enter the augmented reality mode. This could fail, for
+    // example if WebXR is not available or the user has not given
+    // permission.
+    try {
+      // Construct the URL that we can use to load the 3D model.
+      const modelUrl = this._request.model(product.model);
 
-        this._insertModel(model.url); // Immediately enter the augmented reality mode. This could fail, for
-        // example if WebXR is not available or the user has not given
-        // permission.
+      console.log("::select url", modelUrl); // Add the 3D model to the scene.
 
-
-        try {
-          this._scene.enterAR();
-        } catch (error) {
-          this._handleError(error);
-        } // Then show the scene.
+      this._insertModel(modelUrl); // Enter augmented reality.
 
 
-        this.show();
-      });
-    }); // Allow chaining.
+      this._scene.enterAR(); // Then show the scene.
+
+
+      this.show();
+    } catch (error) {
+      this._handleError(error);
+    } // Allow chaining.
 
 
     return this;
@@ -486,7 +482,7 @@ class ArScene extends BaseElement {
     this._model.classList.add("arscene-object"); // Load the source directly onto the model.
 
 
-    this._model.setAttribute("src", "/duck/Duck.gltf"); // For now, set some small dimensions manually.
+    this._model.setAttribute("src", source); // For now, set some small dimensions manually.
     // @TODO determine size dynamically.
 
 

@@ -10,15 +10,18 @@
     "crypto": "^1.0.1",
     "dotenv": "^9.0.1",
     "express": "^4.17.1",
+    "gltf-pipeline": "^3.0.2",
     "jsonwebtoken": "^8.5.1",
     "minio": "^7.0.18",
     "mongoose": "^5.12.7",
     "multer": "^1.4.2",
     "mysql2": "^2.2.5",
+    "node-stream-zip": "^1.13.4",
     "obj2gltf": "^3.1.0",
     "qs": "^6.10.1",
     "quagga": "^0.12.1",
     "require": "^0.4.4",
+    "three": "^0.128.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
@@ -37,10 +40,10 @@
     "copy-html": "/bin/cp -rf server/Client/source/html/* server/Client/public/html",
     "copy-static": "npm run copy-images & npm run copy-html",
     "build": "npm run build-style & npm run build-js & npm run copy-static",
-    "start-dev-storage": "sudo -u minio-user minio server -C /etc/minio --address localhost:9000 server/Storage/minio/",
-    "start-dev-database": "mongod",
+    "start-dev-storage": "sudo -u minio-user minio server -C /etc/minio --address localhost:9000 /home/joel/Projects/product-in-perspective/server/Api/Storage/minio",
+    "start-dev-database": "mongod --dbpath=/home/joel/Projects/product-in-perspective/server/Api/Database/data",
     "start-dev-api": "nodemon server.js",
-    "start-dev": "npm run start-dev-database & ( sleep 3 && npm run start-dev-api )"
+    "start-dev": "npm run start-dev-database & npm run start-dev-storage & ( sleep 3 && npm run start-dev-api )"
   },
   "repository": {
     "type": "git",

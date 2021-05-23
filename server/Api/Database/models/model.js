@@ -15,12 +15,6 @@ const modelSchema = new mongoose.Schema({
       required: [true, "Every model requires a name."],
     },
 
-    // We want a place to store a location to the actual model file.
-    file: {
-      type: String,
-      required: [true, "The model file is missing."],
-    },
-
     // Every model should be connected to a single user.
     user: {
       type:     mongoose.Schema.Types.ObjectId,
@@ -36,6 +30,18 @@ const modelSchema = new mongoose.Schema({
 // Model names should be unique per user.
 modelSchema.index({ name: 1, user: 1 }, {
   unique: [true, "A model with this name already exists."]
+});
+
+// When the model is removed from the database, we should also remove the file
+// from object storage.
+modelSchema.pre('remove', next => {
+
+  // If we have a new file to store, remove the previous one from object
+  // storage.
+  storage.delete(this._id);
+
+  // Continue removing the model.
+  next();
 });
 
 // Use the new schema for the model entity.

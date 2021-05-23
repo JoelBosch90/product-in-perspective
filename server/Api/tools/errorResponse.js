@@ -3,7 +3,7 @@
  *  @param    {ServerResponse}  response  The server response.
  *  @param    {number}          status    The number indicating the response
  *                                        status.
- *  @param    {string}          error     The error message.
+ *  @param    {string|Object}   error     The error message.
  *  @returns  {ServerResponse}
  */
 module.exports = errorResponse = (response, status, error) => {
@@ -22,6 +22,9 @@ module.exports = errorResponse = (response, status, error) => {
   // Check for duplicate key errors.
   if (error.keyValue && error.keyValue.barcode) return response.status(409).json({ error: "This barcode is already used for this app." });
   if (error.keyValue && error.keyValue.name) return response.status(409).json({ error: "This name is already taken." });
+
+  // If this is an error object, we can just pass the error message.
+  if (error instanceof Error) return response.status(400).json({ error: error.message });
 
   // If the error object is something we don't recognize, we shouldn't leak it
   // to the client.

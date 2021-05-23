@@ -6,8 +6,8 @@ const path = require('path');
 const jwt = require("jsonwebtoken");
 
 // Import dependencies.
-const Database = require('./Database.js');
-const Storage = require('./Storage.js');
+const Database = require('./Api/Database.js');
+const Storage = require('./Api/Storage.js');
 
 /**
  *  The definition of the Api class component that is used to process all API
@@ -274,10 +274,10 @@ class Api {
   _listen = app => {
 
     // First, wait for the database to connect.
-    this._database.connect().then(async () => {
+    this._database.connect().catch(console.error).then(async () => {
 
       // Make sure that the object storage is set up correctly.
-      this._storage.verify().then(async () => {
+      this._storage.verify().catch(console.error).then(async () => {
 
         // Then start listening at the API port.
         app.listen(this._config.api.port, () => {

@@ -1,5 +1,5 @@
 // Import dependencies.
-const errorResponse = require("../errorResponse");
+const errorResponse = require("../tools/errorResponse");
 
 /**
  *  This function acts as an API endpoint for acts involving models.
@@ -26,19 +26,8 @@ module.exports = function(app, path) {
     // This is only available to an authenticated user.
     if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // Check if the model could be a valid GLTF model.
-    if (!request.body.model.startsWith("data:application/octet-stream")) {
-
-      // If not, return an error.
-      return errorResponse(response, 400, "Not a valid glTF model.");
-    }
-
     // The database might throw an error.
     try {
-
-      // We want to store any model that was provided and save its location in
-      // the database.
-      request.body.file = await request.context.storage.store(request.body.model, 'gltf');
 
       // Now we can add the new model to the database.
       const model = await request.context.models.Model.create(Object.assign(request.body, {
@@ -47,6 +36,9 @@ module.exports = function(app, path) {
 
       // Check if the model was indeed created.
       if (!model) errorResponse(response, 500, "Model could not be created.");
+
+      // We want to store the model under the model ID.
+      await request.context.storage.storeModel(request.body.model, model._id);
 
       // Confirm that the request was successfully processed.
       return response.send(true);
@@ -75,32 +67,8 @@ module.exports = function(app, path) {
     // This is only available to an authenticated user.
     if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
-    // If a model is provided, check if it could be a valid GLTF model.
-    if (request.body.model && !request.body.model.startsWith("data:application/octet-stream")) {
-
-      // If not, return an error.
-      return errorResponse(response, 400, "Not a valid glTF model.");
-    }
-
     // The database might throw an error.
     try {
-
-      // Get the storage object.
-      const storage = request.context.storage;
-
-      // We want to store any model that was provided and save its location in
-      // the database.
-      request.body.file = await storage.store(request.body.model, 'gltf');
-
-      // Get the model.
-      const model = await request.context.models.Model.findOne({
-        _id:  request.params.modelId,
-        user: request.context.user
-      });
-
-      // If we have a new file to store, remove the previous one from object
-      // storage.
-      if (request.body.file) storage.delete(model._doc.file);
 
       // Now we can update the model.
       const modified = await request.context.models.Model.updateOne({
@@ -110,6 +78,10 @@ module.exports = function(app, path) {
 
       // Check if the model was indeed modified.
       if (modified.nModified <= 0) return errorResponse(response, 500, "Could not edit model.");
+
+      // We want to store any model that was provided and save it in the object
+      // storage for this model's ID.
+      await request.context.storage.storeModel(request.body.model, request.params.modelId);
 
       // Confirm that the request was successfully processed.
       return response.send(true);
@@ -148,11 +120,8 @@ module.exports = function(app, path) {
       // Check if we actually have the model.
       if (!model) return errorResponse(response, 404, "Could not find model.");
 
-      // Get the URL to the file.
-      const url = await request.context.storage.retrieveUrl(model.file);
-
       // Send back the model with the URL to the file.
-      return response.send(Object.assign({}, model._doc, { url }));
+      return response.send(model);
 
     // Listen for any errors that the database might throw.
     } catch (error) {

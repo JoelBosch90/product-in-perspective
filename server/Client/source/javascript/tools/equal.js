@@ -1,8 +1,8 @@
 /**
  *  Helper function to see if two objects are equivalent. We currently support
  *  comparing Maps, Arrays and Objects.
- *  @param    {object}    objectA     The first object.
- *  @param    {object}    objectB     The second object.
+ *  @param    {Object}    objectA     The first object.
+ *  @param    {Object}    objectB     The second object.
  *  @returns  {boolean}
  */
 const equal = (objectA, objectB) => {

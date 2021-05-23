@@ -465,30 +465,26 @@ class ArScene extends BaseElement {
    */
   select = product => {
 
-    // We need to get the actual model for this product.
-    this._request.get('/model/' + product.model).then(response => {
+    // Immediately enter the augmented reality mode. This could fail, for
+    // example if WebXR is not available or the user has not given
+    // permission.
+    try {
 
-      // Get access to the JSON object.
-      response.json().then(model => {
+      // Construct the URL that we can use to load the 3D model.
+      const modelUrl = this._request.model(product.model);
 
-        // Use the the ArScene error handler for errors.
-        if (!response.ok) return this._handleError(model.error);
+      console.log("::select url", modelUrl);
 
-        console.log(model);
+      // Add the 3D model to the scene.
+      this._insertModel(modelUrl);
 
-        // Add the 3D model to the scene.
-        this._insertModel(model.url);
+      // Enter augmented reality.
+      this._scene.enterAR();
 
-        // Immediately enter the augmented reality mode. This could fail, for
-        // example if WebXR is not available or the user has not given
-        // permission.
-        try { this._scene.enterAR(); }
-        catch (error) { this._handleError(error); }
-
-        // Then show the scene.
-        this.show();
-      });
-    });
+      // Then show the scene.
+      this.show();
+    }
+    catch (error) { this._handleError(error); }
 
     // Allow chaining.
     return this;

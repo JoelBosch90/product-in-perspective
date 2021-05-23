@@ -18,9 +18,28 @@ class Request {
   _apiUrl = CONFIG.apiUrl;
 
   /**
+   *  This is a path to the location of the object storage.
+   *  @var      {string}
+   */
+  _storageUrl = CONFIG.storageUrl;
+
+  /**
    *  Class constructor.
    */
   constructor() {}
+
+  /**
+   *  Method to craft the URL to reach a model.
+   *  @param    {string}    id      We need to know a model's ID to craft the
+   *                                URL.
+   *  @returns  {string}
+   */
+  model = id => {
+
+    // Create the URL from the object storage, the models bucket, ID as the
+    // filename and add the GLB extension.
+    return this._storageUrl + '/models/' + id + '.glb';
+  }
 
   /**
    *  Method for performing a PUT request. Returns a promise that will
@@ -156,10 +175,15 @@ class Request {
 
           // If the input value is a file, we want to encode it as a base64
           // string that we can send along in an HTTP request.
-          if (value instanceof File) promises.push(this._encodeFile(value).then(dataString => { encoded[key] = dataString; }));
+          if (value instanceof File) {
+
+            // Store the promise for encoding this file.
+            promises.push(this._encodeFile(value).then(dataObject => {
+              encoded[key] = dataObject;
+            }));
 
           // Otherwise, we can use it as is.
-          else encoded[key] = value;
+          } else encoded[key] = value;
         }
 
         // Return the new object we built after all files have been encoded.
@@ -183,8 +207,16 @@ class Request {
       // Get a file reader object that to read our file.
       const reader = new FileReader();
 
-      // Install an event listener to process the result.
-      reader.onload = () => void resolve(reader.result);
+      // Install an event listener to return the encoded file object as soon as
+      // the file has been read successfully.
+      reader.onload = () => void resolve({
+
+        // Add the base64 encoded file property.
+        file:       reader.result,
+
+        // Also add the extension from the file name.
+        extension:  file.name.split('.').pop(),
+      });
 
       // Install event listeners to listen for when we fail to read the file.
       reader.onerror = error => void reject(error);
