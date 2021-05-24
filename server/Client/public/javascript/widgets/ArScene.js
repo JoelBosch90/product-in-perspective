@@ -2,8 +2,8 @@
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overlay } from "/javascript/widgets/Overlay.js";
 import { Reticle } from "/javascript/widgets/ArScene/Reticle.js";
+import { ArModel } from "/javascript/widgets/ArScene/ArModel.js";
 import { debounce } from "/javascript/tools/debounce.js";
-import { Request } from "/javascript/tools/Request.js";
 import { AttributeObserver } from "/javascript/tools/AttributeObserver.js";
 /**
  *  The definition of the ArScene class that can be used to create an an
@@ -23,17 +23,11 @@ import { AttributeObserver } from "/javascript/tools/AttributeObserver.js";
 
 class ArScene extends BaseElement {
   /**
-   *  This is the object that can make the HTTP requests needed in this class.
-   *  @var      {Request}
-   */
-  _request = null;
-  /**
    *  Private variable that keeps track of the current mode of the scene. We
    *  always start out in inactive mode.
    *  Valid values are: "inactive", "placing", and "viewing"
    *  @var      {string}
    */
-
   _mode = "inactive";
   /**
    *  Private variable that stores a reference to the Aframe scene.
@@ -136,9 +130,7 @@ class ArScene extends BaseElement {
     // Call the base class constructor.
     super(); // Store the texts we need to use.
 
-    this._texts = texts; // We need to be able to make HTTP requests later to load the models.
-
-    this._request = new Request(); // Initialize the interface.
+    this._texts = texts; // Initialize the interface.
 
     this._initInterface(parent);
   }
@@ -372,7 +364,7 @@ class ArScene extends BaseElement {
     this._reticle.show(); // Make sure the 3D object is not visible.
 
 
-    this._model.setAttribute('visible', 'false'); // Update the text of the overlay title.
+    this._model.hide(); // Update the text of the overlay title.
 
 
     if (this._texts["placing-title"]) this._overlayTitle.textContent = this._texts["placing-title"]; // Update the text on the proceed button.
@@ -383,23 +375,28 @@ class ArScene extends BaseElement {
   };
   /**
    *  Private method to proceed to the mode for viewing the placed object.
-   *  @TODO     Figure out what happens with the vectors and the quaternion.
    */
 
   _viewingMode = () => {
     // Change the mode.
     this._mode = "viewing"; // We need to hide the reticle.
 
-    this._reticle.hide(); // We can copy the orientation of the reticle to place the object in the
-    // scene.
+    this._reticle.hide(); // Update the model's position and show it.
 
 
-    this._model.setAttribute("position", this._reticle.position());
-
-    this._model.setAttribute("rotation", this._reticle.rotation()); // Make sure the object is visible.
-
-
-    this._model.setAttribute('visible', 'true'); // Update the text of the overlay title.
+    this._model.position(this._reticle.position(), this._reticle.rotation()).show(); // // We can copy the orientation of the reticle to place the object in the
+    // // scene.
+    // this._model.setAttribute("position", this._reticle.position());
+    // this._model.setAttribute("rotation", this._reticle.rotation());
+    // // Make sure the object is visible.
+    // this._model.setAttribute('visible', 'true');
+    // console.log(AFRAME);
+    // const retPos = this._reticle.position();
+    // const model2Pos = new AFRAME.THREE.Vector3(retPos.x + .1, retPos.y, retPos.z);
+    // this._model2.setAttribute("position", model2Pos);
+    // this._model2.setAttribute("rotation", this._reticle.rotation());
+    // this._model2.setAttribute('visible', 'true');
+    // Update the text of the overlay title.
 
 
     if (this._texts["viewing-title"]) this._overlayTitle.textContent = this._texts["viewing-title"]; // Update the text on the proceed button.
@@ -450,11 +447,8 @@ class ArScene extends BaseElement {
     // example if WebXR is not available or the user has not given
     // permission.
     try {
-      // Construct the URL that we can use to load the 3D model.
-      const modelUrl = this._request.model(product.model); // Add the 3D model to the scene.
-
-
-      this._insertModel(modelUrl); // Enter augmented reality.
+      // Add the 3D model to the scene.
+      this._insertModel(product.model); // Enter augmented reality.
 
 
       this._scene.enterAR(); // Then show the scene.
@@ -470,24 +464,17 @@ class ArScene extends BaseElement {
   };
   /**
    *  Private method for adding an object in an Aframe scene.
-   *  @param    {string}    source    This is path to the model that we can
+   *  @param    {string}    model     This is ID of the model that we want to
    *                                  load into the asset.
    */
 
-  _insertModel = source => {
-    // Create an Aframe GLTF element.
-    this._model = document.createElement("a-gltf-model");
-
-    this._model.classList.add("arscene-object"); // Load the source directly onto the model.
-
-
-    this._model.setAttribute("src", source); // It should be hidden until it is placed in the scene by the user.
-
-
-    this._model.setAttribute("visible", "false"); // Add the object to the scene.
-
-
-    this._scene.appendChild(this._model);
+  _insertModel = model => {
+    // Add the new model to the scene.
+    this._model = new ArModel(this._scene, model, 26, {
+      x: 0.1,
+      y: 0.2,
+      z: 0.1
+    }).hide();
   };
   /**
    *  Method for stopping the augmented reality session.
@@ -515,8 +502,7 @@ class ArScene extends BaseElement {
 
     if (this._overlay) this._overlay.remove();
     if (this._reticle) this._reticle.remove();
-    if (this._observer) this._observer.remove();
-    if (this._request) this._request.remove(); // Remove all DOM elements we've stored.
+    if (this._observer) this._observer.remove(); // Remove all DOM elements we've stored.
 
     if (this._scene) this._scene.remove();
     if (this._model) this._model.remove();
