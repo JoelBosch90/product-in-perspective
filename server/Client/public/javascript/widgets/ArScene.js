@@ -481,10 +481,7 @@ class ArScene extends BaseElement {
     this._model.classList.add("arscene-object"); // Load the source directly onto the model.
 
 
-    this._model.setAttribute("src", source); // For now, set some small dimensions manually.
-    // @TODO determine size dynamically.
-    // this._model.setAttribute("scale", "0.1 0.1 0.1");
-    // It should be hidden until it is placed in the scene by the user.
+    this._model.setAttribute("src", source); // It should be hidden until it is placed in the scene by the user.
 
 
     this._model.setAttribute("visible", "false"); // Add the object to the scene.

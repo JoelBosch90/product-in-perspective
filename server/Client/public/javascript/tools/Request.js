@@ -37,7 +37,7 @@ class Request {
   model = id => {
     // Create the URL from the object storage, the models bucket, ID as the
     // filename and add the GLB extension.
-    return this._storageUrl + '/models/' + id + '.glb';
+    return this._storageUrl + '/' + id + '.glb';
   };
   /**
    *  Method for performing a PUT request. Returns a promise that will
