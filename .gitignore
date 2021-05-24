@@ -8,10 +8,16 @@ server/Client/public/javascript/config.js
 node_modules
 *.log
 
-# Ignore the temporary file upload directory.
-server/Storage/tmp
+# Ignore evrything inside the temporary file upload directory.
+server/Api/Storage/tmp/*
 
 # Ignore all the files inside the minio directory.
-server/Storage/minio/*
+server/Api/Storage/minio/*
 minio.1
 minio.service
+
+# Ignore local database files.
+server/Api/Database/data/*
+
+# Ignore the examples directory.
+examples/*
