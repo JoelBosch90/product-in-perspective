@@ -68,18 +68,13 @@ class ArModel extends BaseElement {
    *  Method to update the parameters of this model.
    *  @param    {string}    model       The object ID.
    *  @param    {Number}    number      The number of objects we should spawn.
-   *  @param    {Object}    distance    The distances between objects.
-   *    @property {Number}    x           Horizontal distance.
-   *    @property {Number}    y           Vertical distance.
-   *    @property {Number}    z           Depth distance.
    *  @returns  {ArModel}
    */
 
 
-  update = (model, number, distance) => {
+  update = (model, number) => {
     // Update the source and the distance.
-    this._source = this._request.model(model);
-    this._distance = distance; // Get the difference between the current number of models and the requested
+    this._source = this._request.model(model); // Get the difference between the current number of models and the requested
     // number.
 
     const difference = Math.abs(number - this._models.length); // If we have too few models, add more.
@@ -107,19 +102,21 @@ class ArModel extends BaseElement {
     const floor = row ** 2; // Get the index of the middle of a row. We should center around the middle
     // position.
 
-    const middle = Math.floor(row / 2); // Create the position vector for the first model in the corner. We can
+    const middle = Math.floor(row / 2); // Get an object describing the minimal distances between models.
+
+    const distance = this._getDistance(); // Create the position vector for the first model in the corner. We can
     // clone the providing position object so that we're sure that we're working
     // with the same type of vector.
 
+
     const start = position.clone() // We want to move left by half the maximum distance so that we'll end up
     // centering around the requested position along the X axis.
-    .setX(position.x - middle * this._distance.x) // We always want to start on the surface and grow upwards.
+    .setX(position.x - middle * distance.x) // We always want to start on the surface and grow upwards.
     .setY(position.y) // Let's keep Z static for now.
-    .setZ(position.z - middle * this._distance.z); // We need one vector that we're constantly updating to reposition each
+    .setZ(position.z - middle * distance.z); // We need one vector that we're constantly updating to reposition each
     // model. We can start by simply cloning the start vector.
 
-    const update = start.clone();
-    console.log("Start", row, floor); // Loop through all models.
+    const update = start.clone(); // Loop through all models.
 
     for (let i = 0; i < this._models.length; i++) {
       // We want to change the x coordinate every iteration and reset every row,
@@ -130,10 +127,9 @@ class ArModel extends BaseElement {
       const yLevel = ~~(i / floor); // We want to change the z coordinate every row and we need to reset every
       // floor.
 
-      const zLevel = ~~(i / row) % row;
-      console.log("Update", xLevel, yLevel, zLevel); // Apply the changes to the update vector.
+      const zLevel = ~~(i / row) % row; // Apply the changes to the update vector.
 
-      update.setX(start.x + xLevel * this._distance.x).setY(start.y + yLevel * this._distance.y).setZ(start.z + zLevel * this._distance.z); // Get the model.
+      update.setX(start.x + xLevel * distance.x).setY(start.y + yLevel * distance.y).setZ(start.z + zLevel * distance.z); // Get the model.
 
       const model = this._models[i]; // Update the model's position.
 
@@ -146,12 +142,40 @@ class ArModel extends BaseElement {
     return this;
   };
   /**
+   *  Method to get an object describing the minimal distances between models.
+   *  @returns    {Object}
+   */
+
+  _getDistance = () => {
+    // We can use any model for this, as they all have the same source.
+    const model = this._models[0]; // Did we get a model?
+
+    if (model) {
+      // Get the 3D box from the model.
+      const box = new AFRAME.THREE.Box3();
+      box.setFromObject(model.object3D); // Return 125% of each dimension.
+
+      return {
+        x: (box.max.x - box.min.x) * 1.25,
+        y: (box.max.y - box.min.y) * 1.25,
+        z: (box.max.z - box.min.z) * 1.25
+      };
+    }
+
+    console.log("failed"); // Otherwise, return a default distance of 20 centimeters in all dimensions.
+
+    return {
+      x: 0.25,
+      y: 0.25,
+      z: 0.25
+    };
+  };
+  /**
    *  Method to add a new model.
    */
 
   _addModel = () => {
-    console.log("::_addModel"); // Create a new GLTF model element to use in the DOM.
-
+    // Create a new GLTF model element to use in the DOM.
     const model = document.createElement("a-gltf-model"); // Add the object class to the new element.
 
     model.classList.add("arscene-object"); // Load the source directly onto the model.
@@ -171,8 +195,7 @@ class ArModel extends BaseElement {
    */
 
   _removeModel = () => {
-    console.log("::_removeModel"); // Get the last model from the array.
-
+    // Get the last model from the array.
     const model = this._models.pop(); // Remove the model.
 
 

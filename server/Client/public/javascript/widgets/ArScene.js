@@ -470,11 +470,7 @@ class ArScene extends BaseElement {
 
   _insertModel = model => {
     // Add the new model to the scene.
-    this._model = new ArModel(this._scene, model, 26, {
-      x: 0.1,
-      y: 0.2,
-      z: 0.1
-    }).hide();
+    this._model = new ArModel(this._scene, model, 26).hide();
   };
   /**
    *  Method for stopping the augmented reality session.
