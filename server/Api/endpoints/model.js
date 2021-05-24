@@ -79,9 +79,9 @@ module.exports = function(app, path) {
       // Check if the model was indeed modified.
       if (modified.nModified <= 0) return errorResponse(response, 500, "Could not edit model.");
 
-      // We want to store any model that was provided and save it in the object
+      // We want to store a model if that was provided and save it in the object
       // storage for this model's ID.
-      await request.context.storage.storeModel(request.body.model, request.params.modelId);
+      if (request.body.model) await request.context.storage.storeModel(request.body.model, request.params.modelId);
 
       // Confirm that the request was successfully processed.
       return response.send(true);

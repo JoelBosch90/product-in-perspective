@@ -3,8 +3,10 @@ const fs = require('fs-extra');
 const crypto = require('crypto');
 const path = require('path');
 const Minio = require('minio');
-const gltfPipeline = require('gltf-pipeline');
 const StreamZip = require('node-stream-zip');
+const gltfPipeline = require('gltf-pipeline');
+const obj2gltf = require('obj2gltf');
+const fbx2gltf = require('fbx2gltf');
 
 /**
  *  The definition of the Storage class component that acts as the interface
@@ -73,12 +75,24 @@ class Storage {
     // Define the models that we support.
     this._supportedModels = {
       'zip': { 
-        mime:     'application/x-zip-compressed',
+        mimes:     ['application/x-zip-compressed'],
         convert:  this._zipToGlb2,
       },
       'gltf': {
-        mime:     'application/octet-stream',
+        mimes:     ['application/octet-stream'],
         convert:  this._gltfToGlb2,
+      },
+      'glb': {
+        mimes:     ['application/octet-stream'],
+        convert:  this._glbToGlb2,
+      },
+      'obj': {
+        mimes:     ['?'],
+        convert:  this._objToGlb2,
+      },
+      'fbx': {
+        mimes:     ['?'],
+        convert:  this._fbxToGlb2,
       },
     }
   }
@@ -118,8 +132,11 @@ class Storage {
    */
   storeModel = async (file, name) => {
 
-    // First check if we support this file type.
-    if (!this._checkMimeType(file)) throw new Error ("Unsupported file type");
+    // Check if we support a file with this extension.
+    if (!(file.extension in this._supportedModels)) throw new Error("Unsupported file type.");
+
+    // First check if the MIME type matches the extension.
+    if (!this._expectedMimeType(file)) throw new Error("Invalid file.");
 
     // First, we want to temporarily store the file on hard disk so that we can
     // process it before we transfer it to the object storage.
@@ -127,6 +144,9 @@ class Storage {
 
     // Convert the temporary file to a glb 2.0 file.
     const glb2 = await this._toGlb2(tempFile);
+
+    // Check if we did indeed find a model.
+    if (!glb2) throw Error("No model found.");
 
     // Now move the glb2 to the object storage and return the name of the new
     // file.
@@ -181,26 +201,6 @@ class Storage {
   }
 
   /**
-   *  Check whether this file object's extension and MIME type is supported. 
-   *  @param    {Object}    fileObject  An object that represents the encoded
-   *                                    file.
-   *    @property {string}    extension   The original file extension.
-   *    @property {string}    file        The base64 encoded file string.
-   *  @returns  {boolean}
-   */
-  _checkMimeType = ({ file, extension }) => {
-
-    // Get the actual MIME type from the file.
-    const actual = file.split(";base64,")[0];
-
-    // Get the MIME type that we expect.
-    const expected = this._supportedModels[extension].mime;
-
-    // Check if these match.
-    return actual == 'data:' + expected;
-  }
-
-  /**
    *  Method to convert any supported file type to a GLTF 2.0 model.
    *  @param    {string}    file        The path to the file that is to be 
    *                                    converted.
@@ -209,10 +209,44 @@ class Storage {
   _toGlb2 = async file => {
 
     // Get the file extension from the path.
-    const extension = file.split(".").pop();
+    const extension = this._extension(file);
 
     // Use the stored convert method for this file extension.
     return this._supportedModels[extension].convert(file);
+  }
+
+  /**
+   *  Helper method to get the extension from a file path.
+   *  @param    {string}  file        The full path to the file.
+   *  @returns  {string}
+   */
+  _extension = file => file.split(".").pop();
+
+  /**
+   *  Helper method to get the mime type from a base64 encoded file string.
+   *  @param    {string}  file        The full path to the file.
+   *  @returns  {string}
+   */
+  _mimeType = file => file.split(";base64,")[0].slice(5);
+
+  /**
+   *  Check whether this file object's extension and MIME type is supported. 
+   *  @param    {Object}    fileObject  An object that represents the encoded
+   *                                    file.
+   *    @property {string}    extension   The original file extension.
+   *    @property {string}    file        The base64 encoded file string.
+   *  @returns  {boolean}
+   */
+  _expectedMimeType = ({ file, extension }) => {
+
+    // Get the actual MIME type from the file.
+    const actual = this._mimeType(file);
+
+    // Get the MIME type that we expect.
+    const expected = this._supportedModels[extension].mimes;
+    
+    // Check if these match.
+    return expected.includes(actual);
   }
 
   /**
@@ -278,7 +312,7 @@ class Storage {
       const fullPath = parent + '/' + file;
 
       // Get the file extension from the file name.
-      const extension = file.split(".").pop();
+      const extension = this._extension(file);
 
       // If this is a directory, we should save it for now. We want to search
       // files in the parent directory first.
@@ -289,7 +323,7 @@ class Storage {
       if (extension == 'zip') zips.push(fullPath);
 
       // Check if this is a supported filetype.
-      if (extension in this._supportedModels) return this._supportedModels[extension].convert(fullPath);
+      if (extension in this._supportedModels) return this._toGlb2(fullPath);
     }
 
     // If we still haven't found a model, we should recursively search all
@@ -342,6 +376,91 @@ class Storage {
 
     // Write the result to the same temporary directory.
     fs.writeFileSync(newPath, result.glb);
+
+    // Remove the old file.
+    await this._removeTempFile(file);
+
+    // And resolve to the path for the new GLB file.
+    return newPath;
+  }
+
+  /**
+   *  Method to convert a GLB file to a GLB 2.0 model.
+   *  @param    {string}    file        The path to the file that is to be 
+   *                                    converted.
+   *  @return   {Promise}
+   */
+  _glbToGlb2 = async file => {
+
+    // It could be that this model is already in GLTF 2.0 format, but we cannot
+    // tell while it is in binary state. So we need to read it and convert it to
+    // GLTF first to see if we should convert to 2.0 or not.
+    const glb = fs.readFileSync(file);
+
+    // Convert the GLB to gltf.
+    const gltf = await gltfPipeline.glbToGltf(glb);
+
+    // If this model is already version 2, we can simply store the originally
+    // uploaded file.
+    if (gltf.asset && Number(gltf.asset.version) >= 2) return file;
+
+    // Otherwise, we can simply convert it back to GLB format. The pipeline will
+    // automatically convert it to version 2.0.
+    const result = await gltfPipeline.gltfToGlb(gltf);
+
+    // Get new a path with the .glb extension.
+    const newPath = this._getFilePath('glb');
+
+    // Write the result to the same temporary directory.
+    fs.writeFileSync(newPath, result.glb);
+
+    // Remove the old file.
+    await this._removeTempFile(file);
+
+    // And resolve to the path for the new GLB file.
+    return newPath;
+  }
+
+  /**
+   *  Method to convert an OBJ file to a GLB 2.0 model.
+   *  @param    {string}    file        The path to the file that is to be 
+   *                                    converted.
+   *  @return   {Promise}
+   */
+  _objToGlb2 = async file => {
+    
+    // Convert the OBJ file to GLB.
+    const glb = await obj2gltf(file, {
+      binary: true,
+      unlit: true
+    });
+
+    // Get a path with the .glb extension.
+    const newPath = this._getFilePath('glb');
+
+    // Write the result to the same temporary directory.
+    fs.writeFileSync(newPath, glb);
+
+    // Remove the old file.
+    await this._removeTempFile(file);;
+
+    // And resolve to the path for the new GLB file.
+    return newPath;
+  }
+
+  /**
+   *  Method to convert an FBX file to a GLB 2.0 model.
+   *  @param    {string}    file        The path to the file that is to be 
+   *                                    converted.
+   *  @return   {Promise}
+   */
+  _fbxToGlb2 = async file => {
+
+    // Get a path with the .glb extension.
+    const newPath = this._getFilePath('glb');
+
+    // Convert the OBJ file to GLB.
+    await fbx2gltf(file, newPath);
 
     // Remove the old file.
     await this._removeTempFile(file);

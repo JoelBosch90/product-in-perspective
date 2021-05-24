@@ -162,7 +162,7 @@ class Api {
     // grow larger than that. Even though these files shouldn't be too large as
     // they need to work well on the web; we still want to allow for larger
     // files.
-    const limit = '5mb';
+    const limit = '85mb';
 
     // We need to get access to the request data in the request's body object.
     // In this API, we want to exclusively use JSON objects to communicate with

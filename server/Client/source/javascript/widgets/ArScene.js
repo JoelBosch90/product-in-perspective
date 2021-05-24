@@ -324,7 +324,7 @@ class ArScene extends BaseElement {
     this._interface = document.createElement("a-entity");
     this._interface.classList.add("arscene-interface");
     this._interface.setAttribute("text", "align: left; width: 0.1;");
-    this._interface.setAttribute("position", "0 0 -0.17;");
+    this._interface.setAttribute("position", "0 0 -0.25;");
     this._interface.setAttribute("visible", "false");
 
     // Add the interface to the camera.
@@ -473,8 +473,6 @@ class ArScene extends BaseElement {
       // Construct the URL that we can use to load the 3D model.
       const modelUrl = this._request.model(product.model);
 
-      console.log("::select url", modelUrl);
-
       // Add the 3D model to the scene.
       this._insertModel(modelUrl);
 
@@ -503,10 +501,6 @@ class ArScene extends BaseElement {
 
     // Load the source directly onto the model.
     this._model.setAttribute("src", source);
-
-    // For now, set some small dimensions manually.
-    // @TODO determine size dynamically.
-    this._model.setAttribute("scale", "0.1 0.1 0.1");
 
     // It should be hidden until it is placed in the scene by the user.
     this._model.setAttribute("visible", "false");
