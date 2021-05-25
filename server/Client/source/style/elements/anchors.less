@@ -42,11 +42,12 @@ a {
   // Add on hover effects.
   &:hover {
 
-    // Show a subtle effect to show this anchor is an interactive element.
-    opacity: .65;
+    // Show a subtle on hover effect. We want to make elements light up to make
+    // them stand out in our generally dark interface.
+    filter: brightness(125%);
 
     // Use a transition effect to give the focus effect a quick and smooth
     // animation.
-    transition: opacity var(--animation-quick);
+    transition: brightness var(--animation-quick);
   }
 }

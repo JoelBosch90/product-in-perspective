@@ -37,7 +37,7 @@ class PasswordForm extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("passwordform"); // Create a change password.
+    this._container.classList.add("passwordform", "component"); // Create a change password.
 
 
     this._form = new Form(this._container, {
@@ -65,7 +65,7 @@ class PasswordForm extends BaseElement {
       }]
     }); // Go to the app list after a successful password change.
 
-    this._form.on("stored", () => void goTo('/admin/app')); // Add the new element to the parent container.
+    this._form.on("stored", () => void goTo('/admin/apps')); // Add the new element to the parent container.
 
 
     parent.appendChild(this._container);

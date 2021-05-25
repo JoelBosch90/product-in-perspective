@@ -71,7 +71,7 @@ class ProductForm extends BaseElement {
 
     // Create a container for this component.
     this._container = document.createElement("div");
-    this._container.classList.add("productform");
+    this._container.classList.add("productform", "component");
 
     // Create a new request object.
     this._request = new Request();
@@ -98,7 +98,7 @@ class ProductForm extends BaseElement {
           for (const model of models) {
 
             // Add the model to the select input.
-            this._modelsSelect.addOption(model.name, model._id);
+            this._modelsSelect.addOption(model._id, model.name);
           }
         });
       });
@@ -119,7 +119,7 @@ class ProductForm extends BaseElement {
           for (const app of apps) {
 
             // Add the app to the select input.
-            this._appsSelect.addOption(app.name, app._id);
+            this._appsSelect.addOption(app._id, app.name);
           }
         });
       });
@@ -168,16 +168,17 @@ class ProductForm extends BaseElement {
 
     // Create the select input for the models seperately so that we can save a
     // reference that we can load the options to later on.
-    this._modelsSelect = this._form.addInput("model", {
-      label:  "Select model ...",
-      type:   "select",
+    this._modelsSelect = this._form.addInput("models", {
+      label:        "Models",
+      placeholder:  "Select model ...",
+      type:         "multiselect",
     });
 
     // Create the select input for the apps seperately so that we can save a
     // reference that we can load the options to later on.
     this._appsSelect = this._form.addInput("app", {
-      label:  "Select app ..",
-      type:   "select",
+      placeholder:  "Select app ..",
+      type:         "select",
     });
 
     // We want to add the button at the bottom of the form.
@@ -187,7 +188,7 @@ class ProductForm extends BaseElement {
     });
 
     // When the product was stored successfully, return to the product overview.
-    this._form.on("stored", () => void goTo('/admin/product'));
+    this._form.on("stored", () => void goTo('/admin/products'));
   }
 
   /**

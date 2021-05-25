@@ -17,41 +17,45 @@ class FormSelect extends BaseElement {
   _options = [];
   /**
    *  Class constructor.
-   *  @param    {Element}   parent    The parent element to which the select
-   *                                  will be added.
-   *  @param    {object}    options   Optional parameters for the select that
-   *                                  is added to the form.
-   *    @property   {string}  name      Registration name of the select. This
-   *                                    should uniquely identify the select.
-   *    @property   {string}  label     This is the label of the element that
-   *                                    will be shown to the user.
-   *    @property   {array}   options   An array of options to add to the select
-   *                                    element.
+   *  @param    {Element}   parent      The parent element to which the select
+   *                                    will be added.
+   *  @param    {object}    options     Optional parameters for the select that
+   *                                    is added to the form.
+   *    @property   {string}  name        Registration name of the select. This
+   *                                      should uniquely identify the select.
+   *    @property   {string}  placeholder This is the placeholder option that
+   *                                      will be shown to the user.
+   *    @property   {array}   options     An array of options to add to the
+   *                                      select element.
    */
 
   constructor(parent, options = {}) {
     // First call the constructor of the base class.
     super(); // Create a container for the select element.
 
-    this._container = document.createElement("select"); // Set the optional attributes.
+    this._container = document.createElement("select"); // Pass on any change events.
+
+    this._container.addEventListener("change", event => void this.trigger("change", event)); // Set the optional attributes.
+
 
     if (options.name) this._container.name = options.name;
     if (options.required) this._container.setAttribute("required", true);
-    if (options.disabled) this.disabled(options.disabled); // Should we set a label?
+    if (options.disabled) this.disabled(options.disabled);
+    if (options.multiple) this._container.setAttribute("multiple", true); // Should we set a placeholder?
 
-    if (options.label) {
-      // Add the label as a disabled option to get a placeholder value.
-      const label = this.addOption(options.label); // Make sure this is the one that's selected by default.
+    if (options.placeholder) {
+      // Add the placeholder as a disabled option to get a placeholder value.
+      const placeholder = this.addOption('', options.placeholder); // Make sure this is the one that's selected by default.
 
-      label.selected = true; // Make sure it cannot be selected.
+      placeholder.selected = true; // Make sure it cannot be selected.
 
-      label.disabled = true; // Make sure it is hidden in the dropdown menu.
+      placeholder.disabled = true; // Make sure it is hidden in the dropdown menu.
 
-      label.hidden = true;
+      placeholder.hidden = true;
     } // Add all the options we get.
 
 
-    if (options.options) for (const option of options.options) this.addOption(option.label, option.value); // Add the input element to the parent element.
+    if (options.options) for (const option of options.options) this.addOption(option.value, option.label); // Add the input element to the parent element.
 
     parent.appendChild(this._container);
   }
@@ -70,11 +74,31 @@ class FormSelect extends BaseElement {
 
   value = newValue => {
     // If used as a getter, return the value of the input.
-    if (newValue === undefined) return this._container.value; // Set the requested value.
+    if (newValue === undefined) {
+      // Don't return anything if no selection was made.
+      if (!this._container.selectedOptions.length) return ''; // Don't return a value for the placeholder option.
+
+      if (this._container.selectedOptions[0].disabled) return ''; // Otherwise, we can return the value.
+
+      return this._container.value;
+    } // Set the requested value.
+
 
     this._container.value = newValue; // Allow chaining.
 
     return this;
+  };
+  /**
+   *  Method for getting the label of the currently selected options.
+   *  @returns   {array}
+   */
+
+  labels = () => {
+    // Get all selected options.
+    const options = this._container.selectedOptions; // Convert the HTMLCollection to an array and return an array of strings
+    // with the text content of each option.
+
+    return [...options].map(option => option.textContent);
   };
   /**
    *  Method for disabling/enabling this element. Can be used as both a getter
@@ -92,8 +116,7 @@ class FormSelect extends BaseElement {
     // If used as a getter, return the disabled state of the form select.
     if (disable === undefined) return this._container.disabled; // Set the requested attribute.
 
-    this._container.setAttribute("disabled", disable); // Allow chaining.
-
+    this._container.disabled = disable; // Allow chaining.
 
     return this;
   };
@@ -106,12 +129,12 @@ class FormSelect extends BaseElement {
    *  @returns  {Element}
    */
 
-  addOption = (label, value) => {
+  addOption = (value, label) => {
     // We cannot add an option without a label.
     if (!label) return; // Create the option element.
 
     const option = document.createElement("option");
-    option.value = value;
+    if (value) option.value = value;
     option.textContent = label; // Add the option to our list. We allow duplicates of any kind.
 
     this._options.push(option); // Add the option to the select element so that we can show it to the user.

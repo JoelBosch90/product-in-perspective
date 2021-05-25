@@ -49,7 +49,7 @@ class AppList extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("applist"); // Create a new request object.
+    this._container.classList.add("applist", "component"); // Create a new request object.
 
 
     this._request = new Request(); // Create a app overview.

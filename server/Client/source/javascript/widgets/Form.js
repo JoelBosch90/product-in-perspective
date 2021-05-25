@@ -356,11 +356,21 @@ class Form extends BaseElement {
     // Is this used as a getter?
     if (newData === undefined) {
 
-      // Get the data from the form.
-      const data = new FormData(this._container);
+      // Start a new data object.
+      const data = {};
 
-      // Convert the data to an object and return that.
-      return Object.fromEntries(data.entries());
+      // Add the data from all inputs to the data object.
+      for (const [name, widget] of Object.entries(this._inputs)) data[name] = widget.value();
+
+      // Also add the data of all fieldsets to the data object.
+      for (const [name, widget] of Object.entries(this._fieldsets)) {
+
+        // Merge the data object with the fieldset data.
+        Object.assign(data, widget.values());
+      }
+
+      // Return the entire data object.
+      return data;
     }
 
     // Loop through all information we got to see if we should prefill an
@@ -387,12 +397,12 @@ class Form extends BaseElement {
    */
   remove() {
 
-    // Remove class objects we used.
+    // Remove class objects we created.
     if (this._title) this._title.remove();
     if (this._inputs) for (const input of Object.values(this._inputs)) input.remove();
     if (this._fieldsets) for (const fieldset of Object.values(this._fieldsets)) fieldset.remove();
     if (this._buttons) for (const button of Object.values(this._buttons)) button.remove();
-    this._request.remove();
+    if (this._request) this._request.remove();
 
     // Remove all references.
     this._title = null;

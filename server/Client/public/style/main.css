@@ -90,6 +90,12 @@
   --line-height: 1.75em;
 }
 /**
+ *  Extra treatment for the hidden attribute.
+ */
+[hidden] {
+  display: none !important;
+}
+/**
  *  Main import file to gather the styles of all elements.
  */
 /**
@@ -110,8 +116,8 @@ a:focus {
   outline: none;
 }
 a:hover {
-  opacity: 0.65;
-  transition: opacity var(--animation-quick);
+  filter: brightness(125%);
+  transition: brightness var(--animation-quick);
 }
 /**
  *  Body
@@ -146,7 +152,12 @@ body {
   background-color: var(--active-background);
   transition: background-color var(--animation-quick);
 }
+a.button {
+  text-align: center;
+  font-weight: normal;
+}
 button,
+a.button,
 input[type="submit"],
 input[type="file"] + label {
   display: inline-block;
@@ -161,6 +172,7 @@ input[type="file"] + label {
   transition: filter var(--animation-quick), background-color var(--animation-quick);
 }
 button.block,
+a.button.block,
 input[type="submit"].block,
 input[type="file"] + label.block {
   display: block;
@@ -168,24 +180,33 @@ input[type="file"] + label.block {
   margin-bottom: 0.5em;
 }
 button[type="confirm"],
+a.button[type="confirm"],
 input[type="submit"][type="confirm"],
 input[type="file"] + label[type="confirm"],
 button[type="submit"],
+a.button[type="submit"],
 input[type="submit"][type="submit"],
 input[type="file"] + label[type="submit"] {
   background-color: var(--confirmation-color);
 }
 button[type="remove"],
+a.button[type="remove"],
 input[type="submit"][type="remove"],
 input[type="file"] + label[type="remove"] {
   background-color: var(--danger-color);
 }
 button[type="cancel"],
+a.button[type="cancel"],
 input[type="submit"][type="cancel"],
-input[type="file"] + label[type="cancel"] {
+input[type="file"] + label[type="cancel"],
+button[type="reset"],
+a.button[type="reset"],
+input[type="submit"][type="reset"],
+input[type="file"] + label[type="reset"] {
   background-color: var(--border-color);
 }
 button:disabled,
+a.button:disabled,
 input[type="submit"]:disabled,
 input[type="file"] + label:disabled {
   filter: opacity(30%);
@@ -193,6 +214,7 @@ input[type="file"] + label:disabled {
   transition: filter var(--animation-quick);
 }
 button:focus,
+a.button:focus,
 input[type="submit"]:focus,
 input[type="file"] + label:focus {
   background-color: var(--active-background);
@@ -200,6 +222,7 @@ input[type="file"] + label:focus {
   outline: none;
 }
 button:not(:disabled):hover,
+a.button:not(:disabled):hover,
 input[type="submit"]:not(:disabled):hover,
 input[type="file"] + label:not(:disabled):hover {
   filter: brightness(125%);
@@ -237,11 +260,8 @@ form {
   display: grid;
   grid-template-columns: auto;
   gap: 1.25em;
-  padding: 2em;
-  max-width: min(100%, 30em);
-}
-form.center {
-  margin: 0 auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 /**
  *  Header
@@ -479,9 +499,6 @@ label {
 .arscene .arscene-overlay button {
   pointer-events: auto;
 }
-.arscene.hidden {
-  display: none;
-}
 /**
  *  Main styling for the BarcodeScanner class.
  */
@@ -510,9 +527,6 @@ label {
   width: 100%;
   height: 100%;
 }
-.barcodescanner.hidden {
-  display: none;
-}
 /**
  *  ErrorDisplay
  *    This file installs styling for the ErrorDisplay widget.
@@ -522,6 +536,74 @@ label {
 }
 .error-display:empty {
   display: none;
+}
+/**
+ *  MultiSelect
+ *    This file installs the styling for our custom MultiSelect class.
+ */
+.multiselect {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "select       add" "selections   selections" "buttons      buttons";
+  gap: 1.25em;
+}
+.multiselect select {
+  grid-area: select;
+}
+.multiselect .selections {
+  grid-area: selections;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+.multiselect .selections .selection {
+  background-color: var(--alternate-background);
+  padding: 0.25em 0.75em;
+  border-radius: 0.25em;
+  margin: 0;
+}
+.multiselect button:first-of-type {
+  grid-area: add;
+}
+.multiselect button:not(:first-of-type) {
+  grid-area: buttons;
+}
+/**
+ *  Main styling for the Menu class.
+ */
+.menu {
+  display: contents;
+}
+.menu .navigation,
+.menu .shortcuts {
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.5em;
+  max-width: min(100%, 30em);
+  z-index: 1;
+}
+.menu .navigation {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25em;
+  border-bottom-left-radius: 2em;
+  border-bottom-right-radius: 2em;
+  overflow: hidden;
+}
+.menu .navigation > * {
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.menu .shortcuts {
+  padding-left: 2em;
+  padding-right: 2em;
+  display: flex;
+  gap: 0.25em;
+  justify-content: space-around;
 }
 /**
  *  Main styling for the Overlay class.
@@ -576,12 +658,9 @@ label {
 .overview {
   display: grid;
   grid-template-columns: auto;
-  gap: 2em;
-  padding: 2em;
-  max-width: min(100%, 30em);
-}
-.overview.center {
-  margin: 0 auto;
+  gap: 1.25em;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 /**
  *  Card
@@ -623,8 +702,16 @@ label {
   width: 100%;
   height: 100%;
 }
+.fullscreen {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
 /**
- *  Main styling for the View class.
+ *  View
+ *    Main styling for the View class.
  */
 .view {
   width: 100%;
@@ -635,5 +722,17 @@ label {
   flex: 1;
 }
 /**
- *  This is the main import file to gather the styles for all pages.
+ *  This is the main import file to gather the styles for all components.
  */
+/**
+ *  Default styling for all components.
+ */
+.component {
+  width: 100%;
+  height: 100%;
+  padding: 0 2em;
+  box-sizing: border-box;
+  max-width: min(100%, 30em);
+  margin-left: auto;
+  margin-right: auto;
+}

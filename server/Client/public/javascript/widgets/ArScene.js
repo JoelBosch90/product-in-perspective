@@ -2,7 +2,9 @@
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Overlay } from "/javascript/widgets/Overlay.js";
 import { Reticle } from "/javascript/widgets/ArScene/Reticle.js";
+import { ArModel } from "/javascript/widgets/ArScene/ArModel.js";
 import { debounce } from "/javascript/tools/debounce.js";
+import { AttributeObserver } from "/javascript/tools/AttributeObserver.js";
 /**
  *  The definition of the ArScene class that can be used to create an an
  *  augmented reality session.
@@ -44,7 +46,14 @@ class ArScene extends BaseElement {
    *  @var      {Element}
    */
 
-  _object = null;
+  _model = null;
+  /**
+   *  Private variable that stores a reference to the container that houses all
+   *  assets that are used for the 3D object.
+   *  @var      {Element}
+   */
+
+  _assets = null;
   /**
    *  Private variable that stores a reference to the Overlay object.
    *  @var      {Overlay}
@@ -96,6 +105,28 @@ class ArScene extends BaseElement {
 
   _texts = null;
   /**
+   *  Private variable that stores the attribute observer that we use to remove
+   *  the 'a-fullscreen' class that Aframe likes to add to the HTML element.
+   *  @var      {AttributeObserver}
+   */
+
+  _observer = null;
+  /**
+   *  Reference to the product that we're showing. This object also contains an
+   *  array with the models we're showing.
+   *  @var      {Object}
+   */
+
+  _product = null;
+  /**
+   *  While we're showing different models, we need to keep track of the index
+   *  of the model that we're currently showing. We can set this to any negative
+   *  number to indicate that we're not showing any model right now.
+   *  @var      {Number}
+   */
+
+  _modelIndex = -1;
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element on which the
    *                                  overlay interface will be installed.
@@ -105,9 +136,6 @@ class ArScene extends BaseElement {
    *    @property {string}    "placing-title"       Title text in placing mode.
    *    @property {string}    "placing-description" Description in placing mode.
    *    @property {string}    "placing-button"      Button text in placing mode.
-   *    @property {string}    "viewing-title"       Title text in viewing mode.
-   *    @property {string}    "viewing-description" Description in viewing mode.
-   *    @property {string}    "viewing-button"      Button text in viewing mode.
    */
 
   constructor(parent, texts) {
@@ -165,19 +193,54 @@ class ArScene extends BaseElement {
     this._scene.setAttribute("webxr", "optionalFeatures: hit-test, local-floor, dom-overlay; overlayElement: .arscene-overlay;"); // Add a reticle to the scene.
 
 
-    this._reticle = new Reticle(this._scene); // Add a 3D object to the scene.
+    this._reticle = new Reticle(this._scene); // Add the overlay to the scene.
 
-    this._insertObject(this._scene); // Add the overlay to the scene.
-
-
-    this._addOverlayToScene(this._scene); // Add the scene to the parent container.
+    this._addOverlayToScene(this._scene); // Add the new model to the scene. Hide it by default.
 
 
-    parent.prepend(this._scene); // Check to see if the renderer has already started. If so, we can
+    this._model = new ArModel(this._scene).hide(); // Add the scene to the parent container.
+
+    parent.prepend(this._scene); // Aframe may attempt to add 'a-fullscreen to the HTML element on the page.
+    // This class helps create a fullscreen orientation, but it sacrifices
+    // scrolling. Because we're in a single page application, this might mess up
+    // different parts of the application, so we want to remove this class so
+    // that we can offload this responsibility elsewhere (like the
+    // Representation class).
+
+    this._preventClass("html", "a-fullscreen"); // Check to see if the renderer has already started. If so, we can
     // immediately initialize the scene.
+
 
     if (this._scene.renderStarted) this._initScene(); // Otherwise, we need to wait for the scene element to load first.
     else this._scene.addEventListener("loaded", () => void this._initScene());
+  };
+  /**
+   *  Private method to watch a single DOM element and remove a certain class
+   *  from that element as soon as it appears. It will only prevent this
+   *  behaviour once.
+   *  @param  {string}    tagName     Name of the DOM element tag.
+   *  @param  {string}    className   Name of the class that should be
+   *                                  prevented.
+   */
+
+  _preventClass = (tagName, className) => {
+    // Get the first occurrence of this tag.
+    const tag = document.getElementsByTagName(tagName)[0]; // Create a new attribute observer to observe changes in the DOM.
+
+    this._observer = new AttributeObserver(); // Start observing our element.
+
+    this._observer.on(tag, mutation => {
+      // No need to observe anything but class changes.
+      if (mutation.attributeName != "class") return; // If the HTML element does not yet have the specific class, we should
+      // keep waiting.
+
+      if (!tag.classList.contains(className)) return; // Remove the class.
+
+      tag.classList.remove(className); // After we've removed the class we can stop observing the HTML element
+      // and we no longer need the attribute observer.
+
+      this._observer.remove();
+    });
   };
   /**
    *  Private method for initializing the scene by adding event listeners and
@@ -217,7 +280,7 @@ class ArScene extends BaseElement {
     this._scene.setAttribute('visible', 'true'); // Go to placing mode.
 
 
-    this._placingMode();
+    this._placeModel();
   };
   /**
    *  Private method for handling errors.
@@ -227,57 +290,6 @@ class ArScene extends BaseElement {
   _handleError = message => {
     // Trigger the error event.
     this.trigger("error", message);
-  };
-  /**
-   *  Private method for loading the assets in the scene.
-   *  @param    {Element}   scene   The Aframe scene to which the object is
-   *                                added.
-   *
-   *  @TODO     Get the assets from an API call.
-   */
-
-  _loadAssets = scene => {
-    // Create an element for the list of assets.
-    const assets = document.createElement("a-assets"); // Some of our models might take a while to load, so we need to increase the
-    // timeout.
-
-    assets.setAttribute("timeout", "5000"); // Add the 3D model to the list of assets.
-    // Currently using this example:
-    // https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/Duck
-
-    const model = document.createElement("a-asset-item");
-    model.setAttribute("src", "/models/duck/Duck.gltf");
-    model.id = "arscene-model"; // Add all assets to the list.
-
-    assets.appendChild(model); // Add the assets to the scene.
-
-    scene.appendChild(assets);
-  };
-  /**
-   *  Private method for adding an object in an Aframe scene.
-   *  @param    {Element}   scene   The Aframe scene to which the object is
-   *                                added.
-   */
-
-  _insertObject = scene => {
-    // First, load the assets.
-    this._loadAssets(scene); // Create an Aframe box element.
-
-
-    this._object = document.createElement("a-gltf-model");
-
-    this._object.classList.add("arscene-object"); // Attach a relevant default model with sensible dimensions.
-
-
-    this._object.setAttribute("src", "#arscene-model");
-
-    this._object.setAttribute("scale", "0.1 0.1 0.1"); // It should be hidden until it is placed in the scene by the user.
-
-
-    this._object.setAttribute("visible", "false"); // Add the object to the scene.
-
-
-    scene.appendChild(this._object);
   };
   /**
    *  Private method for adding a interface in an Aframe scene. This interface
@@ -298,7 +310,7 @@ class ArScene extends BaseElement {
 
     this._interface.setAttribute("text", "align: left; width: 0.1;");
 
-    this._interface.setAttribute("position", "0 0 -0.17;");
+    this._interface.setAttribute("position", "0 0 -0.25;");
 
     this._interface.setAttribute("visible", "false"); // Add the interface to the camera.
 
@@ -340,7 +352,7 @@ class ArScene extends BaseElement {
 
 
     this._stopButton = this._overlay.add("button", {
-      text: this._texts["exit-button"]
+      text: this._texts["exit-button"] || 'Exit'
     }); // Add event listeners to this button with a debounced callback. We want
     // this to just end the XR session. The event listener on the session will
     // then call the stop method.
@@ -359,48 +371,50 @@ class ArScene extends BaseElement {
    *  object.
    */
 
-  _placingMode = () => {
-    // Change the mode.
-    this._mode = "placing"; // We need the reticle to show.
+  _placeModel = () => {
+    // Reset the model index.
+    this._modelIndex = -1; // We need the reticle to show.
 
     this._reticle.show(); // Make sure the 3D object is not visible.
 
 
-    this._object.setAttribute('visible', 'false'); // Update the text of the overlay title.
+    this._model.hide(); // Update the text of the overlay title.
 
 
-    if (this._texts["placing-title"]) this._overlayTitle.textContent = this._texts["placing-title"]; // Update the text on the proceed button.
+    this._overlayTitle.textContent = this._texts["placing-title"] || ""; // Update the text for the instructions.
 
-    if (this._texts["placing-button"]) this._proceedButton.textContent = this._texts["placing-button"]; // Update the text for the instructions.
+    this._instructions.textContent = this._texts["placing-description"] || ""; // Update the text on the proceed button. We should always have a text here.
 
-    if (this._texts["placing-description"]) this._instructions.textContent = this._texts["placing-description"];
+    this._proceedButton.textContent = this._texts["placing-button"] || 'Place';
   };
   /**
    *  Private method to proceed to the mode for viewing the placed object.
-   *  @TODO     Figure out what happens with the vectors and the quaternion.
    */
 
-  _viewingMode = () => {
-    // Change the mode.
-    this._mode = "viewing"; // We need to hide the reticle.
+  _showModel = () => {
+    // Get the current model.
+    const source = this._product.models[this._modelIndex]; // Load the model source.
 
-    this._reticle.hide(); // We can copy the orientation of the reticle to place the object in the
-    // scene.
+    this._model.update(source._id, source.multiplier) // Wait for the model to load to set the model's position and rotation.
+    .then(() => {
+      // If this is not the first model we're showing, it's already got the
+      // correct position and rotation and we don't need to provide it again.
+      if (this._modelIndex != 0) return; // We need to hide the reticle.
 
-
-    this._object.setAttribute("position", this._reticle.position());
-
-    this._object.setAttribute("rotation", this._reticle.rotation()); // Make sure the object is visible.
-
-
-    this._object.setAttribute('visible', 'true'); // Update the text of the overlay title.
+      this._reticle.hide(); // Update the model's position to be where the reticle is now
+      // and show it.
 
 
-    if (this._texts["viewing-title"]) this._overlayTitle.textContent = this._texts["viewing-title"]; // Update the text on the proceed button.
+      this._model.position(this._reticle.position(), this._reticle.rotation()).show();
+    }); // Update the text of the overlay title.
 
-    if (this._texts["viewing-button"]) this._proceedButton.textContent = this._texts["viewing-button"]; // Update the text for the instructions.
 
-    if (this._texts["viewing-description"]) this._instructions.textContent = this._texts["viewing-description"];
+    this._overlayTitle.textContent = source["viewing-title"] || ""; // Update the text for the instructions.
+
+    this._instructions.textContent = source["viewing-description"] || ""; // Update the text on the proceed button. We always need a text for the
+    // button so we should have a fallback.
+
+    this._proceedButton.textContent = source["viewing-button"] || "Proceed";
   };
   /**
    *  Method that returns whether the augmented reality scene has loaded yet.
@@ -414,42 +428,39 @@ class ArScene extends BaseElement {
    */
 
   proceed = () => {
-    // How we need to proceed depends on the mode we're currently in.
-    switch (this._mode) {
-      // If we're placing, we can view next.
-      case "placing":
-        this._viewingMode();
+    // Increment the index of the model we are showing.
+    this._modelIndex += 1; // Do we still have a valid index?
 
-        break;
-      // If we're viewing, we can go back to placing.
-
-      case "viewing":
-        this._placingMode();
-
-        break;
-    } // Allow chaining.
-
+    if (this._modelIndex < this._product.models.length) this._showModel(); // Otherwise, we can go back to placing a model.
+    else this._placeModel(); // Allow chaining.
 
     return this;
   };
   /**
    *  Method to select a 3D object to show.
-   *  @param    {integer}     model     Number indicating the object category.
+   *  @param    {Object}    product     Object container the properties of the
+   *                                    selected product.
    *  @returns  {ArScene}
    */
 
-  select = model => {
-    // @TODO Use the model that is provided.
-    // Immediately enter the augmented reality mode. This could fail, for
-    // example if WebXR is not available or the user has not given permission.
+  select = product => {
+    // Store the product.
+    this._product = product; // Immediately enter the augmented reality mode. This could fail, for
+    // example if WebXR is not available or the user has not given
+    // permission.
+
     try {
-      this._scene.enterAR();
+      // Enter augmented reality.
+      this._scene.enterAR(); // Then show the scene.
+
+
+      this.show();
     } catch (error) {
       this._handleError(error);
-    } // Show the scene and allow chaining.
+    } // Allow chaining.
 
 
-    return this.show();
+    return this;
   };
   /**
    *  Method for stopping the augmented reality session.
@@ -475,25 +486,18 @@ class ArScene extends BaseElement {
     // Stop the session.
     this.stop(); // Remove the other objects we've used.
 
-    this._overlay.remove();
+    if (this._overlay) this._overlay.remove();
+    if (this._reticle) this._reticle.remove();
+    if (this._observer) this._observer.remove(); // Remove all DOM elements we've stored.
 
-    this._reticle.remove(); // Remove all DOM elements we've stored.
-
-
-    this._scene.remove();
-
-    this._object.remove();
-
-    this._overlayContainer.remove();
-
-    this._interface.remove();
-
-    this._proceedButton.remove();
-
-    this._stopButton.remove();
-
-    this._instructions.remove(); // Call the original remove method.
-
+    if (this._scene) this._scene.remove();
+    if (this._model) this._model.remove();
+    if (this._assets) this._assets.remove();
+    if (this._overlayContainer) this._overlayContainer.remove();
+    if (this._interface) this._interface.remove();
+    if (this._proceedButton) this._proceedButton.remove();
+    if (this._stopButton) this._stopButton.remove();
+    if (this._instructions) this._instructions.remove(); // Call the original remove method.
 
     super.remove();
   }

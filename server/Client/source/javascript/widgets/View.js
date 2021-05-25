@@ -1,5 +1,6 @@
 // Import dependencies
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { equal } from "/javascript/tools/equal.js";
 
 /**
  *  The definition of the View class that can be used as a container for other
@@ -79,6 +80,12 @@ class View extends BaseElement {
     // Check if we've installed a widget with this class before.
     if (!this._widgets.has(Widget)) {
 
+      // If we're adding a new widget, we'll also activate it. But we never want
+      // more than one widget active, so we should hide the currently active
+      // widget first.
+      const active = this._activeWidget();
+      if (active) active.instance.hide()
+
       // If not, create an instance of this widget.
       const instance = new Widget(this._container, ...params);
 
@@ -103,12 +110,15 @@ class View extends BaseElement {
 
   /**
    *  Private method for exposing the currently active widget.
-   *  @returns  {BaseElement}
+   *  @returns  {BaseElement|false}
    */
   _activeWidget() {
 
     // Return the last widget in the map.
-    return Array.from(this._widgets).pop()[1];
+    if (this._widgets.size) return Array.from(this._widgets).pop()[1];
+
+    // Return false if there is no active widget.
+    else return false;
   }
 
   /**
@@ -133,7 +143,10 @@ class View extends BaseElement {
 
     // If the parameters for this widget have changed, we need to create a new
     // instance.
-    if (widget.params != params) {
+    if (!equal(widget.params, params)) {
+
+      // Remember the new parameters.
+      widget.params = params;
 
       // Remove the previous instance.
       widget.instance.remove();

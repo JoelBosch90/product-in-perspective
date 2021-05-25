@@ -2,10 +2,8 @@
  *  Form
  *    This file contains the base styling for a form.
  */
-
-// Target all forms.
-form {
-
+form
+{
   // Use grid to create a one column layout by default.
   display: grid;
   grid-template-columns: auto;
@@ -13,17 +11,7 @@ form {
   // Keep some white space between elements.
   gap: 1.25em;
 
-  // Keep some white space around the elements.
-  padding: 2em;
-
-  // Forms contain text and lines of text should never be too long. And the form
-  // should never be wider than the parent element.
-  max-width: min(100%, 30em);
-
-  // Extra styling for when the form has the center class.
-  &.center {
-
-    // Use the margins to center this form.
-    margin: 0 auto;
-  }
+  // Use collapsing margins to keep horizontal distance with other elements.
+  margin-top: 2em;
+  margin-bottom: 2em;
 }

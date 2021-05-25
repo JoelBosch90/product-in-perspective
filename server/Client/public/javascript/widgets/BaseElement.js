@@ -24,29 +24,31 @@ class BaseElement extends EventHandler {
    *  @returns  {BaseElement}
    */
 
-  show = () => {
+  show() {
     // Make sure we're not hiding.
-    this._container.classList.remove("hidden"); // Allow chaining.
+    this._container.removeAttribute('hidden'); // Allow chaining.
 
 
     return this;
-  };
+  }
   /**
    *  Method to hide this element.
    *  @returns  {BaseElement}
    */
 
-  hide = () => {
-    // Make sure we're hiding..
-    this._container.classList.add("hidden"); // Allow chaining.
+
+  hide() {
+    // Make sure we're hiding.
+    this._container.setAttribute('hidden', ''); // Allow chaining.
 
 
     return this;
-  };
+  }
   /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
    */
+
 
   remove() {
     // Remove the container if it was ever initialized.

@@ -25,10 +25,10 @@ class BaseElement extends EventHandler {
    *  Method to show this element.
    *  @returns  {BaseElement}
    */
-  show = () => {
+  show() {
 
     // Make sure we're not hiding.
-    this._container.classList.remove("hidden");
+    this._container.removeAttribute('hidden');
 
     // Allow chaining.
     return this;
@@ -38,10 +38,10 @@ class BaseElement extends EventHandler {
    *  Method to hide this element.
    *  @returns  {BaseElement}
    */
-  hide = () => {
+  hide() {
 
-    // Make sure we're hiding..
-    this._container.classList.add("hidden");
+    // Make sure we're hiding.
+    this._container.setAttribute('hidden', '');
 
     // Allow chaining.
     return this;

@@ -1,5 +1,5 @@
 // Import dependencies.
-const errorResponse = require("../errorResponse");
+const errorResponse = require("../tools/errorResponse");
 
 /**
  *  This function acts as an API endpoint for acts involving models.
@@ -36,6 +36,9 @@ module.exports = function(app, path) {
 
       // Check if the model was indeed created.
       if (!model) errorResponse(response, 500, "Model could not be created.");
+
+      // We want to store the model under the model ID.
+      await request.context.storage.storeModel(request.body.model, model._id);
 
       // Confirm that the request was successfully processed.
       return response.send(true);
@@ -76,6 +79,10 @@ module.exports = function(app, path) {
       // Check if the model was indeed modified.
       if (modified.nModified <= 0) return errorResponse(response, 500, "Could not edit model.");
 
+      // We want to store a model if that was provided and save it in the object
+      // storage for this model's ID.
+      if (request.body.model) await request.context.storage.storeModel(request.body.model, request.params.modelId);
+
       // Confirm that the request was successfully processed.
       return response.send(true);
 
@@ -111,7 +118,7 @@ module.exports = function(app, path) {
       // Check if we actually have the model.
       if (!model) return errorResponse(response, 404, "Could not find model.");
 
-      // Send back the model.
+      // Send back the model with the URL to the file.
       return response.send(model);
 
     // Listen for any errors that the database might throw.
@@ -140,6 +147,15 @@ module.exports = function(app, path) {
 
     // The database might throw an error.
     try {
+
+      // Get the model.
+      const model = await request.context.models.Model.findOne({
+        _id:  request.params.modelId,
+        user: request.context.user
+      });
+
+      // Make sure we remove the object from our object storage.
+      request.context.storage.delete(model._doc.file);
 
       // Remove the requested model. Make sure we never remove anything by another
       // user.

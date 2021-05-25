@@ -1,5 +1,5 @@
 // Import dependencies.
-const errorResponse = require("../errorResponse");
+const errorResponse = require("../tools/errorResponse");
 
 /**
  *  This function acts as an API endpoint for acts involving products.
@@ -106,7 +106,9 @@ const errorResponse = require("../errorResponse");
       // Get the requested product.
       const product = await request.context.models.Product.findOne({
         _id: request.params.productId
-      });
+
+      // Provide the information for all models as well.
+      }).populate('models');
 
       // Check if we did indeed find the product.
       if (!product) return  errorResponse(response, 404, "Product could not be found.");

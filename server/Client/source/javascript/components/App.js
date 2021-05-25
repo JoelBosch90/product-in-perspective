@@ -51,6 +51,38 @@ class App extends BaseElement {
   }
 
   /**
+   *  Method to show this element.
+   *  @returns  {App}
+   */
+  show() {
+
+    // Make sure we enable showing the representation.
+    this._representation.show();
+
+    // Use the BaseElement's show method to actually show this widget.
+    super.show();
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Method to hide this element.
+   *  @returns  {App}
+   */
+  hide() {
+
+    // Make sure we disable showing the representation.
+    this._representation.hide();
+
+    // Use the BaseElement's hide method to actually hide this widget.
+    super.hide();
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
    */

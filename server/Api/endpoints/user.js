@@ -1,5 +1,5 @@
 // Import dependencies.
-const errorResponse = require("../errorResponse");
+const errorResponse = require("../tools/errorResponse");
 
 /**
  *  This function acts as an API endpoint for acts involving users.

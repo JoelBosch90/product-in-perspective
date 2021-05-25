@@ -125,7 +125,10 @@ class Representation extends BaseElement {
         // Get access to the JSON object.
         if (response) return response.json().then(texts => {
           // Store the texts.
-          this._texts = texts; // Now start the barcode scanner and the augmented reality scene.
+          this._texts = texts; // We need to at a class to facilitate fullscreen capabilities.
+
+          this._enableFullscreen(); // Now start the barcode scanner and the augmented reality scene.
+
 
           this._loadBarcodeScanner();
 
@@ -146,9 +149,39 @@ class Representation extends BaseElement {
     parent.appendChild(this._container);
   }
   /**
-   *  Private method to load the augmented reality scene.
+   *  In order to facilitate fullscreen, we're immitating the 'a-fullscreen'
+   *  class that Aframe likes to add to the HTML element, but we only want to
+   *  use this class when showing the prepresentation, so we're not using their
+   *  'a-fullscreen' class, but compensate with own instead.
+   *
+   *  This method sets that class on the HTML element.
    */
 
+
+  _enableFullscreen = () => {
+    // Get the HTML element.
+    const html = document.getElementsByTagName("html")[0]; // Add the representing mode styling to the HTML tag.
+
+    html.classList.add("fullscreen");
+  };
+  /**
+   *  In order to facilitate fullscreen, we're immitating the 'a-fullscreen'
+   *  class that Aframe likes to add to the HTML element, but we only want to
+   *  use this class when showing the prepresentation, so we're not using their
+   *  'a-fullscreen' class, but compensate with own instead.
+   *
+   *  This method removes that class from the HTML element.
+   */
+
+  _disableFullscreen = () => {
+    // Get the HTML element.
+    const html = document.getElementsByTagName("html")[0]; // Remove the representing mode styling from the HTML tag.
+
+    html.classList.remove("fullscreen");
+  };
+  /**
+   *  Private method to load the augmented reality scene.
+   */
 
   _loadArScene = () => {
     // Create a new augmented reality scene.
@@ -217,7 +250,7 @@ class Representation extends BaseElement {
     }); // Add a select button to the overlay.
 
     this._selectButton = scannerOverlay.add("button", {
-      text: this._texts["scanning-button"]
+      text: this._texts["scanning-button"] || "Select"
     }); // Disable the select button by default.
 
     this._selectButton.disabled = true;
@@ -233,7 +266,7 @@ class Representation extends BaseElement {
     this._scanner.stop().hide(); // Start and show the augmented reality session instead.
 
 
-    this._scene.select(this._shownProduct.model);
+    this._scene.select(this._shownProduct);
   };
   /**
     *  Private method for processing a scanned barcode.
@@ -245,11 +278,9 @@ class Representation extends BaseElement {
     // If we cannot recognize this product, we can't do anything.
     if (!(data.code in this._products)) return; // No need to process if we're already showing this product.
 
-    if (this._shownProduct && data.code == this._shownProduct.code) return; // Update the shown product.
+    if (this._shownProduct && data.code == this._shownProduct.barcode) return; // Update the shown product.
 
-    this._shownProduct = this._products[data.code]; // Make sure we also remember the barcode of the shown product.
-
-    this._shownProduct.code = data.code; // Show the user the product name of the selected product. We want to remove
+    this._shownProduct = this._products[data.code]; // Show the user the product name of the selected product. We want to remove
     // the text first and reset it a moment later to trigger the animation
     // effect.
 
@@ -272,12 +303,9 @@ class Representation extends BaseElement {
     .then(response => {
       // Get access to the JSON object.
       if (response) return response.json().then(products => {
-        // Loop through all product and add the name and model to our product
+        // Loop through all products and add the name and model to our product
         // dictionary, using the barcode as the key.
-        for (const product of products) this._products[product.barcode] = {
-          name: product.name,
-          model: product.modelName
-        };
+        for (const product of products) this._products[product.barcode] = product;
       });
     });
   };
@@ -293,12 +321,44 @@ class Representation extends BaseElement {
     .catch(error => void this.trigger('error', error));
   };
   /**
+   *  Method to show this element.
+   *  @returns  {Representation}
+   */
+
+  show() {
+    // Make sure we're in fullscreen mode.
+    this._enableFullscreen(); // Use the BaseElement's show method to actually show this widget.
+
+
+    super.show(); // Allow chaining.
+
+    return this;
+  }
+  /**
+   *  Method to hide this element.
+   *  @returns  {Representation}
+   */
+
+
+  hide() {
+    // Make sure we exit fullscreen mode.
+    this._disableFullscreen(); // Use the BaseElement's hide method to actually hide this widget.
+
+
+    super.hide(); // Allow chaining.
+
+    return this;
+  }
+  /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
    */
 
+
   remove() {
-    // Stop listening for the scene to end.
+    // Immediately hide this widget before we start removing it.
+    this.hide(); // Stop listening for the scene to end.
+
     if (this._scene) this._scene.off("end", this._onSceneEnd); // Remove all classes that we've initialized.
 
     if (this._scanner) this._scanner.remove();

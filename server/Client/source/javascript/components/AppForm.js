@@ -49,7 +49,7 @@ class AppForm extends BaseElement {
 
     // Create a container for this component.
     this._container = document.createElement("div");
-    this._container.classList.add("appform");
+    this._container.classList.add("appform", "component");
 
     // Create a form for creating an app.
     this._form = new Form(this._container, {
@@ -150,36 +150,6 @@ class AppForm extends BaseElement {
             ],
           },
         },
-        {
-          name: "viewing",
-          options: {
-            legend: "Texts in viewing mode",
-            inputs: [
-              {
-                name: "title",
-                options: {
-                  label:  "Title",
-                  type:   "text",
-                },
-              },
-              {
-                name: "description",
-                options: {
-                  label:  "Description",
-                  type:   "textarea",
-                },
-              },
-              {
-                name: "button",
-                options: {
-                  label:    "Button",
-                  type:     "text",
-                  required: true,
-                },
-              },
-            ],
-          },
-        },
       ],
       buttons: [
         {
@@ -193,7 +163,7 @@ class AppForm extends BaseElement {
     });
 
     // When the app was stored successfully, return to the app overview.
-    this._form.on("stored", () => void goTo('/admin/app'));
+    this._form.on("stored", () => void goTo('/admin/apps'));
 
     // Add the new element to the parent container.
     parent.appendChild(this._container);

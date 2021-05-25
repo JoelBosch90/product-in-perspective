@@ -49,8 +49,19 @@
   }
 }
 
+// Target an anchor tag masquerading as a button.
+a.button
+{
+  // Center the text like in a button.
+  text-align: center;
+
+  // Make sure we use normal text, like in a button.
+  font-weight: normal;
+}
+
 // Apply button styles to submit input elements as well.
 button,
+a.button,
 input[type="submit"],
 input[type="file"] + label {
 
@@ -115,7 +126,7 @@ input[type="file"] + label {
   }
 
   // Buttons can be used to cancel current unsaved settings.
-  &[type="cancel"] {
+  &[type="cancel"], &[type="reset"] {
 
     // This button should have a fairly neutral colour and not draw too much
     // attention.

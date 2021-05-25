@@ -53,7 +53,7 @@ class ModelForm extends BaseElement {
 
     // Create a container for this component.
     this._container = document.createElement("div");
-    this._container.classList.add("modelform");
+    this._container.classList.add("modelform", "component");
 
     // Create a new request object.
     this._request = new Request();
@@ -99,12 +99,50 @@ class ModelForm extends BaseElement {
           name:   "model",
           options:  {
             label:  "Upload model ...",
-            accept: ".glTF",
+            // accept: ".glTF",
             type:   "file",
           },
         },
+        {
+          name:   "multiplier",
+          options:  {
+            label:    "Multiplier",
+            type:     "number",
+          },
+        },
       ],
-      fieldsets: [],
+      fieldsets: [
+        {
+          name: "viewing",
+          options: {
+            legend: "Texts in viewing mode",
+            inputs: [
+              {
+                name: "title",
+                options: {
+                  label:  "Title",
+                  type:   "text",
+                },
+              },
+              {
+                name: "description",
+                options: {
+                  label:  "Description",
+                  type:   "textarea",
+                },
+              },
+              {
+                name: "button",
+                options: {
+                  label:    "Button",
+                  type:     "text",
+                  required: true,
+                },
+              },
+            ],
+          },
+        },
+      ],
       buttons: [
         {
           name:   "submit",
@@ -117,7 +155,7 @@ class ModelForm extends BaseElement {
     });
 
     // When the model was stored successfully, return to the model overview.
-    this._form.on("stored", () => void goTo('/admin/model'));
+    this._form.on("stored", () => void goTo('/admin/models'));
   }
 
   /**
