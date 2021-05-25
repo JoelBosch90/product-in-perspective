@@ -183,12 +183,14 @@ class FormMultiSelect extends BaseElement {
 
   _checkAddState = () => {
     // See which option is currently being selected.
-    const option = this._select.value(); // Don't select the default selection.
+    const option = this._select.value();
 
+    console.log("::_checkAddState option", option); // Don't select the default selection.
 
     if (!option) return this._add.disabled(true); // Check if this option is already selected.
 
-    const selected = this.value().includes(option); // The user should be able to add new selections only when they're not
+    const selected = this.value().includes(option);
+    console.log("::_checkAddState selected", selected); // The user should be able to add new selections only when they're not
     // already selected.
 
     return this._add.disabled(selected);
@@ -307,8 +309,11 @@ class FormMultiSelect extends BaseElement {
    */
 
   disabled = disable => {
-    // If used as a getter, return the disabled state of the form select.
-    if (disable === undefined) return this._container.disabled; // Set the requested attribute on the buttons.
+    // If used as a getter, return the disabled state of the fieldset.
+    if (disable === undefined) return this._container.disabled; // Set the requested attribute on the fieldset and the hidden select input.
+
+    this._container.disabled = disable;
+    this._hiddenSelect.disabled = disable; // Set the requested attribute on the buttons.
 
     this._add.disabled = disable;
     this._clear.disabled = disable; // Set the request state on the select widget.
@@ -335,7 +340,10 @@ class FormMultiSelect extends BaseElement {
     const option = this._select.addOption(value, label); // Store the option in our options array.
 
 
-    this._options.push(option); // Expose the option.
+    this._options.push(option); // Check if the add button should be enabled.
+
+
+    this._checkAddState(); // Expose the option.
 
 
     return option;
