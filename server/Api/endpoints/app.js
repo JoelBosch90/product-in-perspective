@@ -186,7 +186,10 @@ module.exports = function(app, path) {
       if (!app) return errorResponse(response, 404, "App not found.");
 
       // Get a list of all products for this app.
-      const products = await request.context.models.Product.find({ app: app._id });
+      const products = await request.context.models.Product.find({ app: app._id })
+
+        // Provide the information for all models in one go.
+        .populate('models');
 
       // Send back the entire list.
       return response.send(products);

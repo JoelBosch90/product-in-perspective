@@ -323,9 +323,8 @@ class Form extends BaseElement {
       for (const [name, widget] of Object.entries(this._fieldsets)) {
         // Merge the data object with the fieldset data.
         Object.assign(data, widget.values());
-      }
+      } // Return the entire data object.
 
-      console.log("Form::values", data); // Return the entire data object.
 
       return data;
     } // Loop through all information we got to see if we should prefill an

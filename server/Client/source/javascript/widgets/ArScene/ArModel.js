@@ -32,22 +32,28 @@ class ArModel extends BaseElement {
   _models = [];
 
   /**
-   *  Remember the model source.
-   *  @var      {string}
+   *  Reference to the current position of the model.
+   *  @var      {Vector3}
    */
-  _source = null;
+  _position = null;
 
   /**
-   *  Remember the minimum distances between models.
+   *  Reference to the current rotation of the model.
    *  @var      {Object}
    */
-  _distance = {};
+  _rotation = null;
+
+  /**
+   *  Keep the model's dimension in cache.
+   *  @var      {Object}
+   */
+  _dimensions = null;
 
   /**
    *  Class constructor.
    *  @param    {Element}     parent    The parent container to which the
    *                                    ArModel will be added.
-   *  @param    {...any}      options   Optional iniital options that will be
+   *  @param    {...any}      options   Optional initial options that will be
    *                                    passed to the update method.
    */
   constructor(parent, ...options) {
@@ -63,7 +69,7 @@ class ArModel extends BaseElement {
     this._request = new Request();
 
     // Call the update method with any initial settings.
-    if (options) this.update(...options);
+    if (options.length) this.update(...options);
 
     // Add the container to the parent element.
     parent.appendChild(this._container);
@@ -73,25 +79,37 @@ class ArModel extends BaseElement {
    *  Method to update the parameters of this model.
    *  @param    {string}    model       The object ID.
    *  @param    {Number}    number      The number of objects we should spawn.
-   *  @returns  {ArModel}
+   *  @returns  {Promise}
    */
-  update = (model, number) => {
+  update = async (model, number = 1) => {
+
+    // Hide the model while updating.
+    this.hide();
 
     // Update the source and the distance.
-    this._source = this._request.model(model);
+    const source = this._request.model(model);
 
-    // Get the difference between the current number of models and the requested
-    // number.
-    const difference = Math.abs(number - this._models.length);
+    // Remove all current models.
+    this.clear();
 
-    // If we have too few models, add more.
-    if (number > this._models.length) for (let i = 0; i < difference; i++) this._addModel();
+    // Keep track of all promises for loading the models.
+    const promises = [];
 
-    // If we have too many models, remove some.
-    else for (let i = 0; i < difference; i++) this._removeModel();
+    // Start adding models.
+    for (let i = 0; i < number; i++) promises.push(this._addModel(source));
 
-    // Allow chaining.
-    return this;
+    // Return the promise that all models have loaded.
+    return Promise.all(promises)
+
+      // Wait for all models to load.
+      .then(() => {
+
+        // Get the dimensions for the new model.
+        this._dimensions = this._modelDimensions();
+
+        // Position the model properly and show it.
+        this.position().show();
+      });
   }
 
   /**
@@ -104,6 +122,17 @@ class ArModel extends BaseElement {
    */
   position = (position, rotation) => {
 
+    // Make sure our cache and current position are up to date.
+    if (position) this._position = position;
+    else position = this._position;
+
+    // Make sure our cache and current rotation are up to date.
+    if (rotation) this._rotation = rotation;
+    else rotation = this._rotation;
+
+    // We need both a position and a rotation to continue.
+    if (!position || !rotation) return this;
+
     // Get the current number of models.
     const number = this._models.length;
 
@@ -113,27 +142,26 @@ class ArModel extends BaseElement {
     // Get the number of models on a single floor.
     const floor = row ** 2;
 
-    // Get the index of the middle of a row. We should center around the middle
-    // position.
-    const middle = Math.floor(row / 2);
-
-    // Get an object describing the minimal distances between models.
-    const distance = this._getDistance();
+    // Get an object describing the model's dimensions.
+    const dimensions = this._dimensions;
 
     // Create the position vector for the first model in the corner. We can
     // clone the providing position object so that we're sure that we're working
     // with the same type of vector.
     const start = position.clone()
 
-      // We want to move left by half the maximum distance so that we'll end up
-      // centering around the requested position along the X axis.
-      .setX(position.x - middle * distance.x)
+      // First, we subtract the offset so that the model expands to the right
+      // from the starting position. Then, we subtract half the width of the
+      // models in a single row to center the model around the x axis.
+      .setX(position.x - dimensions.xOffset - row * dimensions.width / 2)
 
       // We always want to start on the surface and grow upwards.
-      .setY(position.y)
+      .setY(position.y - dimensions.yOffset)
 
-      // Let's keep Z static for now.
-      .setZ(position.z - middle * distance.z);
+      // First, we subtract the offset so that the model expands to the front
+      // from the starting position. Then, we subtract half the depth of the
+      // models in a single row to center the model around the z axis.
+      .setZ(position.z - dimensions.zOffset - row * dimensions.depth / 2);
 
     // We need one vector that we're constantly updating to reposition each
     // model. We can start by simply cloning the start vector.
@@ -156,9 +184,9 @@ class ArModel extends BaseElement {
 
       // Apply the changes to the update vector.
       update
-        .setX(start.x + xLevel * distance.x)
-        .setY(start.y + yLevel * distance.y)
-        .setZ(start.z + zLevel * distance.z);
+        .setX(start.x + xLevel * dimensions.width)
+        .setY(start.y + yLevel * dimensions.height)
+        .setZ(start.z + zLevel * dimensions.depth);
 
       // Get the model.
       const model = this._models[i];
@@ -175,10 +203,15 @@ class ArModel extends BaseElement {
   }
 
   /**
-   *  Method to get an object describing the minimal distances between models.
+   *  Method to get an object describing certain model specific parameters.
    *  @returns    {Object}
+   *    @property {Number}      width     Size of the model along the x axis.
+   *    @property {Number}      height    Size of the model along the y axis.
+   *    @property {Number}      depth     Size of the model along the z axis.
+   *    @property {Number}      yOffset   Distance between the model and the
+   *                                      floor.
    */
-  _getDistance = () => {
+  _modelDimensions = () => {
 
     // We can use any model for this, as they all have the same source.
     const model = this._models[0];
@@ -190,50 +223,75 @@ class ArModel extends BaseElement {
       const box = new AFRAME.THREE.Box3();
       box.setFromObject(model.object3D);
 
-      // Return 125% of each dimension. That will leave 25% of the box in each
-      // dimension as a margin between models.
+      // Return dimensions based on the box model.
       return {
-        x: (box.max.x - box.min.x) * 1.25,
-        y: (box.max.y - box.min.y) * 1.25,
-        z: (box.max.z - box.min.z) * 1.25,
+
+        // Return the dimensions of the model.
+        width:    (box.max.x - box.min.x),
+        height:   (box.max.y - box.min.y),
+        depth:    (box.max.z - box.min.z),
+
+        // Include how far the left side of the model is off to the left.
+        xOffset:  box.min.x,
+
+        // Include how far the model is floating off the floor.
+        yOffset:  box.min.y,
+
+        // Include how close the front of the model is to the front.
+        zOffset:  box.min.z,
       }
     }
 
-    // Otherwise, return a default distance of 25 centimeters in all dimensions.
+    // Otherwise, return some arbitrary defaults.
     return {
-      x: 0.25,
-      y: 0.25,
-      z: 0.25,
+
+      // Assume the model is a cubic meter in size.
+      width:    1,
+      height:   1,
+      depth:    1,
+
+      // Assume the model is exactly where it says it is.
+      xOffset:  0,
+      yOffset:  0,
+      zOffset:  0,
     }
   }
 
   /**
    *  Method to add a new model.
+   *  @param    {string}      source      URL to load the model.
+   *  @returns  {Promise}
    */
-  _addModel = () => {
+  _addModel = async source => {
 
-    // Create a new GLTF model element to use in the DOM.
-    const model = document.createElement("a-gltf-model");
+    // Return a promise.
+    return new Promise((resolve, reject) => {
 
-    // Add the object class to the new element.
-    model.classList.add("arscene-object");
+      // Create a new GLTF model element to use in the DOM.
+      const model = document.createElement("a-gltf-model");
 
-    // Load the source directly onto the model.
-    model.setAttribute("src", this._source);
+      // Add the object class to the new element.
+      model.classList.add("arscene-object");
 
-    // It should be hidden by default.
-    // model.setAttribute("visible", "false");
-    model.setAttribute("visible", "true");
+      // Make sure we can see the model.
+      model.setAttribute("visible", "true");
 
-    // Add the model element to the container.
-    this._container.appendChild(model);
+      // Add the model element to the container.
+      this._container.appendChild(model);
 
-    // Add the model object to our models array.
-    this._models.push(model);
+      // Add the model object to our models array.
+      this._models.push(model);
+
+      // Resolve the promise as soon as the model has loaded.
+      model.addEventListener('model-loaded', resolve);
+
+      // Start loading the model.
+      model.setAttribute("src", source);
+    });
   }
 
   /**
-   *  Method to remove a model.
+   *  Method to remove a single model.
    */
   _removeModel = () => {
 
@@ -242,6 +300,19 @@ class ArModel extends BaseElement {
 
     // Remove the model.
     model.remove();
+  }
+
+  /**
+   *  Method to remove to remove all models.
+   *  @returns  {ArModel}
+   */
+  clear = () => {
+
+    // Keep removing models until there are none left.
+    while(this._models.length) this._removeModel();
+
+    // Allow chaining.
+    return this;
   }
 
   /**

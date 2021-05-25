@@ -37,7 +37,7 @@ class PasswordForm extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("passwordform"); // Create a change password.
+    this._container.classList.add("passwordform", "component"); // Create a change password.
 
 
     this._form = new Form(this._container, {

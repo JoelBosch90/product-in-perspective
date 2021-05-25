@@ -37,7 +37,7 @@ class Login extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("login"); // Create a login form.
+    this._container.classList.add("login", "component"); // Create a login form.
 
 
     this._form = new Form(this._container, {

@@ -89,8 +89,6 @@ module.exports = function(app, path) {
     // Listen for any errors that the database might throw.
     } catch (error) {
 
-      console.log(error);
-
       // Return the error to the client.
       return errorResponse(response, 400, error);
     }

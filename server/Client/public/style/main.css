@@ -716,16 +716,23 @@ label {
 .view {
   width: 100%;
   height: 100%;
-  padding: 0 2em;
-  box-sizing: border-box;
-  max-width: min(100%, 30em);
-  margin-left: auto;
-  margin-right: auto;
   display: flex;
 }
 .view > * {
   flex: 1;
 }
 /**
- *  This is the main import file to gather the styles for all pages.
+ *  This is the main import file to gather the styles for all components.
  */
+/**
+ *  Default styling for all components.
+ */
+.component {
+  width: 100%;
+  height: 100%;
+  padding: 0 2em;
+  box-sizing: border-box;
+  max-width: min(100%, 30em);
+  margin-left: auto;
+  margin-right: auto;
+}

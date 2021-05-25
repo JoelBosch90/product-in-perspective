@@ -51,7 +51,7 @@ class ModelForm extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("modelform"); // Create a new request object.
+    this._container.classList.add("modelform", "component"); // Create a new request object.
 
 
     this._request = new Request(); // Create the form.

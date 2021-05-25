@@ -250,7 +250,7 @@ class Representation extends BaseElement {
     }); // Add a select button to the overlay.
 
     this._selectButton = scannerOverlay.add("button", {
-      text: this._texts["scanning-button"]
+      text: this._texts["scanning-button"] || "Select"
     }); // Disable the select button by default.
 
     this._selectButton.disabled = true;
@@ -278,11 +278,9 @@ class Representation extends BaseElement {
     // If we cannot recognize this product, we can't do anything.
     if (!(data.code in this._products)) return; // No need to process if we're already showing this product.
 
-    if (this._shownProduct && data.code == this._shownProduct.code) return; // Update the shown product.
+    if (this._shownProduct && data.code == this._shownProduct.barcode) return; // Update the shown product.
 
-    this._shownProduct = this._products[data.code]; // Make sure we also remember the barcode of the shown product.
-
-    this._shownProduct.code = data.code; // Show the user the product name of the selected product. We want to remove
+    this._shownProduct = this._products[data.code]; // Show the user the product name of the selected product. We want to remove
     // the text first and reset it a moment later to trigger the animation
     // effect.
 

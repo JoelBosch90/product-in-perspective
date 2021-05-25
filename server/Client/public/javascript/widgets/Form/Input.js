@@ -341,8 +341,7 @@ class FormInput extends BaseElement {
 
 
     if (newValue === undefined) {
-      console.log(this._input); // If this input was used as a file input, return the file.
-
+      // If this input was used as a file input, return the file.
       if (this._input.type == "file") return this._input.files[0]; // Otherwise, we can simply return the value.
 
       return this._input.value;

@@ -67,8 +67,6 @@ const errorResponse = require("../tools/errorResponse");
     // The database might throw an error.
     try {
 
-      console.log(request.body);
-
       // Now we can update the product.
       const modified = await request.context.models.Product.updateOne({
         _id:  request.params.productId,

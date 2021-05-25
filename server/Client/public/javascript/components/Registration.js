@@ -41,7 +41,7 @@ class Registration extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("registration"); // Create a registration form.
+    this._container.classList.add("registration", "component"); // Create a registration form.
 
 
     this._form = new Form(this._container, {

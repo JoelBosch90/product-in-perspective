@@ -47,7 +47,7 @@ class AppForm extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("appform"); // Create a form for creating an app.
+    this._container.classList.add("appform", "component"); // Create a form for creating an app.
 
 
     this._form = new Form(this._container, {

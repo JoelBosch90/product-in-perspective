@@ -125,6 +125,7 @@ class FormFieldset extends BaseElement {
     // Allow chaining.
     return this;
   }
+
   /**
    *  Method for adding an input element to the form.
    *  @param    {string}    unprefixed  Registration name of the input. This is

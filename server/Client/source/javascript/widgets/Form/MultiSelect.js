@@ -39,25 +39,32 @@ class FormMultiSelect extends BaseElement {
 
   /**
    *  Class constructor.
-   *  @param    {Element}   parent    The parent element to which the select
-   *                                  will be added.
-   *  @param    {object}    options   Optional parameters for the select that
-   *                                  is added to the form.
-   *    @property   {string}  name      Registration name of the select. This
-   *                                    should uniquely identify the select.
-   *    @property   {string}  label     This is the label of the element that
-   *                                    will be shown to the user.
-   *    @property   {array}   options   An array of options to add to the select
-   *                                    element.
+   *  @param    {Element}   parent      The parent element to which the select
+   *                                    will be added.
+   *  @param    {object}    options     Optional parameters for the select that
+   *                                    is added to the form.
+   *    @property   {string}  name        Registration name of this input. This
+   *                                      should uniquely identify this input.
+   *    @property   {string}  label       This is the label of the element that
+   *                                      will be shown to the user.
+   *    @property   {string}  placeholder This is the placeholder option that
+   *                                      will be shown to the user.
+   *    @property   {array}   options     An array of options to add to the
+   *                                      select element.
    */
   constructor(parent, options = {}) {
 
     // First call the constructor of the base class.
     super();
 
-    // Create a container for this widget.
-    this._container = document.createElement("div");
+    // Create a container for this widget. We are going to use a few different
+    // elements that may not immediately look like they belong together. We can
+    // solve this by wrapping them in a fieldset.
+    this._container = document.createElement("fieldset");
     this._container.classList.add("multiselect");
+
+    // Add a label if provided.
+    if (options.label) this.label(options.label);
 
     // Create a select input element with the options. We don't immediately want
     // to add all options.
@@ -95,6 +102,46 @@ class FormMultiSelect extends BaseElement {
 
     // Add the the container to the parent element.
     parent.appendChild(this._container);
+  }
+
+  /**
+   *  Method for adding or updating label. Since we wrapped this input in a
+   *  fieldset we can use the legend to add a label.
+   *  @param    {string}    newLabel  Optional string for the legend text. When
+   *                                  no argument or an empty string is
+   *                                  provided, the legend will be removed.
+   *  @returns  {FormMultiSelect}
+   */
+  label = (newLabel) => {
+
+    // Do we already have a legend element?
+    if (this._legend) {
+
+      // Was a new label provided? Then we want to update the legend element.
+      if (newLabel) this._legend.textContent = newLabel;
+
+      // Was no new label provided? Then we can remove the legend element.
+      else this._legend.remove();
+
+    // Is there no legend element yet?
+    } else {
+
+      // If a new label was provided, we should create the legend element.
+      if (newLabel) {
+
+        // Create the legend.
+        this._legend = document.createElement("legend");
+
+        // Add the new label text.
+        this._legend.textContent = newLabel;
+
+        // Add the legend to the fieldset.
+        this._container.appendChild(this._legend);
+      }
+    }
+
+    // Allow chaining.
+    return this;
   }
 
   /**

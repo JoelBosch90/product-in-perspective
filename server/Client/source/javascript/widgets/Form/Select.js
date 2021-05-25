@@ -19,16 +19,16 @@ class FormSelect extends BaseElement {
 
   /**
    *  Class constructor.
-   *  @param    {Element}   parent    The parent element to which the select
-   *                                  will be added.
-   *  @param    {object}    options   Optional parameters for the select that
-   *                                  is added to the form.
-   *    @property   {string}  name      Registration name of the select. This
-   *                                    should uniquely identify the select.
-   *    @property   {string}  label     This is the label of the element that
-   *                                    will be shown to the user.
-   *    @property   {array}   options   An array of options to add to the select
-   *                                    element.
+   *  @param    {Element}   parent      The parent element to which the select
+   *                                    will be added.
+   *  @param    {object}    options     Optional parameters for the select that
+   *                                    is added to the form.
+   *    @property   {string}  name        Registration name of the select. This
+   *                                      should uniquely identify the select.
+   *    @property   {string}  placeholder This is the placeholder option that
+   *                                      will be shown to the user.
+   *    @property   {array}   options     An array of options to add to the
+   *                                      select element.
    */
   constructor(parent, options = {}) {
 
@@ -47,20 +47,20 @@ class FormSelect extends BaseElement {
     if (options.disabled) this.disabled(options.disabled);
     if (options.multiple) this._container.setAttribute("multiple", true);
 
-    // Should we set a label?
-    if (options.label) {
+    // Should we set a placeholder?
+    if (options.placeholder) {
 
-      // Add the label as a disabled option to get a placeholder value.
-      const label = this.addOption('', options.label);
+      // Add the placeholder as a disabled option to get a placeholder value.
+      const placeholder = this.addOption('', options.placeholder);
 
       // Make sure this is the one that's selected by default.
-      label.selected = true;
+      placeholder.selected = true;
 
       // Make sure it cannot be selected.
-      label.disabled = true;
+      placeholder.disabled = true;
 
       // Make sure it is hidden in the dropdown menu.
-      label.hidden = true;
+      placeholder.hidden = true;
     }
 
     // Add all the options we get.
@@ -86,7 +86,10 @@ class FormSelect extends BaseElement {
     // If used as a getter, return the value of the input.
     if (newValue === undefined) {
 
-      // Don't return a value for the label option.
+      // Don't return anything if no selection was made.
+      if (!this._container.selectedOptions.length) return '';
+
+      // Don't return a value for the placeholder option.
       if (this._container.selectedOptions[0].disabled) return '';
 
       // Otherwise, we can return the value.
@@ -101,7 +104,7 @@ class FormSelect extends BaseElement {
   }
 
   /**
-   *  Method for getting the label of the currently selected option.
+   *  Method for getting the label of the currently selected options.
    *  @returns   {array}
    */
   labels = () => {

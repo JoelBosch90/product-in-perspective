@@ -69,7 +69,7 @@ class ProductForm extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("productform"); // Create a new request object.
+    this._container.classList.add("productform", "component"); // Create a new request object.
 
 
     this._request = new Request(); // Create the form.
@@ -148,13 +148,14 @@ class ProductForm extends BaseElement {
     // reference that we can load the options to later on.
 
     this._modelsSelect = this._form.addInput("models", {
-      label: "Select model ...",
+      label: "Models",
+      placeholder: "Select model ...",
       type: "multiselect"
     }); // Create the select input for the apps seperately so that we can save a
     // reference that we can load the options to later on.
 
     this._appsSelect = this._form.addInput("app", {
-      label: "Select app ..",
+      placeholder: "Select app ..",
       type: "select"
     }); // We want to add the button at the bottom of the form.
 
