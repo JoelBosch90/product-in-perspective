@@ -41,6 +41,12 @@ class FormFieldset extends BaseElement {
   _buttons = {};
 
   /**
+   *  We need to be able to access the prefix is several methods.
+   *  @var      {string}
+   */
+  _prefix = null;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element to which the fieldset
    *                                  will be added.
@@ -69,13 +75,13 @@ class FormFieldset extends BaseElement {
     // We want to prefix the names of all inputs, fieldsets and buttons in this
     // fieldset with the fieldset's name because these names might not be unique
     // in the larger context of the form.
-    const prefix = options.name + '-';
+    this._prefix = options.name + '-';
 
     // Add all provided buttons, fieldsets, and inputs to the form. We want to
     // make sure add the prefix.
-    if (options.inputs) for (const input of options.inputs) this.addInput(prefix + input.name, input.options);
-    if (options.fieldsets) for (const fieldset of options.fieldsets) this.addFieldset(prefix + fieldset.name, fieldset.options);
-    if (options.buttons) for (const button of options.buttons) this.addButton(prefix+ button.name, button.options);
+    if (options.inputs) for (const input of options.inputs) this.addInput(input.name, input.options);
+    if (options.fieldsets) for (const fieldset of options.fieldsets) this.addFieldset(fieldset.name, fieldset.options);
+    if (options.buttons) for (const button of options.buttons) this.addButton(button.name, button.options);
 
     // Add the input element to the parent element.
     parent.appendChild(this._container);
@@ -121,18 +127,21 @@ class FormFieldset extends BaseElement {
   }
   /**
    *  Method for adding an input element to the form.
-   *  @param    {string}    name      Registration name of the input. This is
-   *                                  also used in the API call and should
-   *                                  uniquely identify the input.
-   *  @param    {object}    options   Optional parameters for the element that
-   *                                  is added to the form.
-   *    @property   {string}  type      This is the type of input element.
-   *                                    Default: 'text'
-   *    @property   {string}  label     This is the label of the element that
-   *                                    will be shown to the user.
+   *  @param    {string}    unprefixed  Registration name of the input. This is
+   *                                    also used in the API call and should
+   *                                    uniquely identify the input.
+   *  @param    {object}    options     Optional parameters for the element that
+   *                                    is added to the form.
+   *    @property   {string}  type        This is the type of input element.
+   *                                      Default: 'text'
+   *    @property   {string}  label       This is the label of the element that
+   *                                      will be shown to the user.
    *  @returns  {FormInput}
    */
-  addInput = (name, options = {}) => {
+  addInput = (unprefixed, options = {}) => {
+
+    // Add the prefix to the name.
+    const name = this._prefix + unprefixed;
 
     // Create an input element.
     const input = new FormInput(this._container, Object.assign({}, options, { name }));
@@ -150,19 +159,22 @@ class FormFieldset extends BaseElement {
 
   /**
    *  Method for adding a fieldset element to the form.
-   *  @param    {string}    name      Registration name of the fieldset. This
-   *                                  should uniquely identify the fieldset.
-   *  @param    {object}    options   Optional parameters for the fieldset that
-   *                                  is added to the form.
-   *    @property   {string}  legend    This is the main label that is added to
-   *                                    the fieldset.
-   *    @property   {array}   buttons   Optional array of buttons that are
-   *                                    immediately added to the fieldset.
-   *    @property   {array}   inputs    Optional array of inputs that are
-   *                                    immediately added to the fieldset.
+   *  @param    {string}    unprefixed  Registration name of the fieldset. This
+   *                                    should uniquely identify the fieldset.
+   *  @param    {object}    options     Optional parameters for the fieldset
+   *                                    that is added to the form.
+   *    @property   {string}  legend      This is the main label that is added
+   *                                      to the fieldset.
+   *    @property   {array}   buttons     Optional array of buttons that are
+   *                                      immediately added to the fieldset.
+   *    @property   {array}   inputs      Optional array of inputs that are
+   *                                      immediately added to the fieldset.
    *  @returns  {FormFieldset}
    */
-  addFieldset = (name, options = {}) => {
+  addFieldset = (unprefixed, options = {}) => {
+
+    // Add the prefix to the name.
+    const name = this._prefix + unprefixed;
 
     // Create a fieldset element. Also provide the name to the field set.
     const fieldset = new FormFieldset(this._container, Object.assign({}, options, { name }));
@@ -180,17 +192,20 @@ class FormFieldset extends BaseElement {
 
   /**
    *  Method for adding a button to the form.
-   *  @param    {string}    name      Registration name of the button.
-   *  @param    {object}    options   Optional parameters for the element that
-   *                                  is added to the form.
-   *    @property   {string}  element   This is the name of the element that is
-   *                                    added.
-   *                                    Default: 'text'
-   *    @property   {string}  label     This is the label of the element that
-   *                                    will be shown to the user.
+   *  @param    {string}    unprefixed  Registration name of the button.
+   *  @param    {object}    options     Optional parameters for the element that
+   *                                    is added to the form.
+   *    @property   {string}  element     This is the name of the element that
+   *                                      is added.
+   *                                      Default: 'text'
+   *    @property   {string}  label       This is the label of the element that
+   *                                      will be shown to the user.
    *  @returns  {Button}
    */
-  addButton = (name, options = {}) => {
+  addButton = (unprefixed, options = {}) => {
+
+    // Add the prefix to the name.
+    const name = this._prefix + unprefixed;
 
     // Create an button element.
     const button = new Button(this._container, Object.assign({}, options, { name }));
@@ -209,11 +224,34 @@ class FormFieldset extends BaseElement {
   /**
    *  Method for setting the values of all input elements in this fieldset.
    *
+   *  @getter
+   *    @returns  {Object}
+   *
    *  @setter
-   *    @param    {object}  newData  The new data to be used as inputs.
+   *    @param    {Object}  newData  The new data to be used as inputs.
    *    @return   {Form}
    */
   values = newData => {
+
+    // Is this used as a getter?
+    if (newData === undefined) {
+
+      // Start a new data object.
+      const data = {};
+
+      // Add the data from all inputs to the data object.
+      for (const [name, widget] of Object.entries(this._inputs)) data[name] = widget.value();
+
+      // Also add the data of all fieldsets to the data object.
+      for (const [name, widget] of Object.entries(this._fieldsets)) {
+
+        // Merge the data object with the fieldset data.
+        Object.assign(data, widget.values());
+      }
+
+      // Return the entire data object.
+      return data;
+    }
 
     // Loop through all information we got to see if we should prefill an
     // input field.
@@ -250,7 +288,7 @@ class FormFieldset extends BaseElement {
     if (disable === undefined) return this._container.disabled;
 
     // Set the requested attribute.
-    this._container.setAttribute("disabled", disable);
+    this._container.disabled = disable;
 
     // Allow chaining.
     return this;

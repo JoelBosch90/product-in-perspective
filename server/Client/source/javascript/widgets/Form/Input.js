@@ -1,6 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { FormSelect } from "/javascript/widgets/Form/Select.js";
+import { FormMultiSelect } from "/javascript/widgets/Form/MultiSelect.js";
 
 /**
  *  The definition of the Input class that can be used to create input elements.
@@ -61,6 +62,9 @@ class FormInput extends BaseElement {
 
       // Should we create a select element?
       case "select": this._createSelect(parent, options); break;
+
+      // Should we create a multiselect element?
+      case "multiselect": this._createMultiSelect(parent, options); break;
 
       // Otherwise, create a default input element.
       default: this._createInput(parent, options);
@@ -210,13 +214,13 @@ class FormInput extends BaseElement {
     this._container.classList.add("file-button");
 
     // Create the input element.
-    const input = document.createElement("input");
-    input.id = this._id;
-    input.name = options.name;
-    input.setAttribute("type", options.type);
+    this._input = document.createElement("input");
+    this._input.id = this._id;
+    this._input.name = options.name;
+    this._input.setAttribute("type", options.type);
 
     // Install the optional attributes.
-    if (options.accept) input.setAttribute("accept", options.accept);
+    if (options.accept) this._input.setAttribute("accept", options.accept);
     if (options.required) this._container.setAttribute("required", true);
     if (options.disabled) this.disabled(options.disabled);
 
@@ -231,10 +235,10 @@ class FormInput extends BaseElement {
 
     // Listen for when a file is selected. We want to show the filename for
     // selected files.
-    input.addEventListener("change", () => {
+    this._input.addEventListener("change", () => {
 
       // Get the list of selected files.
-      const selected = input.files;
+      const selected = this._input.files;
 
       // Install the label when no files are selected.
       if (!selected.length) label.textContent = options.label;
@@ -249,7 +253,7 @@ class FormInput extends BaseElement {
     })
 
     // Add the input element and the label directly to the parent element.
-    this._container.appendChild(input);
+    this._container.appendChild(this._input);
     this._container.appendChild(label);
     parent.appendChild(this._container);
   }
@@ -271,6 +275,25 @@ class FormInput extends BaseElement {
 
     // Create the select element.
     this._container = new FormSelect(parent, options);
+  }
+
+  /**
+   *  Private method for creating a multiselect element.
+   *  @param    {Element}   parent    The parent element to which the
+   *                                  multiselect element will be added.
+   *  @param    {object}    options   Optional parameters for the element that
+   *                                  is added to the form.
+   *    @property   {string}  name      Registration name of the input. This
+   *                                    should uniquely identify the the.
+   *    @property   {array}   options   An array of options to add to the
+   *                                    multiselect element.
+   *    @property   {string}  label     This is the label of the element that
+   *                                    will be shown to the user.
+   */
+  _createMultiSelect = (parent, options) => {
+
+    // Create the multiselect element.
+    this._container = new FormMultiSelect(parent, options);
   }
 
   /**
@@ -301,7 +324,8 @@ class FormInput extends BaseElement {
   value = newValue => {
 
     // If we are using a different object, we should relay to that.
-    if (this._container instanceof FormSelect) {
+    if (this._container instanceof FormSelect
+     || this._container instanceof FormMultiSelect) {
 
       // If used as a getter, return the value of the select.
       if (newValue === undefined) return this._container.value();
@@ -314,7 +338,14 @@ class FormInput extends BaseElement {
     }
 
     // If used as a getter, return the value of the input.
-    if (newValue === undefined) return this._input.value;
+    if (newValue === undefined) {
+
+      // If this input was used as a file input, return the file.
+      if (this._input.type == "file") return this._input.files[0];
+
+      // Otherwise, we can simply return the value.
+      return this._input.value;
+    }
 
     // Set the requested value.
     this._input.value = newValue;
@@ -353,7 +384,7 @@ class FormInput extends BaseElement {
     if (disable === undefined) return this._input.disabled;
 
     // Set the requested attribute.
-    this._input.setAttribute("disabled", disable);
+    this._input.disabled = disable;
 
     // Allow chaining.
     return this;

@@ -31,12 +31,12 @@ const productSchema = new mongoose.Schema({
       required: [true, "Every product requires an app."],
     },
 
-    // Every product should be connected to a single model.
-    model: {
+    // Every product should be connected to a one or more models.
+    models: [{
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'Model',
       required: [true, "Every product requires a model."],
-    },
+    }],
 
     // Every product should also be connected to a single user.
     user: {

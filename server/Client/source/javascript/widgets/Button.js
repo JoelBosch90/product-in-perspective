@@ -19,9 +19,6 @@ class Button extends BaseElement {
    *                                  element will be added.
    *  @param    {object}    options   Optional parameters for the element that
    *                                  is added to the form.
-   *    @property   {string}  name      Registration name of the input. This is
-   *                                    also used in the API call and should
-   *                                    uniquely identify the input.
    *    @property   {string}  type      This is the type of the button that is
    *                                    added.
    *                                    Default: 'text'
@@ -75,7 +72,7 @@ class Button extends BaseElement {
     if (disable === undefined) return this._container.disabled;
 
     // Set the requested attribute.
-    this._container.setAttribute("disabled", disable);
+    this._container.disabled = disable;
 
     // Allow chaining.
     return this;

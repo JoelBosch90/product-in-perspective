@@ -150,36 +150,6 @@ class AppForm extends BaseElement {
             ],
           },
         },
-        {
-          name: "viewing",
-          options: {
-            legend: "Texts in viewing mode",
-            inputs: [
-              {
-                name: "title",
-                options: {
-                  label:  "Title",
-                  type:   "text",
-                },
-              },
-              {
-                name: "description",
-                options: {
-                  label:  "Description",
-                  type:   "textarea",
-                },
-              },
-              {
-                name: "button",
-                options: {
-                  label:    "Button",
-                  type:     "text",
-                  required: true,
-                },
-              },
-            ],
-          },
-        },
       ],
       buttons: [
         {

@@ -97,8 +97,39 @@ class ModelForm extends BaseElement {
           // accept: ".glTF",
           type: "file"
         }
+      }, {
+        name: "multiplier",
+        options: {
+          label: "Multiplier",
+          type: "number"
+        }
       }],
-      fieldsets: [],
+      fieldsets: [{
+        name: "viewing",
+        options: {
+          legend: "Texts in viewing mode",
+          inputs: [{
+            name: "title",
+            options: {
+              label: "Title",
+              type: "text"
+            }
+          }, {
+            name: "description",
+            options: {
+              label: "Description",
+              type: "textarea"
+            }
+          }, {
+            name: "button",
+            options: {
+              label: "Button",
+              type: "text",
+              required: true
+            }
+          }]
+        }
+      }],
       buttons: [{
         name: "submit",
         options: {

@@ -27,7 +27,9 @@ const errorResponse = require("../tools/errorResponse");
       // Get a list of all products for this user.
       const products = await request.context.models.Product.find({
         user: request.context.user
-      });
+
+      // Provide the information for all models in one go.
+      }).populate('models');
 
       // Check if we did indeed find the products.
       if (!products) return  errorResponse(response, 404, "Products could not be found.");

@@ -190,7 +190,8 @@ class ArModel extends BaseElement {
       const box = new AFRAME.THREE.Box3();
       box.setFromObject(model.object3D);
 
-      // Return 125% of each dimension.
+      // Return 125% of each dimension. That will leave 25% of the box in each
+      // dimension as a margin between models.
       return {
         x: (box.max.x - box.min.x) * 1.25,
         y: (box.max.y - box.min.y) * 1.25,
@@ -198,9 +199,7 @@ class ArModel extends BaseElement {
       }
     }
 
-    console.log("failed");
-
-    // Otherwise, return a default distance of 20 centimeters in all dimensions.
+    // Otherwise, return a default distance of 25 centimeters in all dimensions.
     return {
       x: 0.25,
       y: 0.25,

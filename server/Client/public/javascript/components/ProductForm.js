@@ -88,7 +88,7 @@ class ProductForm extends BaseElement {
 
         for (const model of models) {
           // Add the model to the select input.
-          this._modelsSelect.addOption(model.name, model._id);
+          this._modelsSelect.addOption(model._id, model.name);
         }
       });
     }); // Secondlly, request a list of all apps. Store the promise.
@@ -102,7 +102,7 @@ class ProductForm extends BaseElement {
 
         for (const app of apps) {
           // Add the app to the select input.
-          this._appsSelect.addOption(app.name, app._id);
+          this._appsSelect.addOption(app._id, app.name);
         }
       });
     });
@@ -147,9 +147,9 @@ class ProductForm extends BaseElement {
     }); // Create the select input for the models seperately so that we can save a
     // reference that we can load the options to later on.
 
-    this._modelsSelect = this._form.addInput("model", {
+    this._modelsSelect = this._form.addInput("models", {
       label: "Select model ...",
-      type: "select"
+      type: "multiselect"
     }); // Create the select input for the apps seperately so that we can save a
     // reference that we can load the options to later on.
 

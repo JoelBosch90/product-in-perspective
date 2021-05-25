@@ -198,7 +198,11 @@ input[type="file"] + label[type="remove"] {
 button[type="cancel"],
 a.button[type="cancel"],
 input[type="submit"][type="cancel"],
-input[type="file"] + label[type="cancel"] {
+input[type="file"] + label[type="cancel"],
+button[type="reset"],
+a.button[type="reset"],
+input[type="submit"][type="reset"],
+input[type="file"] + label[type="reset"] {
   background-color: var(--border-color);
 }
 button:disabled,
@@ -532,6 +536,37 @@ label {
 }
 .error-display:empty {
   display: none;
+}
+/**
+ *  MultiSelect
+ *    This file installs the styling for our custom MultiSelect class.
+ */
+.multiselect {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "select       add" "selections   selections" "buttons      buttons";
+  gap: 1.25em;
+}
+.multiselect select {
+  grid-area: select;
+}
+.multiselect .selections {
+  grid-area: selections;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+.multiselect .selections .selection {
+  background-color: var(--alternate-background);
+  padding: 0.25em 0.75em;
+  border-radius: 0.25em;
+  margin: 0;
+}
+.multiselect button:first-of-type {
+  grid-area: add;
+}
+.multiselect button:not(:first-of-type) {
+  grid-area: buttons;
 }
 /**
  *  Main styling for the Menu class.

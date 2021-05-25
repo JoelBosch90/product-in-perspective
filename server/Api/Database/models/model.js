@@ -11,7 +11,7 @@ const modelSchema = new mongoose.Schema({
     // Users recognize their models by their name. These names should be unique
     // per user, but do not need to be unique across all models.
     name: {
-      type: String,
+      type:     String,
       required: [true, "Every model requires a name."],
     },
 
@@ -20,6 +20,28 @@ const modelSchema = new mongoose.Schema({
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'User',
       required: [true, "Every model requires a user."],
+    },
+
+    // Users can set a multiplier for each model to determine how many copies of
+    // this model should be shown at a time. By default, it shows only once.
+    multiplier: {
+      type:     Number,
+      default:  1,
+    },
+
+    // The user can determine the texts of the title, description and button
+    // while the user is viewing the 3D model.
+    "viewing-title": {
+      type: String,
+      required: false,
+    },
+    "viewing-description": {
+      type: String,
+      required: false,
+    },
+    "viewing-button": {
+      type: String,
+      required: [true, "Every model requires a button for viewing mode."],
     },
   },
 

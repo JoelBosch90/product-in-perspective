@@ -314,10 +314,20 @@ class Form extends BaseElement {
   values = newData => {
     // Is this used as a getter?
     if (newData === undefined) {
-      // Get the data from the form.
-      const data = new FormData(this._container); // Convert the data to an object and return that.
+      // Start a new data object.
+      const data = {}; // Add the data from all inputs to the data object.
 
-      return Object.fromEntries(data.entries());
+      for (const [name, widget] of Object.entries(this._inputs)) data[name] = widget.value(); // Also add the data of all fieldsets to the data object.
+
+
+      for (const [name, widget] of Object.entries(this._fieldsets)) {
+        // Merge the data object with the fieldset data.
+        Object.assign(data, widget.values());
+      }
+
+      console.log("Form::values", data); // Return the entire data object.
+
+      return data;
     } // Loop through all information we got to see if we should prefill an
     // input field.
 

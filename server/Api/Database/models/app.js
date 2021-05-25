@@ -68,21 +68,6 @@ const appSchema = new mongoose.Schema({
       required: [true, "Every app requires a button for placing mode."],
     },
 
-    // The user can determine the texts of the title, description and button
-    // while the user is viewing the 3D model.
-    "viewing-title": {
-      type: String,
-      required: false,
-    },
-    "viewing-description": {
-      type: String,
-      required: false,
-    },
-    "viewing-button": {
-      type: String,
-      required: [true, "Every app requires a button for viewing mode."],
-    },
-
     // Every app should be connected to a single user.
     user: {
       type:     mongoose.Schema.Types.ObjectId,

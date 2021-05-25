@@ -67,6 +67,8 @@ const errorResponse = require("../tools/errorResponse");
     // The database might throw an error.
     try {
 
+      console.log(request.body);
+
       // Now we can update the product.
       const modified = await request.context.models.Product.updateOne({
         _id:  request.params.productId,
@@ -106,7 +108,9 @@ const errorResponse = require("../tools/errorResponse");
       // Get the requested product.
       const product = await request.context.models.Product.findOne({
         _id: request.params.productId
-      });
+
+      // Provide the information for all models as well.
+      }).populate('models');
 
       // Check if we did indeed find the product.
       if (!product) return  errorResponse(response, 404, "Product could not be found.");
