@@ -183,14 +183,12 @@ class FormMultiSelect extends BaseElement {
 
   _checkAddState = () => {
     // See which option is currently being selected.
-    const option = this._select.value();
+    const option = this._select.value(); // Don't select the default selection.
 
-    console.log("::_checkAddState option", option); // Don't select the default selection.
 
     if (!option) return this._add.disabled(true); // Check if this option is already selected.
 
-    const selected = this.value().includes(option);
-    console.log("::_checkAddState selected", selected); // The user should be able to add new selections only when they're not
+    const selected = this.value().includes(option); // The user should be able to add new selections only when they're not
     // already selected.
 
     return this._add.disabled(selected);
