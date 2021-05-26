@@ -142,6 +142,9 @@ class Representation extends BaseElement {
           // Now start the barcode scanner and the augmented reality scene.
           this._loadBarcodeScanner()
           this._loadArScene();
+
+          // Check if there's already a barcode available in the URL.
+          this._getProductFromUrl();
         });
       });
     });
@@ -152,9 +155,6 @@ class Representation extends BaseElement {
     // Create a container for the overlay.
     this._container = document.createElement("div");
     this._container.classList.add("representation");
-
-    // Check if there's already a barcode available in the URL.
-    this._getProductFromUrl();
 
     // Add the overlay to the parent container.
     parent.appendChild(this._container);
@@ -170,8 +170,6 @@ class Representation extends BaseElement {
 
     // Get the product parameter.
     const code = url.searchParams.get('product');
-
-    console.log(url, code);
 
     // Wait for the products to load.
     this._productsPromise.then(() => {

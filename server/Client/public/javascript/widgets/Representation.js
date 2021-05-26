@@ -132,7 +132,10 @@ class Representation extends BaseElement {
 
           this._loadBarcodeScanner();
 
-          this._loadArScene();
+          this._loadArScene(); // Check if there's already a barcode available in the URL.
+
+
+          this._getProductFromUrl();
         });
       });
     }); // Start loading after we've installed the event listener.
@@ -143,10 +146,7 @@ class Representation extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("representation"); // Check if there's already a barcode available in the URL.
-
-
-    this._getProductFromUrl(); // Add the overlay to the parent container.
+    this._container.classList.add("representation"); // Add the overlay to the parent container.
 
 
     parent.appendChild(this._container);
@@ -160,8 +160,7 @@ class Representation extends BaseElement {
     // Get a current URL object.
     const url = new URL(window.location.href); // Get the product parameter.
 
-    const code = url.searchParams.get('product');
-    console.log(url, code); // Wait for the products to load.
+    const code = url.searchParams.get('product'); // Wait for the products to load.
 
     this._productsPromise.then(() => {
       // Then immediately process the barcode from the URL.
