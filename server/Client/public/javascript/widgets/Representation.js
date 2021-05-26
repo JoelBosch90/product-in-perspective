@@ -143,11 +143,33 @@ class Representation extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("representation"); // Add the overlay to the parent container.
+    this._container.classList.add("representation"); // Check if there's already a barcode available in the URL.
+
+
+    this._getProductFromUrl(); // Add the overlay to the parent container.
 
 
     parent.appendChild(this._container);
   }
+  /**
+   *  Helper method to get a product barcode from the URL parameters.
+   */
+
+
+  _getProductFromUrl = () => {
+    // Get a current URL object.
+    const url = new URL(window.location.href); // Get the product parameter.
+
+    const code = url.searchParams.get('product');
+    console.log(url, code); // Wait for the products to load.
+
+    this._productsPromise.then(() => {
+      // Then immediately process the barcode from the URL.
+      this._processBarcode({
+        code
+      });
+    });
+  };
   /**
    *  In order to facilitate fullscreen, we're immitating the 'a-fullscreen'
    *  class that Aframe likes to add to the HTML element, but we only want to
@@ -156,7 +178,6 @@ class Representation extends BaseElement {
    *
    *  This method sets that class on the HTML element.
    */
-
 
   _enableFullscreen = () => {
     // Get the HTML element.
