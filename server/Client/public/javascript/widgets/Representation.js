@@ -257,7 +257,9 @@ class Representation extends BaseElement {
     scannerOverlay.add("h1", {
       text: this._texts["scanning-title"],
       location: "top"
-    }); // Add an instruction to the overlay.
+    });
+    console.log(this._texts);
+    document.getElementsByTagName("title")[0].textContent = this._texts["name"]; // Add an instruction to the overlay.
 
     scannerOverlay.add("p", {
       text: this._texts["scanning-description"],
