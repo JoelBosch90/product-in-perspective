@@ -110,6 +110,13 @@ class ModelForm extends BaseElement {
             type:     "number",
           },
         },
+        {
+          name:   "scale",
+          options:  {
+            label:    "Scale",
+            type:     "number",
+          },
+        },
       ],
       fieldsets: [
         {

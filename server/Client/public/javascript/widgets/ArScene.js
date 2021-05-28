@@ -395,7 +395,7 @@ class ArScene extends BaseElement {
     // Get the current model.
     const source = this._product.models[this._modelIndex]; // Load the model source.
 
-    this._model.update(source._id, source.multiplier) // Wait for the model to load to set the model's position and rotation.
+    this._model.update(source._id, source.multiplier, source.scale) // Wait for the model to load to set the model's position and rotation.
     .then(() => {
       // If this is not the first model we're showing, it's already got the
       // correct position and rotation and we don't need to provide it again.

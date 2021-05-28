@@ -251,15 +251,15 @@ class Representation extends BaseElement {
     this._scanner.on('scanned', this._processBarcode); // Get the overlay of the barcode scanner, so that we can configure it here.
 
 
-    const scannerOverlay = this._scanner.overlay(); // Add a title to the overlay.
+    const scannerOverlay = this._scanner.overlay(); // Set the app's name as the page title.
 
+
+    document.getElementsByTagName("title")[0].textContent = this._texts["name"]; // Add a title to the overlay.
 
     scannerOverlay.add("h1", {
       text: this._texts["scanning-title"],
       location: "top"
-    });
-    console.log(this._texts);
-    document.getElementsByTagName("title")[0].textContent = this._texts["name"]; // Add an instruction to the overlay.
+    }); // Add an instruction to the overlay.
 
     scannerOverlay.add("p", {
       text: this._texts["scanning-description"],

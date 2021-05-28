@@ -74,11 +74,13 @@ class ArModel extends BaseElement {
    *  Method to update the parameters of this model.
    *  @param    {string}    model       The object ID.
    *  @param    {Number}    number      The number of objects we should spawn.
+   *  @param    {Number}    scale       The scale at which the model should be
+   *                                    shown.
    *  @returns  {Promise}
    */
 
 
-  update = async (model, number = 1) => {
+  update = async (model, number = 1, scale = 1) => {
     // Hide the model while updating.
     this.hide(); // Update the source and the distance.
 
@@ -89,7 +91,7 @@ class ArModel extends BaseElement {
 
     const promises = []; // Start adding models.
 
-    for (let i = 0; i < number; i++) promises.push(this._addModel(source)); // Return the promise that all models have loaded.
+    for (let i = 0; i < number; i++) promises.push(this._addModel(source, scale)); // Return the promise that all models have loaded.
 
 
     return Promise.all(promises) // Wait for all models to load.
@@ -210,10 +212,11 @@ class ArModel extends BaseElement {
   /**
    *  Method to add a new model.
    *  @param    {string}      source      URL to load the model.
+   *  @param    {string}      scale       Scale at which to display the model.
    *  @returns  {Promise}
    */
 
-  _addModel = async source => {
+  _addModel = async (source, scale) => {
     // Return a promise.
     return new Promise((resolve, reject) => {
       // Create a new GLTF model element to use in the DOM.
@@ -221,7 +224,9 @@ class ArModel extends BaseElement {
 
       model.classList.add("arscene-object"); // Make sure we can see the model.
 
-      model.setAttribute("visible", "true"); // Add the model element to the container.
+      model.setAttribute("visible", "true"); // Set the model scaling.
+
+      model.object3D.scale.set(scale, scale, scale); // Add the model element to the container.
 
       this._container.appendChild(model); // Add the model object to our models array.
 

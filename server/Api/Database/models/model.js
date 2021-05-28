@@ -29,6 +29,13 @@ const modelSchema = new mongoose.Schema({
       default:  1,
     },
 
+    // Users can set a scale for each model to show the model. By default, it
+    // should scale 1:1.
+    scale: {
+      type:     Number,
+      default:  1,
+    },
+
     // The user can determine the texts of the title, description and button
     // while the user is viewing the 3D model.
     "viewing-title": {
