@@ -96,6 +96,8 @@ class FormInput extends BaseElement {
    *                                    added.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {string}  step      Applicable to number only: by which
+   *                                    increment should the number increase?
    *    @property   {boolean} disabled  Should this input be disabled by
    *                                    default?
    */
@@ -118,6 +120,7 @@ class FormInput extends BaseElement {
     // Install the optional attributes.
     if (options.required) this._input.setAttribute("required", true);
     if (options.disabled) this.disabled(options.disabled);
+    if (options.step) this._input.setAttribute("step", options.step);
 
     // Create the label element.
     this._label = document.createElement("label");

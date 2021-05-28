@@ -115,6 +115,7 @@ class ModelForm extends BaseElement {
           options:  {
             label:    "Scale",
             type:     "number",
+            step:     "any",
           },
         },
       ],

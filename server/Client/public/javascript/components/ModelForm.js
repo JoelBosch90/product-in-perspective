@@ -107,7 +107,8 @@ class ModelForm extends BaseElement {
         name: "scale",
         options: {
           label: "Scale",
-          type: "number"
+          type: "number",
+          step: "any"
         }
       }],
       fieldsets: [{
