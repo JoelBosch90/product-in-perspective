@@ -41,16 +41,16 @@ const menu = new Menu(container, {
   // profile page to edit his account information.
   navigation: new Map([
     ['Apps', '/admin/apps'],
-    ['Models', '/admin/models'],
     ['Products', '/admin/products'],
+    ['Models', '/admin/models'],
     ['Profile', '/admin/profile'],
   ]),
 
   // Add quick shortcuts to allow the users to quickly create new objects.
   shortcuts: new Map([
     ['Add app', '/admin/app/new'],
-    ['Add model', '/admin/model/new'],
     ['Add product', '/admin/product/new'],
+    ['Add model', '/admin/model/new'],
   ]),
 });
 
