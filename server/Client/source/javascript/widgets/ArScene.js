@@ -392,6 +392,9 @@ class ArScene extends BaseElement {
    */
   _placeModel = () => {
 
+    // We need to disable the proceed button when the reticle is hidden.
+    this._startReticleSync();
+
     // Reset the model index.
     this._modelIndex = -1;
 
@@ -415,6 +418,9 @@ class ArScene extends BaseElement {
    *  Private method to proceed to the mode for viewing the placed object.
    */
   _showModel = () => {
+
+    // We need to stop synchronizing the reticle with the proceed button.
+    this._stopReticleSync();
 
     // Get the current model.
     const source = this._product.models[this._modelIndex];
@@ -466,23 +472,10 @@ class ArScene extends BaseElement {
     this._modelIndex += 1;
 
     // Do we still have a valid index?
-    if (this._modelIndex < this._product.models.length) {
-
-      // We need to stop synchronizing the reticle with the proceed button.
-      this._stopReticleSync();
-
-      // Go to showing mode.
-      this._showModel();
+    if (this._modelIndex < this._product.models.length) this._showModel();
 
     // Otherwise, we can go back to placing a model.
-    } else {
-
-      // We need to disable the proceed button when the reticle is hidden.
-      this._startReticleSync();
-
-      // Go to placing mode.
-      this._placeModel();
-    }
+    else this._placeModel();
 
     // Allow chaining.
     return this;

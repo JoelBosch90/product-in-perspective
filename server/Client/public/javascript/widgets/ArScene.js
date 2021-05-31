@@ -372,7 +372,10 @@ class ArScene extends BaseElement {
    */
 
   _placeModel = () => {
-    // Reset the model index.
+    // We need to disable the proceed button when the reticle is hidden.
+    this._startReticleSync(); // Reset the model index.
+
+
     this._modelIndex = -1; // We need the reticle to show.
 
     this._reticle.show(); // Make sure the 3D object is not visible.
@@ -392,7 +395,10 @@ class ArScene extends BaseElement {
    */
 
   _showModel = () => {
-    // Get the current model.
+    // We need to stop synchronizing the reticle with the proceed button.
+    this._stopReticleSync(); // Get the current model.
+
+
     const source = this._product.models[this._modelIndex]; // Load the model source.
 
     this._model.update(source._id, source.multiplier, source.scale) // Wait for the model to load to set the model's position and rotation.
@@ -431,21 +437,8 @@ class ArScene extends BaseElement {
     // Increment the index of the model we are showing.
     this._modelIndex += 1; // Do we still have a valid index?
 
-    if (this._modelIndex < this._product.models.length) {
-      // We need to stop synchronizing the reticle with the proceed button.
-      this._stopReticleSync(); // Go to showing mode.
-
-
-      this._showModel(); // Otherwise, we can go back to placing a model.
-
-    } else {
-      // We need to disable the proceed button when the reticle is hidden.
-      this._startReticleSync(); // Go to placing mode.
-
-
-      this._placeModel();
-    } // Allow chaining.
-
+    if (this._modelIndex < this._product.models.length) this._showModel(); // Otherwise, we can go back to placing a model.
+    else this._placeModel(); // Allow chaining.
 
     return this;
   };
