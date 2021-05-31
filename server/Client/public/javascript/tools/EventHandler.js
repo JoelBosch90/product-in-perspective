@@ -46,7 +46,7 @@ class EventHandler {
 
   trigger = (event, data) => {
     // We only know how to handle string events.
-    if (!typeof event == "string") return; // Execute each registered callback function for this event.
+    if (!typeof event == "string") return this; // Execute each registered callback function for this event.
 
     if (this._triggers[event]) this._triggers[event].forEach(listener => void listener(data)); // Trigger the same event on all other handlers we want to bubble to.
 
@@ -62,7 +62,7 @@ class EventHandler {
 
   bubbleTo = handler => {
     // We only know how to handle EventHandler objects.
-    if (!handler instanceof EventHandler) return; // Add this EventHandler to the bubbleTo list.
+    if (!handler instanceof EventHandler) return this; // Add this EventHandler to the bubbleTo list.
 
     this._bubbleTo.push(handler); // Allow chaining;
 
@@ -78,7 +78,7 @@ class EventHandler {
 
   bubbleOff = handler => {
     // We only know how to handle EventHandler objects.
-    if (!handler instanceof EventHandler) return; // Remove this EventHandler from the bubbleTo list.
+    if (!handler instanceof EventHandler) return this; // Remove this EventHandler from the bubbleTo list.
 
     this._bubbleTo = this._bubbleTo.filter(bubbled => bubbled != handler); // Allow chaining;
 
@@ -95,7 +95,7 @@ class EventHandler {
 
   on = (event, listener) => {
     // We only know how to handle string events.
-    if (!typeof event == "string") return; // If no listeners exist for this event, create an array to house them.
+    if (!typeof event == "string") return this; // If no listeners exist for this event, create an array to house them.
 
     if (this._triggers[event] == undefined) this._triggers[event] = []; // Add this callback to the list for this event.
 
@@ -115,10 +115,10 @@ class EventHandler {
 
   off = (event, listener) => {
     // We only know how to handle string events.
-    if (!typeof event == "string") return; // If there are no callbacks registered for this event, there is no need to
+    if (!typeof event == "string") return this; // If there are no callbacks registered for this event, there is no need to
     // remove one.
 
-    if (this._triggers[event] == undefined) return; // If callbacks are registered for this event, make sure that this callback
+    if (this._triggers[event] == undefined) return this; // If callbacks are registered for this event, make sure that this callback
     // is filtered from that array.
 
     this._triggers[event] = this._triggers[event].filter(item => item !== listener); // Allow chaining;

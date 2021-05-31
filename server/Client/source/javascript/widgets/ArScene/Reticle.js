@@ -1,15 +1,19 @@
 // Import dependencies.
 import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
+import { BaseElement } from "/javascript/widgets/BaseElement.js";
 
 /**
  *  The definition of the Reticle class that can be used to create a reticle
  *  element in an Aframe scene that can be used to detect surfaces.
  *
+ *  @event      success       Triggered when hit tests start succeeding.
+ *  @event      fail          Triggered when hit tests start failing.
+ *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
- class Reticle {
+ class Reticle extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -24,11 +28,21 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
   _cache = new Map();
 
   /**
+   *  Private variable that keeps track of whether the latest hit test was a
+   *  success.
+   *  @var      {boolean}
+   */
+  _latestSuccess = false;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element to which the reticle
    *                                  will be added.
    */
   constructor(parent) {
+
+    // Call the BaseElement constructor.
+    super();
 
     // First, register the Aframe primitive so that we can use the <a-reticle>
     // element in the DOM.
@@ -123,6 +137,11 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
    *  @param    {string}    name    Name of the AR hit test component.
    */
   _registerComponent = (name) => {
+
+    // Keep the class in scope.
+    const reticle = this;
+
+    // Register the component.
     if (!AFRAME.components[name]) AFRAME.registerComponent(name, {
 
       /**
@@ -209,7 +228,17 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
 
         // If there is no result, the hit test failed and we should probably not
         // display the reticle for this frame.
-        if (!result) return this.el.setAttribute('visible', false);
+        if (!result) {
+
+          // Hide the reticle.
+          this.el.setAttribute('visible', false);
+
+          // Signal a failed hit test.
+          reticle._success(false);
+
+          // No need to continue.
+          return;
+        }
 
         // Get the pose and the appropriate input space from the results of
         // the hit test.
@@ -228,6 +257,9 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
         this.el.setAttribute('visible', true);
         this.el.setAttribute("position", pose.transform.position);
         this.el.object3D.quaternion.copy(pose.transform.orientation);
+
+        // Signal a successful hit test.
+        reticle._success(true);
       },
 
       /**
@@ -241,6 +273,25 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
         this.el.sceneEl.renderer.xr.removeEventListener("sessionend", this.onSessionEnd);
       }
     });
+  }
+
+  /**
+   *  Private method to signal a successful or failed hit test.
+   *  @param    {boolean}     success     Was the hit test successful or not?
+   */
+  _success = success => {
+
+    // If nothing has changed, we have nothing to do.
+    if (this._latestSuccess == success) return;
+
+    // Remember the state of the latest hit test.
+    this._latestSuccess = success;
+
+    console.log("::_success", success);
+
+    // Trigger the appropriate event.
+    if (success) this.trigger("success");
+    else this.trigger("fail");
   }
 
   /**
@@ -259,12 +310,17 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
    *  Method to show the scene.
    *  @returns  {Reticle}
    */
-  show = () => {
+  show() {
 
-    // Make sure we're not hiding the reticle and that we're performing hit
-    // tests.
-    this._container.setAttribute("testing", "true");
-    this._container.setAttribute("visible", "true");
+    console.log("::show");
+
+    // We want to reset the latest success variable so that the reticle will
+    // automatically trigger a success event if it immediately has a successful
+    // hit test after it is being shown again.
+    this._success(false);
+
+    // Make sure that we're performing hit tests.
+    this._container.setAttribute("testing", true);
 
     // Allow chaining.
     return this;
@@ -274,12 +330,15 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
    *  Method to hide the scene.
    *  @returns  {Reticle}
    */
-  hide = () => {
+  hide() {
 
-    // Make sure we're hiding the reticle. We also don't need to perfom hit
-    // tests while the reticle is hidden.
-    this._container.setAttribute("visible", "false");
-    this._container.setAttribute("testing", "false");
+    console.log("::hide");
+
+    // Make sure we hide the reticle.
+    this._container.setAttribute("visible", false);
+
+    // We don't need to perfom hit tests while the reticle is hidden.
+    this._container.setAttribute("testing", false);
 
     // Allow chaining.
     return this;
@@ -288,13 +347,13 @@ import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
   /**
    *  Method to remove this object and clean up after itself.
    */
-  remove = () => {
-
-    // Remove the DOM elements.
-    this._container.remove();
+  remove() {
 
     // Clear the cache
     this._cache.clear();
+
+    // Call the BaseElement remove method.
+    super.remove();
   }
 }
 

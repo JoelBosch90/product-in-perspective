@@ -193,7 +193,11 @@ class ArScene extends BaseElement {
     this._scene.setAttribute("webxr", "optionalFeatures: hit-test, local-floor, dom-overlay; overlayElement: .arscene-overlay;"); // Add a reticle to the scene.
 
 
-    this._reticle = new Reticle(this._scene); // Add the overlay to the scene.
+    this._reticle = new Reticle(this._scene); // By default, we should only enable the proceed button when the reticle is
+    // showing.
+
+    this._startReticleSync(); // Add the overlay to the scene.
+
 
     this._addOverlayToScene(this._scene); // Add the new model to the scene. Hide it by default.
 
@@ -344,11 +348,7 @@ class ArScene extends BaseElement {
 
     this._proceedButton = this._overlay.add("button"); // Add event listeners to this button with a debounced callback.
 
-    const proceedHandler = debounce(() => void this.proceed(), 500);
-
-    this._proceedButton.addEventListener('mousedown', proceedHandler);
-
-    this._proceedButton.addEventListener('touchstart', proceedHandler); // Add an stop button to the overlay.
+    this._allowProceed(); // Add an stop button to the overlay.
 
 
     this._stopButton = this._overlay.add("button", {
@@ -431,10 +431,82 @@ class ArScene extends BaseElement {
     // Increment the index of the model we are showing.
     this._modelIndex += 1; // Do we still have a valid index?
 
-    if (this._modelIndex < this._product.models.length) this._showModel(); // Otherwise, we can go back to placing a model.
-    else this._placeModel(); // Allow chaining.
+    if (this._modelIndex < this._product.models.length) {
+      // We need to stop synchronizing the reticle with the proceed button.
+      this._stopReticleSync(); // Go to showing mode.
+
+
+      this._showModel(); // Otherwise, we can go back to placing a model.
+
+    } else {
+      // We need to disable the proceed button when the reticle is hidden.
+      this._startReticleSync(); // Go to placing mode.
+
+
+      this._placeModel();
+    } // Allow chaining.
+
 
     return this;
+  };
+  /**
+   *  Private debounced version of the proceed method.
+   */
+
+  _proceedHandler = debounce(() => void this.proceed(), 500);
+  /**
+   *  Private method to synchronize the reticle with the proceed button in that
+   *  we enable the proceed button only when the reticle is showing.
+   */
+
+  _startReticleSync = () => {
+    console.log("::_startReticleSync"); // Disable the proceed button until the reticle is showing.
+
+    this._preventProceed(); // Install event listeners that enable and disable the proceed button
+    // depending on whether the reticle is showing.
+
+
+    this._reticle.on("success", this._allowProceed).on("fail", this._preventProceed);
+  };
+  /**
+   *  Private method to stop synchronizing the reticle with the proceed button.
+   *  Instead, the proceed button should be enabled.
+   */
+
+  _stopReticleSync = () => {
+    console.log("::_stopReticleSync"); // Remove the event listeners that enable and disable the proceed button
+    // depending on whether the reticle is showing.
+
+    this._reticle.off("success", this._allowProceed).off("fail", this._preventProceed); // Enable the proceed button.
+
+
+    this._allowProceed();
+  };
+  /**
+   *  Private method to disable the proceed button.
+   */
+
+  _preventProceed = () => {
+    // Remove the event handlers for the proceed button.
+    this._proceedButton.removeEventListener('mousedown', this._proceedHandler);
+
+    this._proceedButton.removeEventListener('touchstart', this._proceedHandler); // Make sure the proceed button is disabled.
+
+
+    this._proceedButton.disabled = true;
+  };
+  /**
+   *  Private method to enable the proceed button.
+   */
+
+  _allowProceed = () => {
+    // Add the event handlers for the proceed button.
+    this._proceedButton.addEventListener('mousedown', this._proceedHandler);
+
+    this._proceedButton.addEventListener('touchstart', this._proceedHandler); // Make sure the proceed button is not disabled.
+
+
+    this._proceedButton.disabled = false;
   };
   /**
    *  Method to select a 3D object to show.
@@ -478,9 +550,44 @@ class ArScene extends BaseElement {
     return this;
   };
   /**
+   *  Private debounced version of the stop method.
+   */
+
+  _stopHandler = debounce(() => void this.stop(), 500);
+  /**
+   *  Method to show this element.
+   *  @returns  {ArScene}
+   */
+
+  show() {
+    // Make sure we are also able to show the reticle.
+    this._reticle.show(); // Make sure we're showing.
+
+
+    super.show(); // Allow chaining.
+
+    return this;
+  }
+  /**
+   *  Method to hide this element.
+   *  @returns  {ArScene}
+   */
+
+
+  hide() {
+    // Make sure we also hide the reticle.
+    this._reticle.hide(); // Make sure we're hiding.
+
+
+    super.hide(); // Allow chaining.
+
+    return this;
+  }
+  /**
    *  Method to remove this object and clean up after itself. We have to use
    *  non-arrow function or we'd lose the super context.
    */
+
 
   remove() {
     // Stop the session.
