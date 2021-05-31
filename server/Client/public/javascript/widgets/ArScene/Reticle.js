@@ -264,8 +264,7 @@ class Reticle extends BaseElement {
     // If nothing has changed, we have nothing to do.
     if (this._latestSuccess == success) return; // Remember the state of the latest hit test.
 
-    this._latestSuccess = success;
-    console.log("::_success", success); // Trigger the appropriate event.
+    this._latestSuccess = success; // Trigger the appropriate event.
 
     if (success) this.trigger("success");else this.trigger("fail");
   };
@@ -291,10 +290,9 @@ class Reticle extends BaseElement {
    */
 
   show() {
-    console.log("::show"); // We want to reset the latest success variable so that the reticle will
+    // We want to reset the latest success variable so that the reticle will
     // automatically trigger a success event if it immediately has a successful
     // hit test after it is being shown again.
-
     this._success(false); // Make sure that we're performing hit tests.
 
 
@@ -310,8 +308,7 @@ class Reticle extends BaseElement {
 
 
   hide() {
-    console.log("::hide"); // Make sure we hide the reticle.
-
+    // Make sure we hide the reticle.
     this._container.setAttribute("visible", false); // We don't need to perfom hit tests while the reticle is hidden.
 
 

@@ -499,8 +499,6 @@ class ArScene extends BaseElement {
    */
   _startReticleSync = () => {
 
-    console.log("::_startReticleSync");
-
     // Disable the proceed button until the reticle is showing.
     this._preventProceed();
 
@@ -516,8 +514,6 @@ class ArScene extends BaseElement {
    *  Instead, the proceed button should be enabled.
    */
    _stopReticleSync = () => {
-
-    console.log("::_stopReticleSync");
 
     // Remove the event listeners that enable and disable the proceed button
     // depending on whether the reticle is showing.

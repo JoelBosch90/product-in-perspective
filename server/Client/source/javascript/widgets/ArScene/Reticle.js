@@ -287,8 +287,6 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
     // Remember the state of the latest hit test.
     this._latestSuccess = success;
 
-    console.log("::_success", success);
-
     // Trigger the appropriate event.
     if (success) this.trigger("success");
     else this.trigger("fail");
@@ -312,8 +310,6 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
    */
   show() {
 
-    console.log("::show");
-
     // We want to reset the latest success variable so that the reticle will
     // automatically trigger a success event if it immediately has a successful
     // hit test after it is being shown again.
@@ -331,8 +327,6 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
    *  @returns  {Reticle}
    */
   hide() {
-
-    console.log("::hide");
 
     // Make sure we hide the reticle.
     this._container.setAttribute("visible", false);
