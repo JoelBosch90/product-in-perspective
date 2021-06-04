@@ -44,7 +44,10 @@
     "start-dev-storage": "sudo -u minio-user minio server -C /etc/minio --address localhost:9000 /home/joel/Projects/product-in-perspective/server/Api/Storage/minio",
     "start-dev-database": "mongod --dbpath=/home/joel/Projects/product-in-perspective/server/Api/Database/data",
     "start-dev-api": "nodemon server.js",
-    "start-dev": "npm run start-dev-database & npm run start-dev-storage & ( sleep 3 && npm run start-dev-api )"
+    "start-dev": "npm run start-dev-storage & ( sleep 3 && npm run start-dev-api )",
+    "start-database": "docker run -p 27017:27017 -v dbdata:/data/db mongo:4.4",
+    "start-storage": "docker run -v /data/storage:/data -p 9000:9000 minio/minio server /data",
+    "start": "npm run start-database & npm run start-storage & ( sleep 3 && npm run start-dev-api)"
   },
   "repository": {
     "type": "git",

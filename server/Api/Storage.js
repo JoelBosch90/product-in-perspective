@@ -74,7 +74,7 @@ class Storage {
 
     // Define the models that we support.
     this._supportedModels = {
-      'zip': { 
+      'zip': {
         mimes:     ['application/x-zip-compressed'],
         convert:  this._zipToGlb2,
       },
@@ -110,7 +110,32 @@ class Storage {
       this._client.bucketExists(this._bucket).catch(reject).then(async exists => {
 
         // If there is no bucket for models yet, we should create one first.
-        if (!exists) await this._client.makeBucket(this._bucket).catch(reject);
+        if (!exists) {
+
+          // First create the bucket for the models.
+          await this._client.makeBucket(this._bucket).catch(reject);
+
+          // Minio uses the Amazon S3 API format, so we can base our policy on
+          // this example: https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies.html#example-bucket-policies-use-case-2
+          // In this case, we want to make the models publicly accessible.
+          const policy = JSON.stringify({
+
+            // This is the specific AWS policy version that we're using.
+            Version:      "2012-10-17",
+            Statement:[
+              {
+                Sid:        "PublicRead",
+                Effect:     "Allow",
+                Principal:  "*",
+                Action:     ["s3:GetObject","s3:GetObjectVersion"],
+                Resource:   ["arn:aws:s3:::" + this._bucket + "/*"],
+              },
+            ],
+          });
+
+          // Make sure we set the policy.
+          await this._client.setBucketPolicy(this._bucket, policy).catch(reject);
+        }
 
         // Now we can simply resolve the promise to confirm that we have a
         // bucket.
@@ -202,7 +227,7 @@ class Storage {
 
   /**
    *  Method to convert any supported file type to a GLTF 2.0 model.
-   *  @param    {string}    file        The path to the file that is to be 
+   *  @param    {string}    file        The path to the file that is to be
    *                                    converted.
    *  @return   {Promise}
    */
@@ -230,7 +255,7 @@ class Storage {
   _mimeType = file => file.split(";base64,")[0].slice(5);
 
   /**
-   *  Check whether this file object's extension and MIME type is supported. 
+   *  Check whether this file object's extension and MIME type is supported.
    *  @param    {Object}    fileObject  An object that represents the encoded
    *                                    file.
    *    @property {string}    extension   The original file extension.
@@ -244,14 +269,14 @@ class Storage {
 
     // Get the MIME type that we expect.
     const expected = this._supportedModels[extension].mimes;
-    
+
     // Check if these match.
     return expected.includes(actual);
   }
 
   /**
    *  Method to convert a zip file to a GLB 2.0 model.
-   *  @param    {string}    file        The path to the file that is to be 
+   *  @param    {string}    file        The path to the file that is to be
    *                                    converted.
    *  @return   {Promise}
    */
@@ -354,7 +379,7 @@ class Storage {
 
   /**
    *  Method to convert a GLTF file to a GLB 2.0 model.
-   *  @param    {string}    file        The path to the file that is to be 
+   *  @param    {string}    file        The path to the file that is to be
    *                                    converted.
    *  @return   {Promise}
    */
@@ -386,7 +411,7 @@ class Storage {
 
   /**
    *  Method to convert a GLB file to a GLB 2.0 model.
-   *  @param    {string}    file        The path to the file that is to be 
+   *  @param    {string}    file        The path to the file that is to be
    *                                    converted.
    *  @return   {Promise}
    */
@@ -423,12 +448,12 @@ class Storage {
 
   /**
    *  Method to convert an OBJ file to a GLB 2.0 model.
-   *  @param    {string}    file        The path to the file that is to be 
+   *  @param    {string}    file        The path to the file that is to be
    *                                    converted.
    *  @return   {Promise}
    */
   _objToGlb2 = async file => {
-    
+
     // Convert the OBJ file to GLB.
     const glb = await obj2gltf(file, {
       binary: true,
@@ -450,7 +475,7 @@ class Storage {
 
   /**
    *  Method to convert an FBX file to a GLB 2.0 model.
-   *  @param    {string}    file        The path to the file that is to be 
+   *  @param    {string}    file        The path to the file that is to be
    *                                    converted.
    *  @return   {Promise}
    */
@@ -528,7 +553,7 @@ class Storage {
     // If we have a file type, we need to construct the extension by added a
     // dot.
     const extension = fileType ? '.' + fileType : '';
-  
+
     // Create a path to a random file name plus the current time in the
     // temporary directory.
     return __dirname + '/Storage/tmp/' + random + '-at-' + Date.now() + extension;
