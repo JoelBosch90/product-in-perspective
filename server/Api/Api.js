@@ -6,8 +6,8 @@ const path = require('path');
 const jwt = require("jsonwebtoken");
 
 // Import dependencies.
-const Database = require('./Api/Database.js');
-const Storage = require('./Api/Storage.js');
+const Database = require('./Database.js');
+const Storage = require('./Storage.js');
 
 /**
  *  The definition of the Api class component that is used to process all API
@@ -230,7 +230,7 @@ class Api {
   _installEndpoints = app => {
 
     // Construct the path to the endpoints directory.
-    const endpointsDirectory = __dirname + '/Api/endpoints';
+    const endpointsDirectory = __dirname + '/endpoints';
 
     /**
      *  Helper function to read a directory so that we can call it recursively.

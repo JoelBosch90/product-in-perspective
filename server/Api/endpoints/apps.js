@@ -24,7 +24,7 @@ module.exports = function(app, path) {
   app.get(path, async (request, response) => {
 
     // This is only available to an authenticated user.
-    if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
+    // if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
 
     // The database might throw an error.
     try {

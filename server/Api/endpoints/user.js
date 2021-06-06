@@ -45,21 +45,4 @@ module.exports = function(app, path) {
     return errorResponse(response, 400, error);
    }
  });
-
-  // /**
-  //  *  This is the endpoint to supply information about all users.
-  //  *  @TODO   Remove this endpoint since it is a security leak, but useful while
-  //  *          testing.
-  //  *
-  //  *  Authentication level required:
-  //  *      none
-  //  */
-  // app.get(path + '/all', async (request, response) => {
-
-  //   // Get a list of all users.
-  //   const users = await request.context.models.User.find();
-
-  //   // Send back the entire list with all their information.
-  //   return response.send(users);
-  // });
 }
