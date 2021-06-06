@@ -1,0 +1,46 @@
+# Use the latest version of Docker Compose.
+version: "3"
+
+services:
+
+  client:
+    container_name: pip-client
+    restart: always
+    build: ./Client/
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/client
+    env_file:
+      - .env
+
+  api:
+    container_name: pip-api
+    restart: always
+    build: ./Api/
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/api
+    env_file:
+      - .env
+    links:
+      - database
+      - storage
+
+  database:
+    container_name: pip-database
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - /data/database:/data/db
+
+  storage:
+    container_name: pip-storage
+    image: minio/minio
+    command: server /data
+    ports:
+      - "9000:9000"
+    volumes:
+      - /data/storage:/data

@@ -42,7 +42,7 @@ class Client {
     this._config = config;
 
     // Store the absolute path to the directory that holds the public files.
-    this._publicDir = __dirname  + '/Client/public';
+    this._publicDir = __dirname  + '/public';
 
     // Start serving everything that we need to serve the client side
     // application.

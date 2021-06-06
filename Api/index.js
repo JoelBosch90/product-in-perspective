@@ -1,11 +1,12 @@
 /**
- *  This is the main file that initializes the complete API.
+ *  This is the main file that initializes the API with the current environment
+ *  variables.
  */
 
 // Use dotenv to read the local environment variables.
 require('dotenv').config();
 
-// Import the different services.
+// Import API.
 const Api = require('./Api.js');
 
 // Start serving the API.

@@ -7,8 +7,8 @@
 require('dotenv').config();
 
 // Import the different services.
-// const Api = require('./server/Api.js');
-const Client = require('./server/Client.js');
+// const Api = require('./Api/Api.js');
+const Client = require('./Client/Client.js');
 
 // // Start serving the API.
 // const api = new Api({
