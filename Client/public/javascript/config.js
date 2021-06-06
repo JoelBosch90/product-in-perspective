@@ -4,9 +4,12 @@
  *  production environment.
  */
 // Let's claim this variable as the config namespace.
-const CONFIG = {}; // Depending on the environment that we're running, we might want to call a
-// different API. This is the development API URL.
+const CONFIG = {}; // Depending on the environment that we're running, we might want to call the
+// API at a different url. This is the development API URL.
 
-CONFIG.apiUrl = 'http://localhost:3000/api'; // Export the CONFIG namespace so it can be imported elsewhere.
+CONFIG.apiUrl = 'http://localhost:3000/api'; // Depending on the environment that we're running, we might want to call the
+// storage at a different url. This is the development storage URL.
+
+CONFIG.storageUrl = 'http://localhost:9000/models'; // Export the CONFIG namespace so it can be imported elsewhere.
 
 export { CONFIG };

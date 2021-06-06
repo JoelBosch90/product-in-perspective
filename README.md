@@ -41,54 +41,8 @@ with the other static files, as we need this part to be scalable, and we don't
 want to serve the models from the database either, because we want them to be
 publicly available. This is why we use a separate object storage.
 
-### Client
-
-### Storage
-For the object storage, we run a default Minio docker image at the default Minio
-port (9000) with the following command. Buckets and bucket policies are created
-and configured through the API.
-`docker run -d -v /data/storage:/data -p 9000:9000 minio/minio server /data`
-
-### Database
-For the database, we run a default MongoDB docker image at the default MongoDB
-port (27017) with the following command. All models are configurated through the
-API using the Mongoose library.
-`docker run -d -p 27017:27017 -v dbdata:/data/db mongo:4.4`
-
-### Api
-
-
-
-
-
-
-
-
-
-
-## Using the correct version of Node
-Before you begin, make sure that you use the Node Package Manager (npm) uses
-the correct version of Node. We're using version 16.0.0.
-`nvm use 16`
-
-## Building the app
-After any change to the src folder, you can run the following command to
-prepare the dist folder for hosting.
-`npm run build`
-
-## Local test server
-When you want to run a local test server, run the following command. It will
-tell you which URL to follow to view the result.
-`npm start`
-
-## Restart production server
-We use PM2 to run the production server. You may want to restart it after
-changing the server.js file.
-`pm2 restart server`
-
-## Restart production database
-We use systemctl to run the production database.
-`sudo systemctl restart mongod`
+All microservices are spawned with Docker Compose and managed in the
+`docker-compose.yml` file in the main directory.
 
 ## Client side config file.
 Inside the `server/Client/source/javascript` directory (and the corresponding
@@ -96,7 +50,9 @@ Inside the `server/Client/source/javascript` directory (and the corresponding
 that exports an object called `CONFIG`. This allows us to automatically access
 different API endpoints depending on our environment. The `CONFIG` object should
 have the following properties:
-CONFIG.apiUrl   - String that describes the location of the API.
+CONFIG.apiUrl       - String that describes the location of the API.
+CONFIG.storageUrl   - String that describes the location of the public bucket
+                      that houses the 3D models.
 
 ## Set up your local environment variable.
 The server side of this service will require a few variables that likely depend

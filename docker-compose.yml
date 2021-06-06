@@ -1,46 +1,138 @@
+################################################################################
+#
+# Product in Perspective
+#   This is the Docker Compose file that spawns all different services that are
+#   involved with this app. The app was built specifically to have separate
+#   microservices to make scaling relatively easy if traffic picks up.
+#
+#   It currently features the following services:
+#     client      - The service that serves all client-side files.
+#     api         - The REST API service that communicates directly with the
+#                   clients.
+#     database    - The service that the API uses for basic persistent storage.
+#     storage     - The service that the API uses to store 3D models. We don't
+#                   serve these models statically for easier scaling later. This
+#                   storage should also be publicly accessible by the client for
+#                   easier hosting.
+#
+################################################################################
+
 # Use the latest version of Docker Compose.
 version: "3"
 
+# We want to spawn several separate services from Docker images and manage all
+# of them from this file.
 services:
 
+  ##############################################################################
+  #
+  # Client
+  #   This is the service that serves all client-side files. It is written in a
+  #   custom vanilla Javascript framework hosted with Node Express.
+  #
+  ##############################################################################
   client:
     container_name: pip-client
+
+    # We always want to restart when things go wrong.
     restart: always
+
+    # We want to build from the Dockerfile in the Client directory.
     build: ./Client/
+
+    # We can host our client at port 8000.
     ports:
       - "8000:8000"
+
+    # We want to bind the changes inside the container to a local folder so that
+    # we can update the code in real time.
     volumes:
-      - .:/client
+      - ./Client:/client
+
+    # We can get the environment variables from our environment variables file.
     env_file:
       - .env
 
+  ##############################################################################
+  #
+  # API
+  #   This a Node REST API that that connects to the Database and Storage
+  #   containers. This API also includes the configurations for both of those
+  #   services, so they are not independent, but because they're hosted as
+  #   separate containers should help them scale independently nonetheless.
+  #
+  ##############################################################################
   api:
     container_name: pip-api
+
+    # We always want to restart when things go wrong.
     restart: always
+
+    # We want to build from the Dockerfile in the Api directory.
     build: ./Api/
+
+    # We can host our API at port 3000.
     ports:
       - "3000:3000"
+
+    # We want to bind the changes inside the container to a local folder so that
+    # we can update the code in real time.
     volumes:
-      - .:/api
+      - ./Api:/api
+
+    # We can get the environment variables from our environment variables file.
     env_file:
       - .env
+
+    # The API will try to connect to the database and the storage services, so
+    # we need to make sure that they are running.
     links:
       - database
       - storage
 
+  ##############################################################################
+  #
+  # Database
+  #   This is a NoSQL MongoDB database that we can use for scalable persistent
+  #   data. MongoDB will store any document, but we can configure specific
+  #   models and schemas in the API.
+  #
+  ##############################################################################
   database:
     container_name: pip-database
+
+    # We can pull the latest MongoDB version.
     image: mongo:4.4
+
+    # This is the default MongoDB port.
     ports:
       - "27017:27017"
+
+    # We need to designate a volume on physical disk to persist data between
+    # restarts.
     volumes:
       - /data/database:/data/db
 
+  ##############################################################################
+  #
+  # Storage
+  #   This is a Minio object storage that we can use as a scalable solution for
+  #   hosting the 3D models. We can configure buckets from the API.
+  #
+  ##############################################################################
   storage:
     container_name: pip-storage
+
+    # We can pull the Minio version of a Minio server, and we want to designate
+    # a data directory to persist data between restarts.
     image: minio/minio
     command: server /data
+
+    # This is the default Minio port.
     ports:
       - "9000:9000"
+
+    # We need to designate a volume on physical disk to persist data between
+    # restarts.
     volumes:
       - /data/storage:/data

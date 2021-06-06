@@ -70,19 +70,14 @@ class Client {
    */
   _serveLibraries = app => {
 
-    // The node modules are in the project directory. This file is in the
-    // '/server' directory, so we should remove that from the current directory
-    // to get the project directory.
-    const projectDir = __dirname.slice(0, -7)
-
     // QuaggaJS is needed for the barcode scanner.
     app.use('/quagga',express.static(
-      projectDir  + '/node_modules/quagga/dist'
+      __dirname  + '/node_modules/quagga/dist'
     ));
 
     // Aframe is needed for the augmented reality scene.
     app.use('/aframe', express.static(
-      projectDir  + '/node_modules/aframe/dist'
+      __dirname  + '/node_modules/aframe/dist'
     ));
   }
 
