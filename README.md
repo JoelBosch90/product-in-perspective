@@ -44,6 +44,14 @@ publicly available. This is why we use a separate object storage.
 All microservices are spawned with Docker Compose and managed in the
 `docker-compose.yml` file in the main directory.
 
+To get you started, these are the most important Docker Compose commands:
+
+To run the app (this will also build the Docker images if you haven't already):
+`docker-compose up`
+
+To rebuild the images:
+`docker-compose build`
+
 ## Client side config file.
 Inside the `server/Client/source/javascript` directory (and the corresponding
 `server/Client/public/javascript` directory), there should be a `config.js` file
