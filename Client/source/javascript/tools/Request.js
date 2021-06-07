@@ -12,18 +12,28 @@ class Request {
    *  This is a path to the location of the API.
    *  @var      {string}
    */
-  _apiUrl = "http://localhost:3000/api";
+  _apiUrl = '';
 
   /**
    *  This is a path to the location of the object storage.
    *  @var      {string}
    */
-  _storageUrl = "http://localhost:9000/model";
+  _storageUrl = '';
 
   /**
    *  Class constructor.
    */
-  constructor() {}
+  constructor() {
+
+    // Construct the root URL.
+    const origin = window.location.protocol + "//" + window.location.host;
+
+    // Construct the link to the API.
+    this._apiUrl = origin + "/api";
+
+    // Construct the link to the models bucket of the object storage.
+    this._storageUrl = origin + "/models";
+  }
 
   /**
    *  Method to craft the URL to reach a model.

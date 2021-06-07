@@ -6,6 +6,7 @@
 #   microservices to make scaling relatively easy if traffic picks up.
 #
 #   It currently features the following services:
+#     proxy       - The reverse proxy that will expose the services.
 #     client      - The service that serves all client-side files.
 #     api         - The REST API service that communicates directly with the
 #                   clients.
@@ -20,9 +21,57 @@
 # Use the latest version of Docker Compose.
 version: "3"
 
+# Not all of our services need to be able to talk to each other. It is best to
+# keep them separated where we can.
+networks:
+
+  # We want to configure one network for all of the services that need to
+  # communicate with the reverse proxy. The reverse proxy then decides how those
+  # services can be accessed, but this is the network for all services that get
+  # exposed publicly.
+  proxied:
+
+  # Then there are those services that don't need to be publicly accessible and
+  # only communicate with other services. They go into the protected network.
+  protected:
+
 # We want to spawn several separate services from Docker images and manage all
 # of them from this file.
 services:
+
+  ##############################################################################
+  #
+  # Proxy
+  #   We use Nginx as a reverse proxy to direct requests to the ports of the
+  #   correct services. This way we can hide the application's inner network.
+  #
+  ##############################################################################
+  proxy:
+    container_name: proxy
+
+    # We can use the latest version of Nginx.
+    image: nginx:latest
+
+    # We can give Nginx access to the common web ports.
+    ports:
+      - 80:80
+      - 443:443
+
+    # We can use volumes to copy our reverse proxy configuration into Nginx.
+    volumes:
+      - ./Proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./Proxy/error.log:/etc/nginx/error_log.log
+
+    # The proxy needs access to the client, the API and the storage.
+    depends_on:
+      - client
+      - api
+      - storage
+
+    # We need access to all the services that should be exposed (partly)
+    # publicly.
+    networks:
+      - proxied
 
   ##############################################################################
   #
@@ -42,10 +91,9 @@ services:
       context: ./Client/
       dockerfile: development.dockerfile
 
-    # The client hosts at port 8000, but we want to access it at port 80 for
-    # development.
-    ports:
-      - "8000:8000"
+    # We can expose the client service in the container network.
+    expose:
+      - "8000"
 
     # We want to bind the changes inside the container to a local folder so that
     # we can update the code in real time.
@@ -54,8 +102,12 @@ services:
 
     # The client will need to know where to host.
     environment:
-      - CL_HOST=localhost
-      - CL_PORT=8000
+      - PORT=8000
+
+    # We need the reverse proxy to expose the client publicly, so we need to
+    # give it access to the client service.
+    networks:
+      - proxied
 
   ##############################################################################
   #
@@ -77,9 +129,9 @@ services:
       context: ./Api/
       dockerfile: development.dockerfile
 
-    # We can host our API at port 3000.
-    ports:
-      - "3000:3000"
+    # We can expose the API service in the container network.
+    expose:
+      - "3000"
 
     # We want to bind the changes inside the container to a local folder so that
     # we can update the code in real time.
@@ -96,6 +148,12 @@ services:
       - database
       - storage
 
+    # We need the reverse proxy to expose the api publicly, so we need to
+    # give it access to the api service.
+    networks:
+      - proxied
+      - protected
+
   ##############################################################################
   #
   # Database
@@ -110,14 +168,20 @@ services:
     # We can pull the latest MongoDB version.
     image: mongo:4.4
 
-    # This is the default MongoDB port.
-    ports:
-      - "27017:27017"
+    # We can expose the default MongoDB port database service in the proxy
+    # network.
+    expose:
+      - "27017"
 
     # We need to designate a volume on physical disk to persist data between
     # restarts.
     volumes:
       - /data/database:/data/db
+
+    # Only the api needs access to the database, so it does not need to be
+    # publicly available. We can add it to the protected network.
+    networks:
+      - protected
 
   ##############################################################################
   #
@@ -134,11 +198,17 @@ services:
     image: minio/minio
     command: server /data
 
-    # This is the default Minio port.
-    ports:
-      - "9000:9000"
+    # We can expose the default Minio port for the storage service in the proxy
+    # network.
+    expose:
+      - "9000"
 
     # We need to designate a volume on physical disk to persist data between
     # restarts.
     volumes:
       - /data/storage:/data
+
+    # We need the reverse proxy to expose the models bucket publicly, so we need
+    # to give it access to the storage service.
+    networks:
+      - proxied

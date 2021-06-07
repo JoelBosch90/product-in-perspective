@@ -19,11 +19,9 @@ class Client {
 
   /**
    *  Class constructor.
-   *  @param    {object}    config      The configuration object.
-   *    @property   {string}    host        The client application host.
-   *    @property   {integer}   port        The client application port.
+   *  @param    {integer}   port        The client application port.
    */
-  constructor(config = {}) {
+  constructor(port) {
 
     // Get the express application object.
     const app = express();
@@ -38,7 +36,7 @@ class Client {
     this._servePages(app);
 
     // Start listening for incoming requests.
-    this._listen(app, config.host, config.port);
+    this._listen(app, port);
   }
 
   /**
@@ -87,15 +85,16 @@ class Client {
   /**
    *  Private method to start listening forincoming requests.
    *  @param    {EventEmitter}    app     The express application object.
+   *  @param    {string}          port    The port we should be listening to.
    */
-  _listen = (app, host, port) => {
+  _listen = (app, port) => {
 
     // Start listening at the client port.
     app.listen(port, () => {
 
       // Tell the command terminal where we're listening for incoming requests.
       console.log(
-        `Hosting client at ${host}:${port}.`
+        `Hosting client at port ${port}.`
       );
     });
   }

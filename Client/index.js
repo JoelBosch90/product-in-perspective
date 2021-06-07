@@ -9,10 +9,6 @@ require('dotenv').config();
 // Import the client.
 const Client = require('./Client.js');
 
-// Start serving the client.
-const client = new Client({
-
-  // The client will need to know where to listen for requests.
-  port:       process.env.CL_PORT,
-  host:       process.env.CL_HOST,
-});
+// Start serving the client. It will need to know where to listen for incoming
+// requests.
+const client = new Client(process.env.PORT);
