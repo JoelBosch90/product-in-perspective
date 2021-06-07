@@ -90,3 +90,8 @@ DATABASE_TOKEN_SECRET
 ### Object storage credentials.
 STORAGE_ACCESS_KEY
 STORAGE_SECRET_KEY
+
+## SSL certificates
+You can follow the final part of this tutorial to configure the SSL certificates
+for this setup:
+https://www.domysee.com/blogposts/reverse-proxy-nginx-docker-compose

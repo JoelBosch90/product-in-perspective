@@ -9,6 +9,9 @@ WORKDIR /client
 # directory.
 COPY package*.json ./
 
+# Indicate that we're in developer mode.
+ENV NODE_ENV development
+
 # For developer mode, we can use NPMs default install command.
 RUN npm install
 
