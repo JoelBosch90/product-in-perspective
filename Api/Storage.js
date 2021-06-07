@@ -25,12 +25,6 @@ class Storage {
   _bucket = null;
 
   /**
-   *  Reference to the configuration object.
-   *  @var      {object}
-   */
-  _config = {};
-
-  /**
    *  Reference to the object storage client.
    *  @var      {Minio.Client}
    */
@@ -48,7 +42,7 @@ class Storage {
    *  @param    {string}    bucketName  The name of the bucket we use in this
    *                                    storage.
    *  @param    {object}    config      The configuration object.
-   *    @property {string}    url         The URL for connecting to the object
+   *    @property {string}    host        The URL for connecting to the object
    *                                      storage.
    *    @property {number}    port        The port for connecting to the
    *                                      object storage.
@@ -60,16 +54,13 @@ class Storage {
     // Store the bucket name.
     this._bucket = bucketName;
 
-    // Store the configuration.
-    this._config = config;
-
     // Create a new object storage client.
     this._client = new Minio.Client({
-      endPoint:   this._config.url,
-      port:       Number(this._config.port),
+      endPoint:   config.host,
+      port:       Number(config.port),
       useSSL:     false,
-      accessKey:  this._config.accessKey,
-      secretKey:  this._config.secretKey,
+      accessKey:  config.accessKey,
+      secretKey:  config.secretKey,
     });
 
     // Define the models that we support.

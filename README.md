@@ -24,51 +24,69 @@ together. This gives the website the potential for separately scaling individual
 microservices if traffic demands rise in the future. For now, it also helps keep
 a clear separation of concerns.
 
-To keep this easy to manage and install, we use both Docker, and Docker Compose
-to launch both a local development environment, and a live production
-environment. You'll have to have both Docker and Docker Compose installed on
-your machine before you can run either environment.
+To keep this easy to manage and install, we use Docker Compose to launch both a
+local development environment, and a live production environment. You'll have to
+have both Docker and Docker Compose installed on your machine before you can run
+either environment.
 
 You can find instructions to install them here:
 Docker:           https://docs.docker.com/get-docker/
 Docker Compose:   https://docs.docker.com/compose/install/
 
 ## Microservices
-For this website, we run 4 different microservices. The Client to serve general
-static files, the Storage to store 3D models, the Database to store all other
-data, and the Api that offers a RESTful API. We don't want to serve the models
-with the other static files, as we need this part to be scalable, and we don't
-want to serve the models from the database either, because we want them to be
-publicly available. This is why we use a separate object storage.
+For this website, we run 5 different microservices:
+Proxy     - Reverse proxy to serve requests to the right services and hide the
+            internal network.
+Client    - Single Page Application style client built with a custom Javascript
+            framework. This service serves all static files except 3D models.
+Api       - Completely RESTful NodeJS API.
+Storage   - Minio Object Storage to serve the 3D models publicly in a scalable
+            way. Buckets are configured by the Api service.
+Database  - MongoDB NoSQL database. Models and schemas are configured by the Api
+            service.
 
 ## Docker Compose
 All microservices are spawned with Docker Compose and managed in the
 `docker-compose.yml` and `docker-compose.dev.yml` files for production and
-development, respectively.
+development, respectively. To get you started, these are some of the basic
+Docker Compose commands:
 
-To get you started, these are the most important Docker Compose commands:
-
-To run the app (this will also build the Docker images if you haven't already):
-`docker-compose up`
-
+### Production environment
 To rebuild the images:
 `docker-compose build`
 
-To run a development environment instead, add the `-f docker-compose.dev.yml`
-flag to any of these commands to use the development Docker Compose
-configuration instead.
+To run the environment (detached):
+`docker-compose up -d`
 
-## Set up your local environment variable.
-The server side of this service will require a few variables that likely depend
-on local settings. You can set these settings in a `.env` file. This file should
-be in your `.gitignore` because it should not end up in the repository, because
-it contains things like database passwords. The service expects the following
-environment variables:
-CPORT   - The port that will serve the client.
-CHOST   - The host that will serve the client.
-APORT   - The port that will serve the API.
-AHOST   - The host that will serve the API.
-DIR     - A path to the project directory.
-DBUSER  - The username for connecting to the database.
-DBPW    - The password for connecting to the database.
-DBNAME  - The name of the database.
+To stop the environment:
+`docker-compose down`
+
+### Development environment
+To run the environment:
+`docker-compose up -f docker-compose.dev.yml`
+
+To rebuild all images and run the environment:
+`docker-compose up -f docker-compose.dev.yml --build`
+
+To rebuild a container for a specific service (example: client):
+`docker-compose -f docker-compose.dev.yml up client`
+
+This is best to run undetached so that you have access to debug information. You
+can stop this environment with Ctrl+C in a standard Linux terminal.
+
+## Set up your local environment variables.
+The server side of this service will require a few environment variables to be
+set with local access credentials. You can set these settings in a `.env` file.
+This file should be in your `.gitignore` because it should not end up in the
+repository, because it contains things like database passwords. The service
+expects the following environment variables:
+
+### Database credentials.
+DATABASE_NAME
+DATABASE_USERNAME
+DATABASE_PASSWORD
+DATABASE_TOKEN_SECRET
+
+### Object storage credentials.
+STORAGE_ACCESS_KEY
+STORAGE_SECRET_KEY

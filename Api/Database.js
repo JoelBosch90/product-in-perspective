@@ -29,6 +29,8 @@ class Database {
    *                                      database.
    *    @property {string}    secret      The database secret for creating
    *                                      tokens.
+   *    @property {string}    host        The URL to connect to the database.
+   *    @property {number}    port        The port to connect to the database.
    */
   constructor(config) {
 
@@ -47,10 +49,10 @@ class Database {
     const connectUrl = this._config.user
 
       // In production, we need to authenticate when connecting to the database.
-      ? `mongodb://${this._config.user}:${this._config.password}@${this._config.url}`
+      ? `mongodb://${this._config.user}:${this._config.password}@${this._config.host}:${this._config.port}/node-express-mongodb-server?authSource=admin`
 
       // In development, this is not needed. We can load the URL as is.
-      : `mongodb://${this._config.url}`
+      : `mongodb://${this._config.host}:${this._config.port}/node-express-mongodb-server?authSource=admin`;
 
     // Use the URL to connect to the database. Return the connection promise.
     return mongoose.connect(connectUrl);

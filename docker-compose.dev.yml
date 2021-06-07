@@ -91,6 +91,11 @@ services:
       context: ./Client/
       dockerfile: development.dockerfile
 
+    # The client will need to know where to host.
+    environment:
+      - HOST=client
+      - PORT=8000
+
     # We can expose the client service in the container network.
     expose:
       - "8000"
@@ -99,10 +104,6 @@ services:
     # we can update the code in real time.
     volumes:
       - ./Client:/client
-
-    # The client will need to know where to host.
-    environment:
-      - PORT=8000
 
     # We need the reverse proxy to expose the client publicly, so we need to
     # give it access to the client service.
@@ -128,6 +129,15 @@ services:
     build:
       context: ./Api/
       dockerfile: development.dockerfile
+
+    # The api will need to know where to host.
+    environment:
+      - HOST=api
+      - PORT=3000
+      - STORAGE_HOST=storage
+      - STORAGE_PORT=9000
+      - DATABASE_HOST=database
+      - DATABASE_PORT=27017
 
     # We can expose the API service in the container network.
     expose:

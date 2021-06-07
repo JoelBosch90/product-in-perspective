@@ -45,8 +45,10 @@ class Api {
    *                                        database.
    *      @property {string}    secret      The database secret for creating
    *                                        tokens.
-   *    @property {object}    strorage    The object storage credentials.
-   *      @property {string}    url         The URL for connecting to the object
+   *      @property {string}    host        The URL to connect to the database.
+   *      @property {number}    port        The port to connect to the database.
+   *    @property {object}    storage     The object storage credentials.
+   *      @property {string}    host        The URL for connecting to the object
    *                                        storage.
    *      @property {number}    port        The port for connecting to the
    *                                        object storage.
@@ -77,7 +79,7 @@ class Api {
     this._installEndpoints(app);
 
     // Start listening for incoming requests.
-    this._listen(app);
+    this._listen(app, config.api.host, config.api.port);
   }
 
   /**
@@ -270,8 +272,10 @@ class Api {
   /**
    *  Private method to start listening forincoming requests.
    *  @param    {EventEmitter}    app     The express application object.
+   *  @param    {string}          host    The host we need to listen for.
+   *  @param    {number}          port    The port we need to listen for.
    */
-  _listen = app => {
+  _listen = (app, host, port) => {
 
     // First, wait for the database to connect.
     this._database.connect().catch(console.error).then(async () => {
@@ -280,12 +284,12 @@ class Api {
       this._storage.verify().catch(console.error).then(async () => {
 
         // Then start listening at the API port.
-        app.listen(this._config.api.port, () => {
+        app.listen(port, () => {
 
           // Tell the command terminal where we're listening for incoming
           // requests.
           console.log(
-            `Hosting API at ${this._config.api.host}:${this._config.api.port}.`
+            `Hosting API at http://${host}:${port}.`
           );
         });
       });

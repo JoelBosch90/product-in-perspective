@@ -11,4 +11,7 @@ const Client = require('./Client.js');
 
 // Start serving the client. It will need to know where to listen for incoming
 // requests.
-const client = new Client(process.env.PORT);
+const client = new Client({
+  host: process.env.HOST,
+  port: process.env.PORT
+});
