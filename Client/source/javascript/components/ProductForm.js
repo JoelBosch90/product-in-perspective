@@ -88,7 +88,7 @@ class ProductForm extends BaseElement {
       .then(response => {
 
         // Get access to the JSON object.
-        response.json().then(models => {
+        if (response) response.json().then(models => {
 
           // Use this component's error handling if an error has occurred with
           // the HTTP request.
@@ -109,7 +109,7 @@ class ProductForm extends BaseElement {
       .then(response => {
 
         // Get access to the JSON object.
-        response.json().then(apps => {
+        if (response) response.json().then(apps => {
 
           // Use this component's error handling if an error has occurred with
           // the HTTP request.

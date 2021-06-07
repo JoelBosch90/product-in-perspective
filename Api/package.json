@@ -1,6 +1,6 @@
 {
   "name": "product-in-perspective",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -23,7 +23,7 @@
     "nodemon": "^2.0.7"
   },
   "scripts": {
-    "start-dev": "nodemon index.js",
+    "devStart": "nodemon -e js,json -x \"npm start\"",
     "start": "node index.js"
   },
   "repository": {

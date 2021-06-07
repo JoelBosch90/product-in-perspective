@@ -81,7 +81,7 @@ class ProductForm extends BaseElement {
 
     this._modelsRequest = this._request.get('/models').catch(error => void this._form.showError(error)).then(response => {
       // Get access to the JSON object.
-      response.json().then(models => {
+      if (response) response.json().then(models => {
         // Use this component's error handling if an error has occurred with
         // the HTTP request.
         if (!response.ok) return this._form.showError(models.error); // Loop through all of the models.
@@ -95,7 +95,7 @@ class ProductForm extends BaseElement {
 
     this._appsRequest = this._request.get('/apps').catch(error => void this._form.showError(error)).then(response => {
       // Get access to the JSON object.
-      response.json().then(apps => {
+      if (response) response.json().then(apps => {
         // Use this component's error handling if an error has occurred with
         // the HTTP request.
         if (!response.ok) return this._form.showError(apps.error); // Loop through all of the apps.

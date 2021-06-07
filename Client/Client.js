@@ -12,12 +12,6 @@ const express = require('express');
 class Client {
 
   /**
-   *  Reference to the configuration object.
-   *  @var      {object}
-   */
-  _config = {};
-
-  /**
    *  Absolute path to the directory that hosts public files.
    *  @var      {string}
    */
@@ -26,20 +20,13 @@ class Client {
   /**
    *  Class constructor.
    *  @param    {object}    config      The configuration object.
-   *    @property {object}    client      The client part of the configuration.
-   *      @property {string}    host        The client application host.
-   *      @property {integer}   port        The client application port.
-   *    @property {object}    api         The API part of the configuration.
-   *      @property {string}    host        The API application host.
-   *      @property {integer}   port        The API application port.
+   *    @property   {string}    host        The client application host.
+   *    @property   {integer}   port        The client application port.
    */
   constructor(config = {}) {
 
     // Get the express application object.
     const app = express();
-
-    // Store the config for reference.
-    this._config = config;
 
     // Store the absolute path to the directory that holds the public files.
     this._publicDir = __dirname  + '/public';
@@ -51,7 +38,7 @@ class Client {
     this._servePages(app);
 
     // Start listening for incoming requests.
-    this._listen(app);
+    this._listen(app, config.host, config.port);
   }
 
   /**
@@ -101,14 +88,14 @@ class Client {
    *  Private method to start listening forincoming requests.
    *  @param    {EventEmitter}    app     The express application object.
    */
-  _listen = app => {
+  _listen = (app, host, port) => {
 
     // Start listening at the client port.
-    app.listen(this._config.client.port, () => {
+    app.listen(port, () => {
 
       // Tell the command terminal where we're listening for incoming requests.
       console.log(
-        `Hosting client at ${this._config.client.host}:${this._config.client.port}.`
+        `Hosting client at ${host}:${port}.`
       );
     });
   }

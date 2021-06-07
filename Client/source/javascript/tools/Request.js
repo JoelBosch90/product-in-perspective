@@ -12,13 +12,13 @@ class Request {
    *  This is a path to the location of the API.
    *  @var      {string}
    */
-  _apiUrl = '/api';
+  _apiUrl = "http://localhost:3000/api";
 
   /**
    *  This is a path to the location of the object storage.
    *  @var      {string}
    */
-  _storageUrl = '/models';
+  _storageUrl = "http://localhost:9000/model";
 
   /**
    *  Class constructor.

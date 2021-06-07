@@ -43,7 +43,8 @@ publicly available. This is why we use a separate object storage.
 
 ## Docker Compose
 All microservices are spawned with Docker Compose and managed in the
-`docker-compose.yml` file in the main directory.
+`docker-compose.yml` and `docker-compose.dev.yml` files for production and
+development, respectively.
 
 To get you started, these are the most important Docker Compose commands:
 
@@ -52,6 +53,10 @@ To run the app (this will also build the Docker images if you haven't already):
 
 To rebuild the images:
 `docker-compose build`
+
+To run a development environment instead, add the `-f docker-compose.dev.yml`
+flag to any of these commands to use the development Docker Compose
+configuration instead.
 
 ## Set up your local environment variable.
 The server side of this service will require a few variables that likely depend

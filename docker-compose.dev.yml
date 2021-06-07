@@ -6,9 +6,6 @@
 #   microservices to make scaling relatively easy if traffic picks up.
 #
 #   It currently features the following services:
-#     proxy       - This is the reversy proxy that directs requests to the
-#                   correct services. This hides the application's inner
-#                   network.
 #     client      - The service that serves all client-side files.
 #     api         - The REST API service that communicates directly with the
 #                   clients.
@@ -29,19 +26,6 @@ services:
 
   ##############################################################################
   #
-  # Proxy
-  #   We use Nginx for the reversy proxy to direct requests to the ports of the
-  #   correct services. This way we hide the application's inner network.
-  #
-  ##############################################################################
-  proxy:
-    container_name: proxy
-
-    # We can use the latest version of Nginx.
-    image: nginx:latest
-
-  ##############################################################################
-  #
   # Client
   #   This is the service that serves all client-side files. It is written in a
   #   custom vanilla Javascript framework hosted with Node Express.
@@ -56,16 +40,17 @@ services:
     # We want to build from the Dockerfile in the Client directory.
     build:
       context: ./Client/
-      dockerfile: production.dockerfile
+      dockerfile: development.dockerfile
 
-    # We can host our client at port 8000.
+    # The client hosts at port 8000, but we want to access it at port 80 for
+    # development.
     ports:
       - "8000:8000"
 
     # We want to bind the changes inside the container to a local folder so that
     # we can update the code in real time.
     volumes:
-      - ./:/client
+      - ./Client:/client
 
     # The client will need to know where to host.
     environment:
@@ -90,7 +75,7 @@ services:
     # We want to build from the Dockerfile in the Api directory.
     build:
       context: ./Api/
-      dockerfile: production.dockerfile
+      dockerfile: development.dockerfile
 
     # We can host our API at port 3000.
     ports:
@@ -99,7 +84,7 @@ services:
     # We want to bind the changes inside the container to a local folder so that
     # we can update the code in real time.
     volumes:
-      - ./Api:/Api
+      - ./Api:/api
 
     # We can get the environment variables from our environment variables file.
     env_file:
