@@ -26,8 +26,8 @@
     "copy-html": "/bin/cp -rf source/html/* public/html",
     "copy-static": "npm run copy-images & npm run copy-html",
     "build": "npm run build-style & npm run build-js & npm run copy-static",
-    "start-dev": "npm run build & nodemon index.js",
-    "start": "npm run build & node index.js"
+    "start-dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

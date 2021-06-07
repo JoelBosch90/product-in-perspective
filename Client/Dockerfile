@@ -15,6 +15,9 @@ RUN npm install
 # Copy the application files to the directory.
 COPY . .
 
+# We need to make sure that the build is up to date.
+RUN npm run build
+
 # We want to host the client at port 8000.
 EXPOSE 8000
 

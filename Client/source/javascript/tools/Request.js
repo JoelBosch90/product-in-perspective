@@ -1,6 +1,3 @@
-// Import settings.
-import { CONFIG } from "/javascript/config.js";
-
 /**
  *  The definition of the Request class that can be used to perform HTTP
  *  requests.
@@ -15,13 +12,13 @@ class Request {
    *  This is a path to the location of the API.
    *  @var      {string}
    */
-  _apiUrl = CONFIG.apiUrl;
+  _apiUrl = '/api';
 
   /**
    *  This is a path to the location of the object storage.
    *  @var      {string}
    */
-  _storageUrl = CONFIG.storageUrl;
+  _storageUrl = '/models';
 
   /**
    *  Class constructor.

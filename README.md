@@ -41,6 +41,7 @@ with the other static files, as we need this part to be scalable, and we don't
 want to serve the models from the database either, because we want them to be
 publicly available. This is why we use a separate object storage.
 
+## Docker Compose
 All microservices are spawned with Docker Compose and managed in the
 `docker-compose.yml` file in the main directory.
 
@@ -52,21 +53,11 @@ To run the app (this will also build the Docker images if you haven't already):
 To rebuild the images:
 `docker-compose build`
 
-## Client side config file.
-Inside the `server/Client/source/javascript` directory (and the corresponding
-`server/Client/public/javascript` directory), there should be a `config.js` file
-that exports an object called `CONFIG`. This allows us to automatically access
-different API endpoints depending on our environment. The `CONFIG` object should
-have the following properties:
-CONFIG.apiUrl       - String that describes the location of the API.
-CONFIG.storageUrl   - String that describes the location of the public bucket
-                      that houses the 3D models.
-
 ## Set up your local environment variable.
 The server side of this service will require a few variables that likely depend
-on local settings. You can set these settings in a .env file. This file should
-be in your .gitignore because it should not end up in the repository, because it
-contains things like database passwords. The service expects the following
+on local settings. You can set these settings in a `.env` file. This file should
+be in your `.gitignore` because it should not end up in the repository, because
+it contains things like database passwords. The service expects the following
 environment variables:
 CPORT   - The port that will serve the client.
 CHOST   - The host that will serve the client.

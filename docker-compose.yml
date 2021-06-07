@@ -32,7 +32,7 @@ services:
   #
   ##############################################################################
   client:
-    container_name: pip-client
+    container_name: client
 
     # We always want to restart when things go wrong.
     restart: always
@@ -63,7 +63,7 @@ services:
   #
   ##############################################################################
   api:
-    container_name: pip-api
+    container_name: api
 
     # We always want to restart when things go wrong.
     restart: always
@@ -86,7 +86,7 @@ services:
 
     # The API will try to connect to the database and the storage services, so
     # we need to make sure that they are running.
-    links:
+    depends_on:
       - database
       - storage
 
@@ -99,7 +99,7 @@ services:
   #
   ##############################################################################
   database:
-    container_name: pip-database
+    container_name: database
 
     # We can pull the latest MongoDB version.
     image: mongo:4.4
@@ -121,7 +121,7 @@ services:
   #
   ##############################################################################
   storage:
-    container_name: pip-storage
+    container_name: storage
 
     # We can pull the Minio version of a Minio server, and we want to designate
     # a data directory to persist data between restarts.
