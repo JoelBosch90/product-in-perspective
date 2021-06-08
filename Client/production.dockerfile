@@ -2,21 +2,27 @@
 FROM node:16-alpine
 
 # Define a working directory for this image.
-WORKDIR /usr/src/client
+WORKDIR /client
 
 # We want to use the Node Package Manager to install our dependencies. These
 # dependencies are listed in the package JSON files. We need them in our working
 # directory.
 COPY package*.json ./
 
-# For developer mode, we can use NPMs default install command.
-RUN npm install
+# Indicate that we're in production mode.
+ENV NODE_ENV production
+
+# We want to install only the libraries that we need for production.
+RUN npm ci --only=production
+
+# Let's not run these commands as the root user.
+USER node
 
 # Copy the application files to the directory.
-COPY . .
+COPY --chown=node:node . .
 
 # We want to host the client at port 8000.
 EXPOSE 8000
 
-# Start the API application.
+# Start the client in production mode.
 CMD ["npm", "start"]

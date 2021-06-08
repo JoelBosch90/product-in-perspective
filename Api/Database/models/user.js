@@ -51,7 +51,7 @@ userSchema.methods.checkPassword = function(password, callback) {
 userSchema.methods.createToken = function() {
 
   // Create a new JWT for authentication.
-  return jwt.sign({ id: this._id }, process.env.DB_TOKEN_SECRET, {
+  return jwt.sign({ id: this._id }, process.env.DATABASE_TOKEN_SECRET, {
 
     // Let each token expire in 24 hours.
     expiresIn: 86400,

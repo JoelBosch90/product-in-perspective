@@ -1,6 +1,6 @@
 ################################################################################
 #
-# Product in Perspective
+# Product in Perspective (development mode)
 #   This is the Docker Compose file that spawns all different services that are
 #   involved with this app. The app was built specifically to have separate
 #   microservices to make scaling relatively easy if traffic picks up.
@@ -15,6 +15,28 @@
 #                   serve these models statically for easier scaling later. This
 #                   storage should also be publicly accessible by the client for
 #                   easier hosting.
+#
+#   Development mode
+#     The difference with production mode is that we run the development
+#     dockerfiles that run node in development mode. This also means that the
+#     client and api services are run with Nodemon and have their containers'
+#     working directories bound to the local service directories on the host
+#     machine.
+#
+#     That allows a developer to make changes to the code and view them in
+#     (almost) real time while the containers are running. After saving any
+#     Javascript, HTML or LESS file files, the new code will immediately be
+#     reloaded. For the client, the clients-side Javascript and LESS will also
+#     automatically be compiled, but this may take a few seconds. That is why
+#     you may see some changes if you reload the page immediately and others
+#     only if you do so after a few seconds.
+#
+#     Keep in mind that you do need to run the `npm install` command inside the
+#     local service directories on the host machine in order for the above setup
+#     to work.
+#
+#     In addition, the reverse proxy will expose the Minio GUI at the /minio URL
+#     to allow the developer to easily inspect the buckets.
 #
 ################################################################################
 
@@ -47,7 +69,7 @@ services:
   #
   ##############################################################################
   proxy:
-    container_name: proxy
+    container_name: proxy.dev
 
     # We can use the latest version of Nginx.
     image: nginx:latest
@@ -59,7 +81,9 @@ services:
 
     # We can use volumes to copy our reverse proxy configuration into Nginx.
     volumes:
-      - ./Proxy/nginx.conf:/etc/nginx/nginx.conf
+      # Use the development configuration to also expose the Minio at the
+      # /minio URL.
+      - ./Proxy/development.conf:/etc/nginx/nginx.conf
       - ./Proxy/error.log:/etc/nginx/error_log.log
 
     # The proxy needs access to the client, the API and the storage.
@@ -81,12 +105,12 @@ services:
   #
   ##############################################################################
   client:
-    container_name: client
+    container_name: client.dev
 
     # We always want to restart when things go wrong.
     restart: always
 
-    # We want to build from the Dockerfile in the Client directory.
+    # We want to build from the development dockerfile in the Client directory.
     build:
       context: ./Client/
       dockerfile: development.dockerfile
@@ -120,12 +144,12 @@ services:
   #
   ##############################################################################
   api:
-    container_name: api
+    container_name: api.dev
 
     # We always want to restart when things go wrong.
     restart: always
 
-    # We want to build from the Dockerfile in the Api directory.
+    # We want to build from the development dockerfile in the Api directory.
     build:
       context: ./Api/
       dockerfile: development.dockerfile
@@ -173,7 +197,7 @@ services:
   #
   ##############################################################################
   database:
-    container_name: database
+    container_name: database.dev
 
     # We can pull the latest MongoDB version.
     image: mongo:4.4
@@ -201,7 +225,7 @@ services:
   #
   ##############################################################################
   storage:
-    container_name: storage
+    container_name: storage.dev
 
     # We can pull the Minio version of a Minio server, and we want to designate
     # a data directory to persist data between restarts.

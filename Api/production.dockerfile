@@ -2,21 +2,27 @@
 FROM node:16-alpine
 
 # Define a working directory for this image.
-WORKDIR /usr/src/api
+WORKDIR /api
 
 # We want to use the Node Package Manager to install our dependencies. These
 # dependencies are listed in the package JSON files. We need them in our working
 # directory.
 COPY package*.json ./
 
-# For developer mode, we can use NPMs default install command.
-RUN npm install
+# Indicate that we're running in production.
+ENV NODE_ENV production
+
+# We only want to install the libraries that we need for production.
+RUN npm ci --only=production
+
+# Let's not run these commands as the root user.
+USER node
 
 # Copy the application files to the directory.
-COPY . .
+COPY --chown=node:node . .
 
 # We want to host the API at port 3000.
 EXPOSE 3000
 
-# Start the API application.
+# Start the API application in production mode.
 CMD ["npm", "start"]
