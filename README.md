@@ -47,8 +47,8 @@ Database  - MongoDB NoSQL database. Models and schemas are configured by the Api
 
 For more information about the microservices' configurations, check the
 `.yml` files for more documentation. For more information about the
-microservices' file structure you can view the README files in their individual
-directories.
+microservices' file structure and design philosophy you can view the README
+files in their individual directories.
 
 ## Docker Compose
 All microservices are spawned with Docker Compose and managed in the
