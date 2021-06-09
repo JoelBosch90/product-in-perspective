@@ -71,11 +71,14 @@ class Login extends BaseElement {
     }); // Listen for when the registration was successful.
 
     this._form.on("stored", response => {
-      // @TODO Do this in a much safer way. Currently, this is unprotected
-      // against cross site scripting!!!
-      localStorage.setItem('jwt', response.token); // Move to the list of apps after login.
+      // Store the JSON Web Token.
+      localStorage.setItem('jwt', response.token); // Move to the list of apps after login. Here we don't want to use our
+      // usual `goTo` function as the `goTo` function prevents full page
+      // reloads. Since we just logged in, we want a full page reload to clean
+      // up client-side caching so that all artifacts from any previous sessions
+      // disappear.
 
-      goTo('/admin/apps');
+      window.location.href = "/admin/apps";
     }); // Create a new link for navigating the register page.
 
 

@@ -77,7 +77,10 @@ To rebuild a container for a specific service (example: client):
 `docker-compose -f docker-compose.dev.yml up client`
 
 This is best to run undetached so that you have access to debug information. You
-can stop this environment with Ctrl+C in a standard Linux terminal.
+can stop this environment with Ctrl+C in a standard Linux terminal. After the
+`up` command, you'll be able to access the application at `http://localhost` and
+you can simply reload the page after you've saved changes to view them. There
+will be no need to rebuild the containers until you restart them.
 
 ## Set up your local environment variables.
 The server side of this service will require a few environment variables to be

@@ -6,8 +6,6 @@ import { FormMultiSelect } from "/javascript/widgets/Form/MultiSelect.js";
 /**
  *  The definition of the Input class that can be used to create input elements.
  *
- *  @event      changed     @TODO
- *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
