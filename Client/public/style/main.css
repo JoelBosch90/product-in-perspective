@@ -325,9 +325,9 @@ textarea.block {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-input:not(:disabled):hover,
-select:not(:disabled):hover,
-textarea:not(:disabled):hover {
+input:not(select):not(:disabled):hover,
+select:not(select):not(:disabled):hover,
+textarea:not(select):not(:disabled):hover {
   filter: brightness(125%);
   transition: brightness var(--animation-quick);
 }

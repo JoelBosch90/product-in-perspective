@@ -54,8 +54,10 @@ textarea {
     margin-bottom: .5em;
   }
 
-  // Show hover effects only when the input has not been disabled.
-  &:not(:disabled):hover {
+  // Show hover effects only when the input has not been disabled. We shouldn't
+  // attach any on hover animations to select inputs, as that might unexpectedly
+  // collapse the select option dropdown.
+  &:not(select):not(:disabled):hover {
 
     // Show a subtle on hover effect. We want to make elements light up to make
     // them stand out in our generally dark interface.
