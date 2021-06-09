@@ -6,13 +6,6 @@
 // Target all fieldsets.
 fieldset {
 
-  // Use grid to create a one column layout by default.
-  display: grid;
-  grid-template-columns: auto;
-
-  // Keep some distance between the fieldset elements.
-  gap: 1.25em;
-
   // Keep some white space around the elements.
   padding: 1em;
 
@@ -47,6 +40,18 @@ fieldset {
     // label.
     padding: 0.15em 0.45em;
     margin: 0.1em 0.3em;
+  }
+
+  // In some browsers, we cannot use grid on a fieldset element. As a
+  // workaround, we can simply wrap the inputs in a div container.
+  .fieldset-inputs {
+
+    // Use grid to create a one column layout by default.
+    display: grid;
+    grid-template-columns: auto;
+
+    // Keep some distance between the fieldset elements.
+    gap: 1.25em;
   }
 
   // Targets input elements.

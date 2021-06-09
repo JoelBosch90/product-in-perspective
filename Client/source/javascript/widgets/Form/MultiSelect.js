@@ -61,14 +61,20 @@ class FormMultiSelect extends BaseElement {
     // elements that may not immediately look like they belong together. We can
     // solve this by wrapping them in a fieldset.
     this._container = document.createElement("fieldset");
-    this._container.classList.add("multiselect");
+
+    // Some browsers will not allow certain styling on fieldsets and we do want
+    // this control. So to fix this, we wrap the input elements in a separate
+    // div.
+    const inputs = document.createElement("div");
+    inputs.classList.add("multiselect");
+    this._container.appendChild(inputs);
 
     // Add a label if provided.
     if (options.label) this.label(options.label);
 
     // Create a select input element with the options. We don't immediately want
     // to add all options.
-    this._select = new FormSelect(this._container, { label:  options.label });
+    this._select = new FormSelect(inputs, { label:  options.label });
 
     // Create a hidden select to submit the data.
     this._createHiddenField(options);
@@ -78,7 +84,7 @@ class FormMultiSelect extends BaseElement {
     if (options.options) for (const option of options.options) this.addOption(option);
 
     // Create a button to add the model that's currently selected.
-    this._add = new Button(this._container, {
+    this._add = new Button(inputs, {
       label:      'Add',
       disabled:   true,
     }).on('click', this.selectCurrent);
@@ -91,10 +97,10 @@ class FormMultiSelect extends BaseElement {
     this._selectionDisplay.classList.add("selections");
 
     // Add the selection display to this container.
-    this._container.appendChild(this._selectionDisplay);
+    inputs.appendChild(this._selectionDisplay);
 
     // Create a button to reset all selected options.
-    this._clear = new Button(this._container, {
+    this._clear = new Button(inputs, {
       label:      'Clear',
       type:       'reset',
       disabled:   true
@@ -136,7 +142,7 @@ class FormMultiSelect extends BaseElement {
         this._legend.textContent = newLabel;
 
         // Add the legend to the fieldset.
-        this._container.appendChild(this._legend);
+        this._container.prepend(this._legend);
       }
     }
 

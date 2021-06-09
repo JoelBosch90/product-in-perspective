@@ -15,9 +15,15 @@ class FormFieldset extends BaseElement {
 
   /**
    *  Reference to the legend element.
-   *  @var      {Legend}
+   *  @var      {Element}
    */
   _legend = null;
+
+  /**
+   *  Reference to the wrapper around the input elements.
+   *  @var      {Element}
+   */
+  _inputContainer = null;
 
   /**
    *  Object that is used as a dictionary for keeping track of the inputs in the
@@ -69,6 +75,12 @@ class FormFieldset extends BaseElement {
     // Create a container for the input element.
     this._container = document.createElement("fieldset");
 
+    // Some browsers don't allow for certain styling on fieldsets. We can solve
+    // this by wrapping the inputs in a div element.
+    this._inputContainer = document.createElement("div");
+    this._inputContainer.classList.add("fieldset-inputs");
+    this._container.appendChild(this._inputContainer);
+
     // Create the legend element if a text is provided.
     if (options.legend) this.legend(options.legend);
 
@@ -118,7 +130,7 @@ class FormFieldset extends BaseElement {
         this._legend.textContent = newLabel;
 
         // Add the legend to the fieldset.
-        this._container.appendChild(this._legend);
+        this._container.prepend(this._legend);
       }
     }
 
@@ -145,7 +157,7 @@ class FormFieldset extends BaseElement {
     const name = this._prefix + unprefixed;
 
     // Create an input element.
-    const input = new FormInput(this._container, Object.assign({}, options, { name }));
+    const input = new FormInput(this._inputContainer, Object.assign({}, options, { name }));
 
     // If there is already an input element with this name. If so, we need to
     // remove that first.
@@ -178,7 +190,7 @@ class FormFieldset extends BaseElement {
     const name = this._prefix + unprefixed;
 
     // Create a fieldset element. Also provide the name to the field set.
-    const fieldset = new FormFieldset(this._container, Object.assign({}, options, { name }));
+    const fieldset = new FormFieldset(this._inputContainer, Object.assign({}, options, { name }));
 
     // If there is already an fieldset element with this name. If so, we need to
     // remove that first.
@@ -209,7 +221,7 @@ class FormFieldset extends BaseElement {
     const name = this._prefix + unprefixed;
 
     // Create an button element.
-    const button = new Button(this._container, Object.assign({}, options, { name }));
+    const button = new Button(this._inputContainer, Object.assign({}, options, { name }));
 
     // If there is already an button element with this name. If so, we need to
     // remove that first.
