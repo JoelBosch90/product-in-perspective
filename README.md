@@ -36,15 +36,19 @@ Docker Compose:   https://docs.docker.com/compose/install/
 ## Microservices
 For this website, we run 5 different microservices:
 
-Proxy     - Reverse proxy to serve requests to the right services and hide the
-            internal network.
-Client    - Single Page Application style client built with a custom Javascript
-            framework. This service serves all static files except 3D models.
-Api       - Completely RESTful NodeJS API.
-Storage   - Minio Object Storage to serve the 3D models publicly in a scalable
-            way. Buckets are configured by the Api service.
-Database  - MongoDB NoSQL database. Models and schemas are configured by the Api
-            service.
+Proxy
+- Reverse proxy to serve requests to the right services and hide the internal
+  network.
+Client
+- Single Page Application style client built with a custom Javascript framework.
+  This service serves all static files except 3D models.
+Api
+- Completely RESTful NodeJS API.
+Storage
+- Minio Object Storage to serve the 3D models publicly in a scalable way.
+  Buckets are configured by the Api service.
+Database
+- MongoDB NoSQL database. Models and schemas are configured by the Api service.
 
 
 For more information about the microservices' configurations, check the

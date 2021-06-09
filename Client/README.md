@@ -18,15 +18,16 @@ Client.js file. This class contains all logic for the Node Express server.
 ## Directory structure
 You'll find two main directories here:
 
-public      - This is the directory that has all the static files that are
-              served publicly so that they can be used client-side. As a
-              developer, you normally shouldn't have to directly change these
-              files.
-source      - This is the directory that has all the source files that the
-              developer can update. These should only be moved to the public
-              directory with the `npm run build` command. This command will
-              compile JavaScript with Babel, style with LESS and copy over any
-              other static files.
+public
+- This is the directory that has all the static files that are served publicly
+  so that they can be used client-side. As a developer, you normally shouldn't
+  have to directly change these files.
+
+source
+- This is the directory that has all the source files that the developer can
+  update. These should only be moved to the public directory with the
+  `npm run build` command. This command will compile JavaScript with Babel,
+  style with LESS and copy over any other static files.
 
 
 Both of these main directories feature the same structure inside:
