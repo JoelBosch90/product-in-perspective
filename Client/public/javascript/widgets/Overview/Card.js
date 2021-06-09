@@ -2,7 +2,7 @@
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Title } from "/javascript/widgets/Title.js";
 import { Button } from "/javascript/widgets/Button.js";
-import { Modal } from "/javascript/widgets/Modal.js";
+import { Confirmation } from "/javascript/widgets/Confirmation.js";
 /**
  *  The definition of the OverviewCard class that can be used to create card
  *  components to represent an object in an overview.
@@ -109,26 +109,27 @@ class OverviewCard extends BaseElement {
 
 
   _removeHandler = id => {
-    // Create a new modal element to ask the user to confirm their choice.
-    const modal = new Modal({
+    // Create a new confirmation element to ask the user to confirm their
+    // choice.
+    const confirmation = new Confirmation({
       title: "Are you sure you want to remove this item?",
       description: "You are about to permanently remove this item. This action is irreversible."
     }); // Add a button to confirm.
 
-    modal.addButton({
+    confirmation.addButton({
       label: "Yes",
       type: "confirm"
     }).on("click", () => {
-      // Remove the modal.
-      modal.remove(); // Trigger the actual remove event.
+      // Remove the confirmation.
+      confirmation.remove(); // Trigger the actual remove event.
 
       this.trigger("remove", id);
     }); // Add a button to cancel.
 
-    modal.addButton({
+    confirmation.addButton({
       label: "No",
       type: "cancel"
-    }).on("click", () => void modal.remove());
+    }).on("click", () => void confirmation.remove());
   };
   /**
    *  Method for installing or updating the card's title.

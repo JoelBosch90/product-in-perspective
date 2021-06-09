@@ -35,7 +35,7 @@ const menu = new Menu(container, {
   pages: ['/admin'],
   // Wen want to help the user easily navigate to all overviews, and to the
   // profile page to edit his account information.
-  navigation: new Map([['Apps', '/admin/apps'], ['Products', '/admin/products'], ['Models', '/admin/models'], ['Profile', '/admin/profile']]),
+  navigation: new Map([['Apps', '/admin/apps'], ['Products', '/admin/products'], ['Models', '/admin/models'], ['Profile', '/admin/profile'], ['Log out', '']]),
   // Add quick shortcuts to allow the users to quickly create new objects.
   shortcuts: new Map([['Add app', '/admin/app/new'], ['Add product', '/admin/product/new'], ['Add model', '/admin/model/new']])
 });

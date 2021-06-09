@@ -20,7 +20,7 @@
     margin-bottom: 1.5em;
 
     // Very wide menus are hard to use, so we don't want this to grow too wide.
-    max-width: min(100%, 30em);
+    max-width: var(--max-width);
 
     // We want to always display this navigation menu overtop all standard
     // elements on the page.
@@ -39,8 +39,8 @@
     // Use Flexbox to create a layout.
     display: flex;
 
-    // Stick to one row.
-    flex-wrap: nowrap;
+    // Make sure we can always display the full navigation.
+    flex-wrap: wrap;
 
     // Keep some distance between the navigation elements.
     gap: 0.25em;
@@ -61,6 +61,9 @@
       // Make sure they don't use any border-radius at the top.
       border-top-left-radius: 0;
       border-top-right-radius: 0;
+
+      // Stick to one row.
+      white-space: nowrap;
     }
   }
 
@@ -73,6 +76,9 @@
 
     // Use Flexbox to create a layout.
     display: flex;
+
+    // Make sure we can always display the full navigation.
+    flex-wrap: wrap;
 
     // Keep some distance between the shortcut buttons.
     gap: 0.25em;

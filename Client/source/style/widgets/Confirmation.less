@@ -1,16 +1,16 @@
 /**
- *  Main styling for the Modal class.
+ *  Main styling for the Confirmation class.
  */
-.modal
+.confirmation
 {
   // Cover the entire screen.
   position: absolute;
   inset: 0;
 
-  // Darken out everything behind the modal to get the focus on the content of
-  // the modal. We want this to vaguely show the background to remind the user
-  // of the page they're on, but we also want this to be really dark so that the
-  // modal is clearly legible.
+  // Darken out everything behind the confirmation to get the focus on the
+  // content of the confirmation. We want this to vaguely show the background to
+  // remind the user of the page they're on, but we also want this to be really
+  // dark so that the confirmation texts are clearly legible.
   background: rgba(0, 0, 0, 0.85);
 
   // We want to display overtop all elements on the page. Even the menu.
@@ -24,7 +24,7 @@
   // Target just the message.
   .message
   {
-    // Center all modal texts.
+    // Center all confirmation texts.
     text-align: center;
 
     // Target the buttons container.
@@ -39,7 +39,7 @@
       gap: 1em;
 
       // We want to allow the buttons to wrap around on a new row so that they
-      // cannot break the modal's layout.
+      // cannot break the confirmation layout.
       flex-wrap: wrap;
 
       // Center the buttons.

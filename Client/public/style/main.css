@@ -88,6 +88,7 @@
   --text-font: 'Nunito', sans-serif;
   --header-font: 'Roboto Slab', sans-serif;
   --line-height: 1.75em;
+  --max-width: min(100%, 32em);
 }
 /**
  *  Extra treatment for the hidden attribute.
@@ -530,6 +531,28 @@ label {
   height: 100%;
 }
 /**
+ *  Main styling for the Confirmation class.
+ */
+.confirmation {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.confirmation .message {
+  text-align: center;
+}
+.confirmation .message .buttons {
+  margin-top: 1em;
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+/**
  *  ErrorDisplay
  *    This file installs styling for the ErrorDisplay widget.
  */
@@ -582,14 +605,14 @@ label {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 1.5em;
-  max-width: min(100%, 30em);
+  max-width: var(--max-width);
   z-index: 1;
 }
 .menu .navigation {
   position: sticky;
   top: 0;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 0.25em;
   border-bottom-left-radius: 2em;
   border-bottom-right-radius: 2em;
@@ -599,35 +622,15 @@ label {
   flex-grow: 1;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  white-space: nowrap;
 }
 .menu .shortcuts {
   padding-left: 2em;
   padding-right: 2em;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.25em;
   justify-content: space-around;
-}
-/**
- *  Main styling for the Modal class.
- */
-.modal {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal .message {
-  text-align: center;
-}
-.modal .message .buttons {
-  margin-top: 1em;
-  display: flex;
-  gap: 1em;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 /**
  *  Main styling for the Overlay class.
@@ -756,7 +759,7 @@ label {
   height: 100%;
   padding: 0 2em;
   box-sizing: border-box;
-  max-width: min(100%, 30em);
+  max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
 }

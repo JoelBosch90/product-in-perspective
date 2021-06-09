@@ -3,17 +3,18 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Button } from "/javascript/widgets/Button.js";
 
 /**
- *  The definition of the Modal class that can be used to create an overlay over
- *  the entire page. This is usually used to request the user to confirm
- *  something before proceeding.
+ *  The definition of the Confirmation class that can be used to create an
+ *  overlay over the entire page to request the user to confirm something before
+ *  proceeding.
  *
- *  Note that because the modal attaches to the entire page,
+ *  Note that because this widget attaches to the entire page, it does not
+ *  require the parent parameter that most widgets use.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
- class Modal extends BaseElement {
+ class Confirmation extends BaseElement {
 
   /**
    *  A private variable reference to the message element.
@@ -44,10 +45,9 @@ import { Button } from "/javascript/widgets/Button.js";
     // Call the base class constructor.
     super();
 
-    // Create a container for the modal. This will act as the backdrop for the
-    // modal.
+    // Create a container for the widget. This will act as the backdrop.
     this._container = document.createElement("div");
-    this._container.classList.add("modal");
+    this._container.classList.add("confirmation");
 
     // Create a separate container for the message.
     this._message = document.createElement("div");
@@ -68,7 +68,7 @@ import { Button } from "/javascript/widgets/Button.js";
       this._message.appendChild(description);
     }
 
-    // Add the modal to the body of the page.
+    // Add the confirmation to the body of the page.
     document.body.appendChild(this._container);
   }
 
@@ -119,5 +119,5 @@ import { Button } from "/javascript/widgets/Button.js";
   }
 }
 
-// Export the Modal class so it can be imported elsewhere.
-export { Modal };
+// Export the Confirmation class so it can be imported elsewhere.
+export { Confirmation };
