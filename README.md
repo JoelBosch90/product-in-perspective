@@ -35,6 +35,7 @@ Docker Compose:   https://docs.docker.com/compose/install/
 
 ## Microservices
 For this website, we run 5 different microservices:
+
 Proxy     - Reverse proxy to serve requests to the right services and hide the
             internal network.
 Client    - Single Page Application style client built with a custom Javascript
@@ -45,10 +46,12 @@ Storage   - Minio Object Storage to serve the 3D models publicly in a scalable
 Database  - MongoDB NoSQL database. Models and schemas are configured by the Api
             service.
 
+
 For more information about the microservices' configurations, check the
 `.yml` files for more documentation. For more information about the
 microservices' file structure and design philosophy you can view the README
 files in their individual directories.
+
 
 ## Docker Compose
 All microservices are spawned with Docker Compose and managed in the
@@ -56,31 +59,45 @@ All microservices are spawned with Docker Compose and managed in the
 development, respectively. To get you started, these are some of the basic
 Docker Compose commands:
 
+
 ### Production environment
 To rebuild the images:
+
 `docker-compose build`
 
+
 To run the environment (detached):
+
 `docker-compose up -d`
 
+
 To stop the environment:
+
 `docker-compose down`
+
 
 ### Development environment
 To run the environment:
+
 `docker-compose up -f docker-compose.dev.yml`
 
+
 To rebuild all images and run the environment:
+
 `docker-compose up -f docker-compose.dev.yml --build`
 
+
 To rebuild a container for a specific service (example: client):
+
 `docker-compose -f docker-compose.dev.yml up client`
+
 
 This is best to run undetached so that you have access to debug information. You
 can stop this environment with Ctrl+C in a standard Linux terminal. After the
 `up` command, you'll be able to access the application at `http://localhost` and
 you can simply reload the page after you've saved changes to view them. There
 will be no need to rebuild the containers until you restart them.
+
 
 ## Set up your local environment variables.
 The server side of this service will require a few environment variables to be
@@ -89,17 +106,25 @@ This file should be in your `.gitignore` because it should not end up in the
 repository, because it contains things like database passwords. The service
 expects the following environment variables:
 
+
 ### Database credentials.
 DATABASE_NAME
+
 DATABASE_USERNAME
+
 DATABASE_PASSWORD
+
 DATABASE_TOKEN_SECRET
+
 
 ### Object storage credentials.
 STORAGE_ACCESS_KEY
+
 STORAGE_SECRET_KEY
 
 ## SSL certificates
+
 You can follow the final part of this tutorial to configure the SSL certificates
 for this setup:
+
 https://www.domysee.com/blogposts/reverse-proxy-nginx-docker-compose
