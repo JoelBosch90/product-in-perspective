@@ -35,26 +35,25 @@ module.exports = function(app, path) {
       // to give away any information about what email address is in our
       // database if we don't have to, so we tell the user that the password is
       // incorrect for this email address.
-      if (!user) return errorResponse(response, 400, "Password incorrect.");
+      if (!user) throw new Error("Password incorrect.");
 
       // Check if the provided password matches the hash that is stored in the
       // database.
-      user.checkPassword(request.body.password, (error, isMatch) => {
+      await user.checkPassword(request.body.password)
+        .catch(error => { throw new Error("Could not authenticate."); })
+        .then(isMatch => {
 
-        // Throw a generic error if an error occurred while checking the password.
-        if (error) return errorResponse(response, 500, "Could not authenticate.");
+          // Throw the incorrect password error if the password does not match
+          // the  hash.
+          if (!isMatch) throw new Error("Password incorrect.");
 
-        // Throw the incorrect password error if the password does not match the
-        // hash.
-        if (!isMatch) errorResponse(response, 400, "Password incorrect.");
-
-        // Send back the user's ID and token for confirmation if login was
-        // successful.
-        return response.send({
-          id:     user._id,
-          token:  user.createToken(),
+          // Send back the user's ID and token for confirmation if login was
+          // successful.
+          return response.send({
+            id:     user._id,
+            token:  user.createToken(),
+          });
         });
-      });
 
      // Listen for any errors that the database might throw.
     } catch (error) {

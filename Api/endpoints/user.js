@@ -26,6 +26,17 @@ module.exports = function(app, path) {
     // The database might throw an error.
     try {
 
+      // Check that the user didn't misstype the password.
+      if (request.body.password != request.body.repeat) throw new Error("Passwords do not match.");
+
+      // Check if a user with this email already exists.
+      const existing = await request.context.models.User.findOne({
+        email:  request.body.email,
+      });
+
+      // If so, throw an error, as emails should be unique.
+      if (existing) throw new Error("An account for this email address already exists.");
+
       // Try to add the new user to the database.
       const user = await request.context.models.User.create({
         email:    request.body.email,
@@ -33,7 +44,7 @@ module.exports = function(app, path) {
       });
 
       // Check if adding the user worked.
-      if (!user) errorResponse(response, 500, "Could not register new user.");
+      if (!user) throw new Error("Could not register new user.");
 
       // Confirm that the request was successfully processed.
       return response.send(true);
