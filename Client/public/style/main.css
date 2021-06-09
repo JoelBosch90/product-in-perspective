@@ -608,6 +608,28 @@ label {
   justify-content: space-around;
 }
 /**
+ *  Main styling for the Modal class.
+ */
+.modal {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal .message {
+  text-align: center;
+}
+.modal .message .buttons {
+  margin-top: 1em;
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+/**
  *  Main styling for the Overlay class.
  */
 .overlay {

@@ -2,6 +2,7 @@
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
 import { Title } from "/javascript/widgets/Title.js";
 import { Button } from "/javascript/widgets/Button.js";
+import { Modal } from "/javascript/widgets/Modal.js";
 
 /**
  *  The definition of the OverviewCard class that can be used to create card
@@ -97,7 +98,7 @@ class OverviewCard extends BaseElement {
         type:   "remove",
 
       // Trigger an event that communicates that the user wants to remove.
-      }).on("click", () => void this.trigger("remove", options.id));
+      }).on("click", () => void this._removeHandler(options.id));
     }
 
     // Install the other options.
@@ -105,6 +106,40 @@ class OverviewCard extends BaseElement {
 
     // Add the card to the parent container.
     parent.appendChild(this._container);
+  }
+
+  /**
+   *  Private method to double check with the user before triggering the remove
+   *  event.
+   *  @param    {string}    id          The id of the item that the user wants
+   *                                    removed.
+   */
+  _removeHandler = id => {
+
+    // Create a new modal element to ask the user to confirm their choice.
+    const modal = new Modal({
+      title:  "Are you sure you want to remove this item?",
+      description: "You are about to permanently remove this item. This action is irreversible.",
+    });
+
+    // Add a button to confirm.
+    modal.addButton({
+      label:  "Yes",
+      type:   "confirm",
+    }).on("click", () => {
+
+      // Remove the modal.
+      modal.remove();
+
+      // Trigger the actual remove event.
+      this.trigger("remove", id);
+    })
+
+    // Add a button to cancel.
+    modal.addButton({
+      label:  "No",
+      type:   "cancel",
+    }).on("click", () => void modal.remove());
   }
 
   /**

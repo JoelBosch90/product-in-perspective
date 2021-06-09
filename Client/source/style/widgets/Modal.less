@@ -1,0 +1,49 @@
+/**
+ *  Main styling for the Modal class.
+ */
+.modal
+{
+  // Cover the entire screen.
+  position: absolute;
+  inset: 0;
+
+  // Darken out everything behind the modal to get the focus on the content of
+  // the modal. We want this to vaguely show the background to remind the user
+  // of the page they're on, but we also want this to be really dark so that the
+  // modal is clearly legible.
+  background: rgba(0, 0, 0, 0.85);
+
+  // We want to display overtop all elements on the page. Even the menu.
+  z-index: 2;
+
+  // Use Flexbox to align the message to the center of the screen.
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Target just the message.
+  .message
+  {
+    // Center all modal texts.
+    text-align: center;
+
+    // Target the buttons container.
+    .buttons {
+
+      // Keep some white space between the buttons and the rest of the message.
+      margin-top: 1em;
+
+      // Use Flexbox to create a layout for the buttons so that we can use the
+      // gap property to properly space them.
+      display: flex;
+      gap: 1em;
+
+      // We want to allow the buttons to wrap around on a new row so that they
+      // cannot break the modal's layout.
+      flex-wrap: wrap;
+
+      // Center the buttons.
+      justify-content: center;
+    }
+  }
+}
