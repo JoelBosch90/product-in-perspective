@@ -10,6 +10,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^9.0.1",
     "express": "^4.17.1",
+    "express-rate-limit": "^5.2.6",
     "fbx2gltf": "*",
     "gltf-pipeline": "^3.0.2",
     "jsonwebtoken": "^8.5.1",

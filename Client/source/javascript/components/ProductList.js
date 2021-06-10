@@ -106,12 +106,13 @@ class ProductList extends BaseElement {
               });
           });
 
+          // Redirect the user to the edit form if requested.
           this._overview.on('edit', id => void goTo('/admin/product/' + id));
-
-          // Add the new element to the parent container.
-          parent.appendChild(this._container);
         })
       });
+
+    // Add the new element to the parent container.
+    parent.appendChild(this._container);
   }
 
   /**

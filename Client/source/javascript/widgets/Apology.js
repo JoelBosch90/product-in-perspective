@@ -49,7 +49,7 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
    *  @param      {string}    message   The new message to install.
    *  @returns    {Apology}
    */
-  update = () => {
+  update = message => {
 
     // Install the new message by overwriting the previous one.
     this._title.textContent = message;

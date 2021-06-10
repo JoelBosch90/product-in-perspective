@@ -90,14 +90,14 @@ class ProductList extends BaseElement {
             // the overview as well.
             if (response.ok) cards[id].remove();
           });
-        });
-
-        this._overview.on('edit', id => void goTo('/admin/product/' + id)); // Add the new element to the parent container.
+        }); // Redirect the user to the edit form if requested.
 
 
-        parent.appendChild(this._container);
+        this._overview.on('edit', id => void goTo('/admin/product/' + id));
       });
-    });
+    }); // Add the new element to the parent container.
+
+    parent.appendChild(this._container);
   }
   /**
    *  Method to remove this object and clean up after itself. We have to use

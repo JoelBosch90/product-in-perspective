@@ -107,11 +107,11 @@ class ModelList extends BaseElement {
           });
 
           this._overview.on('edit', id => void goTo('/admin/model/' + id));
-
-          // Add the new element to the parent container.
-          parent.appendChild(this._container);
         })
       });
+
+    // Add the new element to the parent container.
+    parent.appendChild(this._container);
   }
 
   /**

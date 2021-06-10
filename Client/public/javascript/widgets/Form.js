@@ -273,13 +273,15 @@ class Form extends BaseElement {
   };
   /**
    *  Method for showing errors.
-   *  @param    {string}      error   Error message.
+   *  @param    {string|Error}      error   Error message.
    *  @returns  {Form}
    */
 
   showError = error => {
-    // Clear the error display to show the new error.
-    this._errorDisplay.clear().add(error); // Allow chaining.
+    // If this is an Error object, we should extract the error message first.
+    const message = error instanceof Error ? error.message : error; // Clear the error display to show the new error.
+
+    this._errorDisplay.clear().add(message); // Allow chaining.
 
 
     return this;

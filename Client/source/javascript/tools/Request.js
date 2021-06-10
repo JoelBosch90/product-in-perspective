@@ -49,15 +49,36 @@ class Request {
   }
 
   /**
+   *  Private method to check for common errors. We do this because our widgets
+   *  expect promises to fail when things go wrong, but fetch only fails the
+   *  promise if connection errors happen.
+   *  @param    {Promise}  request  Fetch API request.
+   *  @returns  {Promise}
+   */
+  _errorCheck = async (request) => {
+
+    // Wait for the response to arrive.
+    const response = await request;
+
+    console.log(response);
+
+    // Check if the response was rejected for too many requests.
+    if (response.status == 429) throw new Error("Received too many requests. Try again later.");
+
+    // If we found no known errors, we can pass on the response.
+    return response;
+  }
+
+  /**
    *  Method for performing a PUT request. Returns a promise that will
    *  resolve in a Response object.
-   *  @param    {string}    url     URL that points to the API endpoint.
+   *  @param    {string}    url       URL that points to the API endpoint.
    *  @returns  {Promise}
    */
   get = async (url = '') => {
 
     // Use fetch to perform the HTTP request.
-    return fetch(this._apiUrl + url, {
+    return this._errorCheck(fetch(this._apiUrl + url, {
       method:         'GET',
       mode:           'cors',
       cache:          'no-cache',
@@ -67,7 +88,7 @@ class Request {
       },
       redirect:       'follow',
       referrerPolicy: 'no-referrer'
-    });
+    }));
   }
 
   /**
@@ -85,7 +106,7 @@ class Request {
     return this._encodeFiles(data).then(encoded => {
 
       // Use fetch to perform the HTTP request.
-      return fetch(this._apiUrl + url, {
+      return this._errorCheck(fetch(this._apiUrl + url, {
         method:         'PUT',
         mode:           'cors',
         cache:          'no-cache',
@@ -96,7 +117,7 @@ class Request {
         redirect:       'follow',
         referrerPolicy: 'no-referrer',
         body:           JSON.stringify(encoded),
-      });
+      }));
     });
   }
 
@@ -115,7 +136,7 @@ class Request {
     return this._encodeFiles(data).then(encoded => {
 
       // Use fetch to perform the HTTP request.
-      return fetch(this._apiUrl + url, {
+      return this._errorCheck(fetch(this._apiUrl + url, {
         method:         'POST',
         mode:           'cors',
         cache:          'no-cache',
@@ -126,7 +147,7 @@ class Request {
         redirect:       'follow',
         referrerPolicy: 'no-referrer',
         body:           JSON.stringify(encoded),
-      });
+      }));
     });
   }
 
@@ -139,7 +160,7 @@ class Request {
   delete = async (url = '') => {
 
     // Use fetch to perform the HTTP request.
-    return fetch(this._apiUrl + url, {
+    return this._errorCheck(fetch(this._apiUrl + url, {
       method:         'DELETE',
       mode:           'cors',
       cache:          'no-cache',
@@ -149,7 +170,7 @@ class Request {
       },
       redirect:       'follow',
       referrerPolicy: 'no-referrer',
-    });
+    }));
   }
 
   /**

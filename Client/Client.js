@@ -1,5 +1,6 @@
 // Load libraries.
 const express = require('express');
+const rateLimit = require("express-rate-limit");
 
 /**
  *  The definition of the Client class component that is used to serve all
@@ -27,6 +28,19 @@ class Client {
 
     // Get the express application object.
     const app = express();
+
+    // We are behind a reverse proxy that we should trust.
+    app.set('trust proxy', true);
+
+    // We want to install protection against DDOS attacks.
+    app.use(rateLimit({
+
+      // Set a limit per 10 minutes.
+      windowMs: 600000,
+
+      // Allow a maxium of 500 requests for a single user.
+      max: 500,
+    }));
 
     // Store the absolute path to the directory that holds the public files.
     this._publicDir = __dirname  + '/public';

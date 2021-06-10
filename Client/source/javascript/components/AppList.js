@@ -117,11 +117,11 @@ class AppList extends BaseElement {
 
           // Link the view button to the URL of the appropiate app.
           this._overview.on('view', id => void goTo ('/app/' + paths[id]));
-
-          // Add the new element to the parent container.
-          parent.appendChild(this._container);
         })
       });
+
+    // Add the new element to the parent container.
+    parent.appendChild(this._container);
   }
 
   /**

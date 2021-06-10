@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const jwt = require("jsonwebtoken");
 const cookieParser = require('cookie-parser');
+const rateLimit = require("express-rate-limit");
 
 // Import dependencies.
 const Database = require('./Database.js');
@@ -63,6 +64,9 @@ class Api {
 
     // Store the config for reference.
     this._config = config;
+
+    // We are behind a reverse proxy that we should trust.
+    app.set('trust proxy', true);
 
     // Connect to the database.
     this._connectDatabase(app);
@@ -180,6 +184,16 @@ class Api {
 
     // We need to be able to set and read cookies.
     app.use(cookieParser());
+
+    // We want to install protection against DDOS attacks.
+    app.use(rateLimit({
+
+      // Set a limit per 10 minutes.
+      windowMs: 600000,
+
+      // Allow a maxium of 500 requests for a single user.
+      max: 500,
+    }));
   }
 
   /**

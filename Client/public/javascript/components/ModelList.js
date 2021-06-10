@@ -92,12 +92,11 @@ class ModelList extends BaseElement {
           });
         });
 
-        this._overview.on('edit', id => void goTo('/admin/model/' + id)); // Add the new element to the parent container.
-
-
-        parent.appendChild(this._container);
+        this._overview.on('edit', id => void goTo('/admin/model/' + id));
       });
-    });
+    }); // Add the new element to the parent container.
+
+    parent.appendChild(this._container);
   }
   /**
    *  Method to remove this object and clean up after itself. We have to use

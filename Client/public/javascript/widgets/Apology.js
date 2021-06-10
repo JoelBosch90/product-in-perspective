@@ -47,7 +47,7 @@ class Apology extends BaseElement {
    */
 
 
-  update = () => {
+  update = message => {
     // Install the new message by overwriting the previous one.
     this._title.textContent = message; // Allow chaining.
 
