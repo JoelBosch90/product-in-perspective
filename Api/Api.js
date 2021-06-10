@@ -187,11 +187,11 @@ class Api {
     // We want to install protection against DDOS attacks.
     app.use(rateLimit({
 
-      // Set a limit per 10 minutes.
-      windowMs: 600000,
+      // Set a limit per minute.
+      windowMs: 60000,
 
-      // Allow a maxium of 500 requests for a single user.
-      max: 500,
+      // Allow a maxium number of requests for a single user.
+      max: 100,
     }));
   }
 

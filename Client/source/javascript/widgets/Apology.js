@@ -1,5 +1,6 @@
 // Import dependencies.
 import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { goTo } from "/javascript/tools/goTo.js";
 
 /**
  *  The definition of the Apology class that can be used to create an apology
@@ -23,8 +24,11 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
    *  @param    {Element}   parent    The parent element on which the
    *                                  overlay interface will be installed.
    *  @param    {string}    message   Message to display to the user.
+   *  @param    {Object}    link      Optional link for navigation.
+   *    @property {string}    text      The text to display for the link.
+   *    @property {string}    location  Where to navigate to.
    */
-  constructor(parent, message) {
+  constructor(parent, message, link) {
 
     // Call the base class constructor.
     super();
@@ -39,6 +43,9 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 
     // Add the message.
     this._container.appendChild(this._title);
+
+    // Add the link if requested.
+    if (link) this.addLink(link.text, link.location);
 
     // Add the overlay to the parent container.
     parent.appendChild(this._container);
@@ -56,6 +63,43 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 
     // Allow chaining.
     return this;
+  }
+
+  /**
+   *  Private method to add anchors to a container.
+   *  @param  {string}      text        The text for the link.
+   *  @param  {string}      location    The location to which the link should
+   *                                    redirect.
+   */
+  addLink = (text, location) => {
+
+    // Create the anchor.
+    const anchor = document.createElement("a");
+
+    // Make the anchor tag look like a button.
+    anchor.classList.add("button");
+
+    // While we will overwrite clicks on the anchor tag, we should still add
+    // the href so that it can use all other uses of an anchor tag, like copy
+    // link on right click and open in different tab with middle mouse click.
+    anchor.setAttribute("href", location);
+
+    // Add the text.
+    anchor.textContent = text;
+
+    // Navigate to the right page when this anchor is clicked.
+    anchor.addEventListener("click", event => {
+
+      // We don't want to use the regular click event on anchor tags to
+      // navigate, as that will reload the page.
+      event.preventDefault();
+
+      // Instead we use our own goTo function to navigate.
+      goTo(location);
+    });
+
+    // Add the anchor to the navigation menu.
+    this._container.appendChild(anchor);
   }
 
   /**

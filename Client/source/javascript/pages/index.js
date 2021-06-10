@@ -115,11 +115,11 @@ const router = new Router(new Map([
   .on("navigate", page => void view.install(page.component, page.options))
 
   // Show an apology if the route could not be found.
-  .on("not-found", () => void view.install(Apology, "This page could not be found."))
+  .on("not-found", () => void view.install(Apology, "This page could not be found.", { text: 'Visit login', location: '/login' }))
 
   // Show an apology if the user is trying to access a protected route they are
   // not allowed to access.
-  .on("not-allowed", () => void view.install(Apology, "You are not allowed to view this page."))
+  .on("not-allowed", () => void view.install(Apology, "You are not allowed to view this page.", { text: 'Visit login', location: '/login' }))
 
   // Make sure we initially honor the current URL request.
   .navigateToCurrent();

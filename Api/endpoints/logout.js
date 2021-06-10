@@ -1,3 +1,6 @@
+// Import dependencies
+const unauthorize = require("../tools/unauthorize");
+
 /**
  *  This function acts as an API endpoint for logging out.
  *  @param    {EventEmitter}  app       The express application object.
@@ -20,40 +23,8 @@ module.exports = function(app, path) {
    */
   app.get(path, async (request, response) => {
 
-    // Remove the JWT token cookie. It is important that we provide the exact
-    // same options when setting the cookie or browsers will not remove it.
-    response.clearCookie("token", {
-
-      // Let this cookie expire when the token does, in 24 hours.
-      maxAge:     86400000,
-
-      // Make sure that client-side JavaScript cannot access this cookie.
-      httpOnly:   true,
-
-      // Force HTTPS when used in a production environment.
-      secure:     process.env.NODE_ENV == 'production',
-
-      // We should only send this cookie when requested on a website with
-      // the same top-level domain.
-      sameSite:   'Strict',
-    });
-
-    // Also clear the convenience active session cookie.
-    response.clearCookie("clientToken", {
-
-      // Let this cookie expire in 24 hours, just like the token.
-      maxAge:     86400000,
-
-      // Make sure that client-side JavaScript can access this cookie.
-      httpOnly:   false,
-
-      // Force HTTPS when used in a production environment.
-      secure:     process.env.NODE_ENV == 'production',
-
-      // We should only send this cookie when requested on a website with
-      // the same top-level domain.
-      sameSite:   'Strict',
-    });
+    // Remove authorization.
+    unauthorize(response);
 
     // Indicate success always.
     return response.send(true);

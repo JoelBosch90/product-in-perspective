@@ -53,8 +53,8 @@ class Menu extends BaseElement {
     this._pages = options.pages;
 
     // Add the menu anchors to the right parts of the menu.
-    this._addAnchor(navigation, options.navigation);
-    this._addAnchor(shortcuts, options.shortcuts);
+    this._addAnchors(navigation, options.navigation);
+    this._addAnchors(shortcuts, options.shortcuts);
 
     // Start listening for URL changes.
     window.addEventListener('popstate', this._processPathChange);
@@ -98,7 +98,7 @@ class Menu extends BaseElement {
    *  @param  {Map}         entries     Map of anchor text, to navigation
    *                                    location for the anchors to add.
    */
-  _addAnchor = (parent, entries) => {
+  _addAnchors = (parent, entries) => {
 
     // Loop through the navigation anchors.
     for (const [text, location] of entries) {
