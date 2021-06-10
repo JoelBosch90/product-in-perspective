@@ -1,3 +1,6 @@
+// Import dependencies.
+import { getCookies } from "/javascript/tools/getCookies.js";
+
 /**
  *  The definition of the Request class that can be used to perform HTTP
  *  requests.
@@ -68,6 +71,14 @@ class Request {
   }
 
   /**
+   *  Private method to get the XSRF token from the cookies.
+   *  @returns  {string}
+   */
+  _xsrfToken = () => {
+    return getCookies()['xsrfToken'];
+  }
+
+  /**
    *  Method for performing a PUT request. Returns a promise that will
    *  resolve in a Response object.
    *  @param    {string}    url       URL that points to the API endpoint.
@@ -83,6 +94,7 @@ class Request {
       credentials:    'include',
       headers:      {
         'Content-Type':   'application/json',
+        'X-XSRF-TOKEN':   this._xsrfToken(),
       },
       redirect:       'follow',
       referrerPolicy: 'no-referrer'
@@ -111,6 +123,7 @@ class Request {
         credentials:    'include',
         headers:      {
           'Content-Type':   'application/json',
+          'X-XSRF-TOKEN':   this._xsrfToken(),
         },
         redirect:       'follow',
         referrerPolicy: 'no-referrer',
@@ -141,6 +154,7 @@ class Request {
         credentials:    'include',
         headers:      {
           'Content-Type':   'application/json',
+          'X-XSRF-TOKEN':   this._xsrfToken(),
         },
         redirect:       'follow',
         referrerPolicy: 'no-referrer',
@@ -165,6 +179,7 @@ class Request {
       credentials:    'include',
       headers:      {
         'Content-Type':   'application/json',
+        'X-XSRF-TOKEN':   this._xsrfToken(),
       },
       redirect:       'follow',
       referrerPolicy: 'no-referrer',

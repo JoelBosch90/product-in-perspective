@@ -1,5 +1,6 @@
 // Import dependencies
 import { EventHandler } from "/javascript/tools/EventHandler.js";
+import { getCookies } from "/javascript/tools/getCookies.js";
 
 /**
  *  The definition of the Router class that handles all routing in the app. This
@@ -85,21 +86,8 @@ class Router extends EventHandler {
    */
   _loggedIn = () => {
 
-    // Get all the cookies as an object.
-    const cookies = document.cookie.split('; ').reduce((accumulator, current) => {
-
-      // Split them by the equals operator.
-      const [key, value] = current.split('=');
-
-      // Assign the key value combination for each cookie to the object.
-      accumulator[key] = value;
-
-      // Return the object to keep checking.
-      return accumulator;
-    }, {});
-
     // We should have a cookie that says we're logged in.
-    return cookies['activeSession'] == 'true';
+    return !!getCookies()['xsrfToken'];
   }
 
   /**

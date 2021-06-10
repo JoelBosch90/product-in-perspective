@@ -39,14 +39,13 @@ class Api {
    *    @property {object}    api         The API part of the configuration.
    *      @property {string}    host        The API application host.
    *      @property {number}    port        The API application port.
+   *      @property {string}    secret      The secret for creating tokens.
    *    @property {object}    database    The database credentials.
    *      @property {string}    name        The name of the database.
    *      @property {string}    user        The username for connecting to the
    *                                        database.
    *      @property {string}    password    The password for connecting to the
    *                                        database.
-   *      @property {string}    secret      The database secret for creating
-   *                                        tokens.
    *      @property {string}    host        The URL to connect to the database.
    *      @property {number}    port        The port to connect to the database.
    *    @property {object}    storage     The object storage credentials.
@@ -200,7 +199,7 @@ class Api {
    *  Private method to install middleware to authenticate each request.
    *  @param    {EventEmitter}    app     The express application object.
    */
-   _installAuthentication = app => {
+  _installAuthentication = app => {
 
     /**
      * Install new middleware on the Express app.
@@ -215,19 +214,24 @@ class Api {
     app.use(async (request, response, next) => {
 
       // Check if we have an access token.
-      const token = request.cookies['token'];
+      const httpToken = request.cookies['httpToken'];
+
+      // Get the XRSRF token from the headers.
+      const xsrfToken = request.headers['x-xsrf-token'];
 
       // If there is a token, we want to confirm it so that we can set the
       // special access variables.
-      if (token) {
+      if (httpToken) {
 
         // Verify the JWT.
-        jwt.verify(token, this._config.database.secret, (error, decoded) => {
+        jwt.verify(httpToken, this._config.api.secret, (error, decoded) => {
+
+          console.log({ xsrfToken, xsrf: decoded.xsrf });
 
           // If verification fails, we won't add the special access variables.
           // If authentication is required, this will cause the endpoint to
           // fail.
-          if (error) return;
+          if (error || xsrfToken != decoded.xsrf) return;
 
           // Create or expand the context for each request.
           request.context = Object.assign({}, request.context, {

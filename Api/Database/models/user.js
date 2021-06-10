@@ -5,8 +5,6 @@
 // Import dependencies.
 const mongoose = require('mongoose');
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-require('dotenv').config();
 
 // Create a new schema for the User entity.
 const userSchema = new mongoose.Schema({
@@ -50,20 +48,6 @@ userSchema.methods.checkPassword = function(password) {
       // Otherwise, resolve into whether or not the password matches.
       resolve(isMatch);
     });
-  });
-}
-
-/**
- *  Install an extra method for creating a JSON web token.
- *  @returns  {string}
- */
-userSchema.methods.createToken = function() {
-
-  // Create a new JWT for authentication.
-  return jwt.sign({ id: this._id }, process.env.DATABASE_TOKEN_SECRET, {
-
-    // Let each token expire in 24 hours.
-    expiresIn: 86400,
   });
 }
 

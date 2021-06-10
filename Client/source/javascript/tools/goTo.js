@@ -1,6 +1,5 @@
 /**
  *  Helper function to visit any page in the app without refreshing the page.
- *
  *  @param    {string}      path    Path to visit.
  */
 const goTo = path => {

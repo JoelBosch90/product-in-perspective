@@ -16,6 +16,11 @@ const api = new Api({
   api: {
     host:       process.env.HOST,
     port:       process.env.PORT,
+
+    // Get the local token that will be used to hash the authentication tokens.
+    // WARNING: refreshing this token will invalidate all current tokens, even
+    // if they've not yet expired.
+    secret:     process.env.TOKEN_SECRET,
   },
 
   // The API will need credentials to connect to the database.
@@ -23,11 +28,6 @@ const api = new Api({
     name:       process.env.DATABASE_NAME,
     user:       process.env.DATABASE_USERNAME,
     password:   process.env.DATABASE_PASSWORD,
-
-    // Get the local token that will be used to hash the authentication tokens.
-    // WARNING: refreshing this token will invalidate all current tokens, even
-    // if they've not yet expired.
-    secret:     process.env.DATABASE_TOKEN_SECRET,
 
     // Get the host and the port that point to the object storage.
     host:       process.env.DATABASE_HOST,

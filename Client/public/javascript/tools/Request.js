@@ -1,3 +1,5 @@
+// Import dependencies.
+import { getCookies } from "/javascript/tools/getCookies.js";
 /**
  *  The definition of the Request class that can be used to perform HTTP
  *  requests.
@@ -6,6 +8,7 @@
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
+
 class Request {
   /**
    *  This is a path to the location of the API.
@@ -60,6 +63,14 @@ class Request {
     return response;
   };
   /**
+   *  Private method to get the XSRF token from the cookies.
+   *  @returns  {string}
+   */
+
+  _xsrfToken = () => {
+    return getCookies()['xsrfToken'];
+  };
+  /**
    *  Method for performing a PUT request. Returns a promise that will
    *  resolve in a Response object.
    *  @param    {string}    url       URL that points to the API endpoint.
@@ -74,7 +85,8 @@ class Request {
       cache: 'no-cache',
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': this._xsrfToken()
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer'
@@ -100,7 +112,8 @@ class Request {
         cache: 'no-cache',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': this._xsrfToken()
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
@@ -128,7 +141,8 @@ class Request {
         cache: 'no-cache',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': this._xsrfToken()
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
@@ -151,7 +165,8 @@ class Request {
       cache: 'no-cache',
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': this._xsrfToken()
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer'

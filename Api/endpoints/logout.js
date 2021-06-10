@@ -39,7 +39,7 @@ module.exports = function(app, path) {
     });
 
     // Also clear the convenience active session cookie.
-    response.clearCookie("activeSession", {
+    response.clearCookie("clientToken", {
 
       // Let this cookie expire in 24 hours, just like the token.
       maxAge:     86400000,
