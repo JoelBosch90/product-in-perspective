@@ -4,6 +4,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const jwt = require("jsonwebtoken");
+const cookieParser = require('cookie-parser');
 
 // Import dependencies.
 const Database = require('./Database.js');
@@ -164,7 +165,7 @@ class Api {
     // grow larger than that. Even though these files shouldn't be too large as
     // they need to work well on the web; we still want to allow for larger
     // files.
-    const limit = '85mb';
+    const limit = '25mb';
 
     // We need to get access to the request data in the request's body object.
     // In this API, we want to exclusively use JSON objects to communicate with
@@ -176,6 +177,9 @@ class Api {
       // We do want to use nested objects.
       extended: true,
     }));
+
+    // We need to be able to set and read cookies.
+    app.use(cookieParser());
   }
 
   /**
@@ -197,7 +201,7 @@ class Api {
     app.use(async (request, response, next) => {
 
       // Check if we have an access token.
-      const token = request.headers["x-access-token"];
+      const token = request.cookies['token'];
 
       // If there is a token, we want to confirm it so that we can set the
       // special access variables.

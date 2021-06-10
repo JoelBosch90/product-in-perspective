@@ -71,17 +71,39 @@ class Router extends EventHandler {
     return this;
   };
   /**
+   *  Method to check if the user is currently logged in. We can check this by
+   *  checking the cookie that is set when logging in. This cookie does not
+   *  contain the actual authorization token, but is simply a client-side
+   *  indication to see if we should still be logged in.
+   *  @returns  {boolean}
+   */
+
+  _loggedIn = () => {
+    // Get all the cookies as an object.
+    const cookies = document.cookie.split('; ').reduce((accumulator, current) => {
+      // Split them by the equals operator.
+      const [key, value] = current.split('='); // Assign the key value combination for each cookie to the object.
+
+      accumulator[key] = value; // Return the object to keep checking.
+
+      return accumulator;
+    }, {}); // We should have a cookie that says we're logged in.
+
+    return cookies['activeSession'] == 'true';
+  };
+  /**
    *  Method to trigger the navigate event based on the provided URL.
    *  @param    {string}    path      The part of the URL after the domain.
    *  @returns  {Router}
    */
 
   navigateTo = path => {
-    // Check if the user is currently logged in to see if we should show
-    // protected routes. This is not really for security. The API will only ever
-    // show data that the user is authorized to receive. Instead, this is for
-    // user convenience to show whether he is properly authorized or not.
-    const authorized = !!localStorage.getItem('jwt'); // If the user is not authorized, see if this path is protected.
+    // We want to check if the user is currently logged in to see if we should
+    // show protected routes. This is not really for security. The API will only
+    // ever show data that the user is authorized to receive. Instead, this is
+    // for user convenience to show whether he is properly authorized or not.
+    const authorized = this._loggedIn(); // If the user is not authorized, see if this path is protected.
+
 
     if (!authorized) for (const protectedPath of this._protected) {
       // If the path starts with a protected path, trigger a 'not-allowed'

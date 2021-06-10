@@ -39,21 +39,53 @@ module.exports = function(app, path) {
 
       // Check if the provided password matches the hash that is stored in the
       // database.
-      await user.checkPassword(request.body.password)
-        .catch(error => { throw new Error("Could not authenticate."); })
-        .then(isMatch => {
+      const isMatch = await user.checkPassword(request.body.password)
+        .catch(error => { throw new Error("Could not authenticate."); });
 
-          // Throw the incorrect password error if the password does not match
-          // the hash.
-          if (!isMatch) throw new Error("Password incorrect.");
+      // Throw the incorrect password error if the password does not match
+      // the hash.
+      if (!isMatch) throw new Error("Password incorrect.");
 
-          // Send back the user's ID and token for confirmation if login was
-          // successful.
-          return response.send({
-            id:     user._id,
-            token:  user.createToken(),
-          });
-        });
+      // Add the JSON web token as an HTTP only cookie for authentication.
+      response.cookie('token', user.createToken(), {
+
+        // Let this cookie expire when the token does, in 24 hours.
+        maxAge:     86400000,
+
+        // Make sure that client-side JavaScript cannot access this cookie.
+        httpOnly:   true,
+
+        // Force HTTPS when used in a production environment.
+        secure:     process.env.NODE_ENV == 'production',
+
+        // We should only send this cookie when requested on a website with
+        // the same top-level domain.
+        sameSite:   'Strict',
+      });
+
+      // We send a second cookie to the client.
+      response.cookie('activeSession', true, {
+
+        // Let this cookie expire in 24 hours, just like the token.
+        maxAge:     86400000,
+
+        // Make sure that client-side JavaScript can access this cookie.
+        httpOnly:   false,
+
+        // Force HTTPS when used in a production environment.
+        secure:     process.env.NODE_ENV == 'production',
+
+        // We should only send this cookie when requested on a website with
+        // the same top-level domain.
+        sameSite:   'Strict',
+      });
+
+      // Send back the user's ID and token for confirmation if login was
+      // successful.
+      return response.send({
+        id:     user._id,
+        token:  user.createToken(),
+      });
 
      // Listen for any errors that the database might throw.
     } catch (error) {

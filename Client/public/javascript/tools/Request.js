@@ -56,10 +56,9 @@ class Request {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
-      credentials: 'omit',
+      credentials: 'include',
       headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': localStorage.getItem('jwt')
+        'Content-Type': 'application/json'
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer'
@@ -83,10 +82,9 @@ class Request {
         method: 'PUT',
         mode: 'cors',
         cache: 'no-cache',
-        credentials: 'omit',
+        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': localStorage.getItem('jwt')
+          'Content-Type': 'application/json'
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
@@ -112,10 +110,9 @@ class Request {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
-        credentials: 'omit',
+        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': localStorage.getItem('jwt')
+          'Content-Type': 'application/json'
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
@@ -136,10 +133,9 @@ class Request {
       method: 'DELETE',
       mode: 'cors',
       cache: 'no-cache',
-      credentials: 'omit',
+      credentials: 'include',
       headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': localStorage.getItem('jwt')
+        'Content-Type': 'application/json'
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer'
