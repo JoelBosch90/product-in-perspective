@@ -9,6 +9,7 @@ import { Router } from "/javascript/tools/Router.js";
 import { Apology } from "/javascript/widgets/Apology.js"; // Import components.
 
 import { Login } from "/javascript/components/Login.js";
+import { Logout } from "/javascript/components/Logout.js";
 import { Registration } from "/javascript/components/Registration.js";
 import { PasswordForm } from "/javascript/components/PasswordForm.js";
 import { App } from "/javascript/components/App.js";
@@ -35,7 +36,7 @@ const menu = new Menu(container, {
   pages: ['/admin'],
   // Wen want to help the user easily navigate to all overviews, and to the
   // profile page to edit his account information.
-  navigation: new Map([['Apps', '/admin/apps'], ['Products', '/admin/products'], ['Models', '/admin/models'], ['Profile', '/admin/profile'], ['Log out', '']]),
+  navigation: new Map([['Apps', '/admin/apps'], ['Products', '/admin/products'], ['Models', '/admin/models'], ['Profile', '/admin/profile'], ['Log out', '/logout']]),
   // Add quick shortcuts to allow the users to quickly create new objects.
   shortcuts: new Map([['Add app', '/admin/app/new'], ['Add product', '/admin/product/new'], ['Add model', '/admin/model/new']])
 });
@@ -67,7 +68,7 @@ const view = new View(container, {
 
 const router = new Router(new Map([// This route will serve all apps.
 ['/app/:appPath', App], // These routes will serve the admin interface.
-['/', Login], ['/login', Login], ['/register', Registration], ['/admin', AppList], ['/admin/apps', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/models', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/products', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm], ['/admin/profile', PasswordForm]]), {
+['/', Login], ['/login', Login], ['/logout', Logout], ['/register', Registration], ['/admin', AppList], ['/admin/apps', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/models', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/products', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm], ['/admin/profile', PasswordForm]]), {
   // Protect the admin routes.
   protected: ['/admin']
 }) // Make sure that we pass on any navigation requests to the View widget.

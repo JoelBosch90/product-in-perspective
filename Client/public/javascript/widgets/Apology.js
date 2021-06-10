@@ -12,11 +12,17 @@ import { BaseElement } from "/javascript/widgets/BaseElement.js";
 
 class Apology extends BaseElement {
   /**
+   *  Reference to the header element we are using.
+   *  @var      {Element}
+   */
+  _title = null;
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element on which the
    *                                  overlay interface will be installed.
    *  @param    {string}    message   Message to display to the user.
    */
+
   constructor(parent, message) {
     // Call the base class constructor.
     super(); // Create a container for the overlay.
@@ -26,13 +32,36 @@ class Apology extends BaseElement {
     this._container.classList.add("apology"); // Create the message to display.
 
 
-    const title = document.createElement("h1");
-    title.textContent = message; // Add the message.
+    this._title = document.createElement("h1");
+    this._title.textContent = message; // Add the message.
 
-    this._container.appendChild(title); // Add the overlay to the parent container.
+    this._container.appendChild(this._title); // Add the overlay to the parent container.
 
 
     parent.appendChild(this._container);
+  }
+  /**
+   *  Method to update the current message.
+   *  @param      {string}    message   The new message to install.
+   *  @returns    {Apology}
+   */
+
+
+  update = () => {
+    // Install the new message by overwriting the previous one.
+    this._title.textContent = message; // Allow chaining.
+
+    return this;
+  };
+  /**
+   *  Method to remove the current object.
+   */
+
+  remove() {
+    // Remove the title.
+    if (this._title) this._title.remove(); // Let the BaseElement remove the container.
+
+    super.remove();
   }
 
 } // Export the Apology class so it can be imported elsewhere.

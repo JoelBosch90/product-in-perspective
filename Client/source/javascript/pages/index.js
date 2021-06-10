@@ -11,6 +11,7 @@ import { Apology } from "/javascript/widgets/Apology.js";
 
 // Import components.
 import { Login } from "/javascript/components/Login.js";
+import { Logout } from "/javascript/components/Logout.js";
 import { Registration } from "/javascript/components/Registration.js";
 import { PasswordForm } from "/javascript/components/PasswordForm.js";
 import { App } from "/javascript/components/App.js";
@@ -44,7 +45,7 @@ const menu = new Menu(container, {
     ['Products', '/admin/products'],
     ['Models', '/admin/models'],
     ['Profile', '/admin/profile'],
-    ['Log out', ''],
+    ['Log out', '/logout'],
   ]),
 
   // Add quick shortcuts to allow the users to quickly create new objects.
@@ -91,6 +92,7 @@ const router = new Router(new Map([
   // These routes will serve the admin interface.
   ['/', Login],
   ['/login', Login],
+  ['/logout', Logout],
   ['/register', Registration],
   ['/admin', AppList],
   ['/admin/apps', AppList],

@@ -2,7 +2,7 @@
 const errorResponse = require("../tools/errorResponse");
 
 /**
- *  This function acts as an API endpoint for actings involving users.
+ *  This function acts as an API endpoint for logging in.
  *  @param    {EventEmitter}  app       The express application object.
  *  @param    {string}        path      The path to this endpoint. All routes
  *                                      that are processed here should start
