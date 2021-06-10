@@ -44,7 +44,7 @@ module.exports = function(app, path) {
         .then(isMatch => {
 
           // Throw the incorrect password error if the password does not match
-          // the  hash.
+          // the hash.
           if (!isMatch) throw new Error("Password incorrect.");
 
           // Send back the user's ID and token for confirmation if login was

@@ -52,8 +52,54 @@ module.exports = function(app, path) {
     // Listen for any errors that the database might throw.
     } catch (error) {
 
+      // Return the error to the client.
+      return errorResponse(response, 400, error);
+    }
+  });
+
+ /**
+  *  This is the endpoint to change a user's password.
+  *  @param    {IncomingMessage} request   Information object about the
+  *                                        request.
+  *  @param    {ServerResponse}  response  Object to construct the response
+  *                                        message.
+  *  @returns  {ServerResponse}
+  *
+  *  Authentication level required:
+  *      authenticated
+  */
+ app.post(`${path}/password`, async (request, response) => {
+
+  // This is only available to an authenticated user.
+  if (!request.context.authenticated) return errorResponse(response, 401, "Request not allowed.");
+
+  // The database might throw an error.
+  try {
+
+    // Check that the user didn't misstype the password.
+    if (request.body.password != request.body.repeat) throw new Error("Passwords do not match.");
+
+    // Get the user from the database.
+    const user = await request.context.models.User.findOne({
+      _id:        request.context.user,
+    });
+
+    // Set the new password.
+    user.set({ password: request.body.password });
+
+    // Save the user. We want to use the save method here instead of an update
+    // or updateOne method so that the 'pre save' condition is triggered and
+    // the password is properly validated and hashed.
+    await user.save();
+
+    // Confirm that the request was successfully processed.
+    return response.send(true);
+
+  // Listen for any errors that the database might throw.
+  } catch (error) {
+
     // Return the error to the client.
     return errorResponse(response, 400, error);
-   }
- });
+    }
+  });
 }

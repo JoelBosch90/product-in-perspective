@@ -1,27 +1,13 @@
 # Environment variables and config files should not end up in the repository
 # since they're specific to the environment.
 .env
-server/Client/source/javascript/config.js
-server/Client/public/javascript/config.js
 
 # No need to copy over all node modules or any logs.
 node_modules
 *.log
 
-# Ignore the javascript config file.
-server/Client/source/javascript/config.js
-server/Client/public/javascript/config.js
-
-# Ignore evrything inside the temporary file upload directory.
-server/Api/Storage/tmp/*
-
-# Ignore all the files inside the minio directory.
-server/Api/Storage/minio/*
-minio.1
-minio.service
-
-# Ignore local database files.
-server/Api/Database/data/*
+# Ignore everything inside the temporary file upload directory.
+Api/Storage/tmp/*
 
 # Ignore the examples directory.
-examples/*
+examples

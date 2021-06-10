@@ -70,11 +70,11 @@ const errorResponse = require("../tools/errorResponse");
       // Now we can update the product.
       const modified = await request.context.models.Product.updateOne({
         _id:  request.params.productId,
-        user: request.context.user
+        user: request.context.user,
       }, request.body);
 
       // Check if we did indeed find the product.
-      if (modified.nModified <= 0) return  errorResponse(response, 404, "Product could not be found.");
+      if (modified.nModified <= 0) return errorResponse(response, 404, "Product could not be found.");
 
       // Confirm success.
       return response.send(true);

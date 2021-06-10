@@ -28,10 +28,9 @@ class PasswordForm extends BaseElement {
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
-   *  @param    {array}     options
    */
 
-  constructor(parent, options = {}) {
+  constructor(parent) {
     // Call the base class constructor first.
     super(); // Create a container for this component.
 
@@ -43,6 +42,9 @@ class PasswordForm extends BaseElement {
     this._form = new Form(this._container, {
       title: "Change password",
       center: true,
+      params: {
+        post: "/user/password"
+      },
       inputs: [{
         name: "password",
         options: {
