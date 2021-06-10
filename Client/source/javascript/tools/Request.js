@@ -60,8 +60,6 @@ class Request {
     // Wait for the response to arrive.
     const response = await request;
 
-    console.log(response);
-
     // Check if the response was rejected for too many requests.
     if (response.status == 429) throw new Error("Received too many requests. Try again later.");
 

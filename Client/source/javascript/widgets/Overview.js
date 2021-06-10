@@ -141,8 +141,6 @@ class Overview extends BaseElement {
     // If this is an Error object, we should extract the error message first.
     const message = error instanceof Error ? error.message : error;
 
-    console.log(message);
-
     // Clear the error display to show the new error.
     this._errorDisplay.clear().add(message);
 
