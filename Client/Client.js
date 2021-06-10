@@ -39,7 +39,7 @@ class Client {
       windowMs: 60000,
 
       // Allow a maxium number of requests for a single user.
-      max: 100,
+      max: 1000,
     }));
 
     // Store the absolute path to the directory that holds the public files.

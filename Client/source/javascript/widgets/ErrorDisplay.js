@@ -43,7 +43,7 @@ class ErrorDisplay extends BaseElement {
     const p = document.createElement("p");
 
     // Install the error text.
-    p.textContent = "Error: " + error.toLowerCase();
+    p.textContent = "Error: " + error;
 
     // Add the error to the display.
     this._container.appendChild(p);

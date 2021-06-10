@@ -66,6 +66,9 @@ class Request {
     // Check if the response was rejected for too many requests.
     if (response.status == 429) throw new Error("Received too many requests. Try again later.");
 
+    // Check if the response was rejected for too many requests.
+    if (response.status == 401) throw new Error("Request not allowed. You need to be logged in.");
+
     // If we found no known errors, we can pass on the response.
     return response;
   }

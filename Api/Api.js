@@ -8,8 +8,9 @@ const cookieParser = require('cookie-parser');
 const rateLimit = require("express-rate-limit");
 
 // Import dependencies.
-const Database = require('./Database.js');
-const Storage = require('./Storage.js');
+const Database = require('./Database');
+const Storage = require('./Storage');
+const unauthorize = require("./tools/unauthorize");
 
 /**
  *  The definition of the Api class component that is used to process all API
@@ -226,12 +227,10 @@ class Api {
         // Verify the JWT.
         jwt.verify(httpToken, this._config.api.secret, (error, decoded) => {
 
-          console.log({ xsrfToken, xsrf: decoded.xsrf });
-
-          // If verification fails, we won't add the special access variables.
-          // If authentication is required, this will cause the endpoint to
-          // fail.
-          if (error || xsrfToken != decoded.xsrf) return;
+          // If verification fails, we will remove the current authorization
+          // tokens. If authentication is required, this will cause the endpoint
+          // to fail.
+          if (error || xsrfToken != decoded.xsrf) return unauthorize(response);
 
           // Create or expand the context for each request.
           request.context = Object.assign({}, request.context, {
