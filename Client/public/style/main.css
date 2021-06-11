@@ -600,6 +600,9 @@ label {
 .menu {
   display: contents;
 }
+.menu .current {
+  filter: brightness(0.5);
+}
 .menu .navigation,
 .menu .shortcuts {
   margin-top: 0;

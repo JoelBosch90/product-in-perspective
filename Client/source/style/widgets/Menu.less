@@ -6,6 +6,13 @@
   // This is a container only, it should not affect the document flow.
   display: contents;
 
+  // Select the link for the current page.
+  .current
+  {
+    // Make it darker so that it appears to be pressed.
+    filter: brightness(.5);
+  }
+
   // Target both parts of the menu.
   .navigation, .shortcuts
   {

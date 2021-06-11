@@ -254,6 +254,14 @@
      */
     _pages = null;
     /**
+     *  We want to keep track of all the locations that we link to and map them to
+     *  their buttons so that we can use the navigation to show which page we're
+     *  currently on.
+     *  @var      {Map}
+     */
+
+    _locations = new Map();
+    /**
      *  Class constructor.
      *  @param    {Element}   parent    The parent element to which the select
      *                                  will be added.
@@ -312,7 +320,10 @@
 
     _processPathChange = event => {
       // Get the current path name.
-      const currentPath = window.location.pathname; // Loop through all stored pages.
+      const currentPath = window.location.pathname; // Try to get the current selection from the path.
+
+      this._setCurrentSelection(currentPath); // Loop through all stored pages.
+
 
       for (const page of this._pages) {
         // If the route starts with this page, we should show the menu.
@@ -321,6 +332,25 @@
 
 
       return this.hide();
+    };
+    /**
+     *  Private method to show which navigation button corresponds to the current
+     *  URL.
+     *  @param  {string}      path        The currently selected path.
+     */
+
+    _setCurrentSelection = path => {
+      // Go through all current anchors.
+      for (const [location, anchor] of this._locations.entries()) {
+        // Make sure none have the current class.
+        anchor.classList.remove('current');
+      } // If we cannot match the path to the location one of the anchors points to,
+      // none are selected.
+
+
+      if (!this._locations.has(path)) return; // Now we can set the current class on the matching anchor.
+
+      this._locations.get(path).classList.add('current');
     };
     /**
      *  Private method to add anchors to a container.
@@ -349,7 +379,10 @@
           event.preventDefault(); // Instead we use our own goTo function to navigate.
 
           goTo(location);
-        }); // Add the anchor to the navigation menu.
+        }); // Keep track of the locations and map them to the anchors.
+
+        this._locations.set(location, anchor); // Add the anchor to the navigation menu.
+
 
         parent.append(anchor);
       }
@@ -361,7 +394,12 @@
 
     remove() {
       // Stop listening for URL changes.
-      window.removeEventListener('popstate', this._processPathChange); // Call the BaseElement remove method that will remove the container.
+      window.removeEventListener('popstate', this._processPathChange); // Reset our private variables.
+
+      this._pages = null;
+
+      this._locations.clear(); // Call the BaseElement remove method that will remove the container.
+
 
       super.remove();
     }
