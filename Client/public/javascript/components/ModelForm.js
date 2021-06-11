@@ -77,10 +77,14 @@ class ModelForm extends BaseElement {
     } // If not, we'll create a new one.
     : {
       post: '/model'
-    }; // Create a form for creating an new model.
+    }; // Determine the form's title.
+
+    const title = formOptions.modelId ? "Model configuration" : "Model creation"; // Use the form's title as the page title.
+
+    this.pageTitle(title); // Create a form for creating an new model.
 
     this._form = new Form(this._container, {
-      title: "Model creation",
+      title,
       center: true,
       params,
       inputs: [{

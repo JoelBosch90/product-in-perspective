@@ -44,8 +44,14 @@ class Logout extends BaseElement {
     // Create a container for this component.
     this._container = document.createElement("div");
 
+    // Determine the component's title.
+    const title = "Logging out.";
+
+    // Use the component's title as the page title.
+    this.pageTitle(title);
+
     // Show a brief message that we're logging out.
-    this._apology = new Apology(this._container, "Logging out.");
+    this._apology = new Apology(this._container, title);
 
     // We need to make an API call to log off so we need the Request object.
     this._request = new Request();

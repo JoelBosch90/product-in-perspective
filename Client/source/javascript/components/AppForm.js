@@ -51,9 +51,15 @@ class AppForm extends BaseElement {
     this._container = document.createElement("div");
     this._container.classList.add("appform", "component");
 
+    // Determine the form's title.
+    const title = options.appId ? "App configuration" : "App creation";
+
+    // Use the form's title as the page title.
+    this.pageTitle(title);
+
     // Create a form for creating an app.
     this._form = new Form(this._container, {
-      title:    "App creation",
+      title,
       center:   true,
       params,
       inputs: [

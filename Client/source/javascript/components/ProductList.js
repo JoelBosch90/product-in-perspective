@@ -56,9 +56,15 @@ class ProductList extends BaseElement {
     // Create a new request object.
     this._request = new Request();
 
+    // Determine the overviews's title.
+    const title = "Product overview";
+
+    // Use the overview's title as the page title.
+    this.pageTitle(title);
+
     // Create a product overview.
     this._overview = new Overview(this._container, {
-      title: "Product overview",
+      title,
       center: true,
     });
 

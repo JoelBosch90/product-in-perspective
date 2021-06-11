@@ -257,7 +257,7 @@ class Representation extends BaseElement {
   /**
    *  Private method to load the barcode scanner.
    */
-_loadBarcodeScanner = () => {
+  _loadBarcodeScanner = () => {
 
     // Create a new barcode scanner.
     this._scanner = new BarcodeScanner(this._container);
@@ -273,7 +273,7 @@ _loadBarcodeScanner = () => {
     const scannerOverlay = this._scanner.overlay();
 
     // Set the app's name as the page title.
-    document.getElementsByTagName("title")[0].textContent = this._texts["name"];
+    this.pageTitle(this._texts["name"]);
 
     // Add a title to the overlay.
     scannerOverlay.add("h1", {

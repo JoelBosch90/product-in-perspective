@@ -97,6 +97,9 @@ class Overview extends BaseElement {
       if (newTitle) this._title = new Title(this._container, { title: newTitle });
     }
 
+    // Use the overview's title as the page title.
+    document.getElementsByTagName("title")[0].textContent = newTitle;
+
     // Allow chaining.
     return this;
   }

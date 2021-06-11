@@ -41,37 +41,43 @@ class Login extends BaseElement {
     this._container = document.createElement("div");
     this._container.classList.add("login", "component");
 
+    // Determine the form's title.
+    const title = "Login";
+
+    // Use the form's title as the page title.
+    this.pageTitle(title);
+
     // Create a login form.
     this._form = new Form(this._container, {
-      title:      "Login",
-      center:     true,
+      title,
+      center:  true,
       params: {
-        post:        '/login',
+        post: '/login',
       },
       inputs: [
         {
-          name:       "email",
+          name: "email",
           options: {
-            label:      "Email address",
-            type:       "email",
-            required:   true,
+            label: "Email address",
+            type: "email",
+            required: true,
           },
         },
         {
-          name:       "password",
+          name: "password",
           options: {
-            label:      "Password",
-            type:       "password",
-            required:   true,
+            label: "Password",
+            type: "password",
+            required: true,
           },
         },
       ],
       buttons: [
         {
-          name:       "submit",
+          name: "submit",
           options: {
-            label:      "Login",
-            type:       "submit",
+            label: "Login",
+            type: "submit",
           },
         },
       ],

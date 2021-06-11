@@ -123,10 +123,14 @@ class ProductForm extends BaseElement {
     } // If not, we'll create a new one.
     : {
       post: '/product'
-    }; // Create a form for creating an new product.
+    }; // Determine the form's title.
+
+    const title = formOptions.productId ? "Product configuration" : "Product creation"; // Use the form's title as the page title.
+
+    this.pageTitle(title); // Create a form for creating an new product.
 
     this._form = new Form(this._container, {
-      title: "Product creation",
+      title,
       center: true,
       params,
       inputs: [{

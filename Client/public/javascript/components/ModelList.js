@@ -52,10 +52,14 @@ class ModelList extends BaseElement {
     this._container.classList.add("modellist", "component"); // Create a new request object.
 
 
-    this._request = new Request(); // Create a model overview.
+    this._request = new Request(); // Determine the overviews's title.
+
+    const title = "Model overview"; // Use the overview's title as the page title.
+
+    this.pageTitle(title); // Create a model overview.
 
     this._overview = new Overview(this._container, {
-      title: "Model overview",
+      title,
       center: true
     }); // First, request a list of all models. Store the promise.
 

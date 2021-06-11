@@ -20,13 +20,36 @@ class BaseElement extends EventHandler {
    */
   _container = null;
   /**
+   *  If we've ever set a page title, we want to remember that so that we can
+   *  reinstall that title if we are showing again.
+   */
+
+  _pageTitle = null;
+  /**
+   *  Method to set the page title.
+   *  @param    {string}    newTitle    The new title to install.
+   *  @returns  {BaseElement}
+   */
+
+  pageTitle(newTitle) {
+    // Remember this title.
+    this._pageTitle = newTitle; // Install it as the page's title.
+
+    document.getElementsByTagName("title")[0].textContent = newTitle; // Allow chaining.
+
+    return this;
+  }
+  /**
    *  Method to show this element.
    *  @returns  {BaseElement}
    */
 
+
   show() {
     // Make sure we're not hiding.
-    if (this._container) this._container.removeAttribute('hidden'); // Allow chaining.
+    if (this._container) this._container.removeAttribute('hidden'); // If we have a page title, we want to install it again.
+
+    if (this._pageTitle) this.pageTitle(this._pageTitle); // Allow chaining.
 
     return this;
   }

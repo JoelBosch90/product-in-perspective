@@ -36,11 +36,15 @@ class PasswordForm extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("passwordform", "component"); // Create a change password.
+    this._container.classList.add("passwordform", "component"); // Determine the form's title.
 
+
+    const title = "Change password"; // Use the form's title as the page title.
+
+    this.pageTitle(title); // Create a change password.
 
     this._form = new Form(this._container, {
-      title: "Change password",
+      title,
       center: true,
       params: {
         post: "/user/password"

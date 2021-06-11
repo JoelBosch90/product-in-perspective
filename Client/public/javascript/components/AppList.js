@@ -52,10 +52,14 @@ class AppList extends BaseElement {
     this._container.classList.add("applist", "component"); // Create a new request object.
 
 
-    this._request = new Request(); // Create a app overview.
+    this._request = new Request(); // Determine the overviews's title.
+
+    const title = "App overview"; // Use the overview's title as the page title.
+
+    this.pageTitle(title); // Create a app overview.
 
     this._overview = new Overview(this._container, {
-      title: "App overview",
+      title,
       center: true
     }); // First, request a list of all apps. Store the promise.
 

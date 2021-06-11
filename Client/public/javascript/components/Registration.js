@@ -41,11 +41,15 @@ class Registration extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("registration", "component"); // Create a registration form.
+    this._container.classList.add("registration", "component"); // Determine the form's title.
 
+
+    const title = "Registration"; // Use the form's title as the page title.
+
+    this.pageTitle(title); // Create a registration form.
 
     this._form = new Form(this._container, {
-      title: "Registration",
+      title,
       center: true,
       params: {
         post: '/user'

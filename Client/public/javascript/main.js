@@ -162,13 +162,36 @@
      */
     _container = null;
     /**
+     *  If we've ever set a page title, we want to remember that so that we can
+     *  reinstall that title if we are showing again.
+     */
+
+    _pageTitle = null;
+    /**
+     *  Method to set the page title.
+     *  @param    {string}    newTitle    The new title to install.
+     *  @returns  {BaseElement}
+     */
+
+    pageTitle(newTitle) {
+      // Remember this title.
+      this._pageTitle = newTitle; // Install it as the page's title.
+
+      document.getElementsByTagName("title")[0].textContent = newTitle; // Allow chaining.
+
+      return this;
+    }
+    /**
      *  Method to show this element.
      *  @returns  {BaseElement}
      */
 
+
     show() {
       // Make sure we're not hiding.
-      if (this._container) this._container.removeAttribute('hidden'); // Allow chaining.
+      if (this._container) this._container.removeAttribute('hidden'); // If we have a page title, we want to install it again.
+
+      if (this._pageTitle) this.pageTitle(this._pageTitle); // Allow chaining.
 
       return this;
     }
@@ -3077,11 +3100,15 @@
 
       this._container = document.createElement("div");
 
-      this._container.classList.add("login", "component"); // Create a login form.
+      this._container.classList.add("login", "component"); // Determine the form's title.
 
+
+      const title = "Login"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a login form.
 
       this._form = new Form(this._container, {
-        title: "Login",
+        title,
         center: true,
         params: {
           post: '/login'
@@ -3182,9 +3209,13 @@
       // Call the base class constructor first.
       super(); // Create a container for this component.
 
-      this._container = document.createElement("div"); // Show a brief message that we're logging out.
+      this._container = document.createElement("div"); // Determine the component's title.
 
-      this._apology = new Apology(this._container, "Logging out."); // We need to make an API call to log off so we need the Request object.
+      const title = "Logging out."; // Use the component's title as the page title.
+
+      this.pageTitle(title); // Show a brief message that we're logging out.
+
+      this._apology = new Apology(this._container, title); // We need to make an API call to log off so we need the Request object.
 
       this._request = new Request();
 
@@ -3258,11 +3289,15 @@
 
       this._container = document.createElement("div");
 
-      this._container.classList.add("registration", "component"); // Create a registration form.
+      this._container.classList.add("registration", "component"); // Determine the form's title.
 
+
+      const title = "Registration"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a registration form.
 
       this._form = new Form(this._container, {
-        title: "Registration",
+        title,
         center: true,
         params: {
           post: '/user'
@@ -3364,11 +3399,15 @@
 
       this._container = document.createElement("div");
 
-      this._container.classList.add("passwordform", "component"); // Create a change password.
+      this._container.classList.add("passwordform", "component"); // Determine the form's title.
 
+
+      const title = "Change password"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a change password.
 
       this._form = new Form(this._container, {
-        title: "Change password",
+        title,
         center: true,
         params: {
           post: "/user/password"
@@ -5781,7 +5820,7 @@
       const scannerOverlay = this._scanner.overlay(); // Set the app's name as the page title.
 
 
-      document.getElementsByTagName("title")[0].textContent = this._texts["name"]; // Add a title to the overlay.
+      this.pageTitle(this._texts["name"]); // Add a title to the overlay.
 
       scannerOverlay.add("h1", {
         text: this._texts["scanning-title"],
@@ -6434,8 +6473,10 @@
         if (newTitle) this._title = new Title(this._container, {
           title: newTitle
         });
-      } // Allow chaining.
+      } // Use the overview's title as the page title.
 
+
+      document.getElementsByTagName("title")[0].textContent = newTitle; // Allow chaining.
 
       return this;
     };
@@ -6550,10 +6591,14 @@
       this._container.classList.add("applist", "component"); // Create a new request object.
 
 
-      this._request = new Request(); // Create a app overview.
+      this._request = new Request(); // Determine the overviews's title.
+
+      const title = "App overview"; // Use the overview's title as the page title.
+
+      this.pageTitle(title); // Create a app overview.
 
       this._overview = new Overview(this._container, {
-        title: "App overview",
+        title,
         center: true
       }); // First, request a list of all apps. Store the promise.
 
@@ -6665,11 +6710,15 @@
 
       this._container = document.createElement("div");
 
-      this._container.classList.add("appform", "component"); // Create a form for creating an app.
+      this._container.classList.add("appform", "component"); // Determine the form's title.
 
+
+      const title = options.appId ? "App configuration" : "App creation"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a form for creating an app.
 
       this._form = new Form(this._container, {
-        title: "App creation",
+        title,
         center: true,
         params,
         inputs: [{
@@ -6831,10 +6880,14 @@
       this._container.classList.add("modellist", "component"); // Create a new request object.
 
 
-      this._request = new Request(); // Create a model overview.
+      this._request = new Request(); // Determine the overviews's title.
+
+      const title = "Model overview"; // Use the overview's title as the page title.
+
+      this.pageTitle(title); // Create a model overview.
 
       this._overview = new Overview(this._container, {
-        title: "Model overview",
+        title,
         center: true
       }); // First, request a list of all models. Store the promise.
 
@@ -6967,10 +7020,14 @@
       } // If not, we'll create a new one.
       : {
         post: '/model'
-      }; // Create a form for creating an new model.
+      }; // Determine the form's title.
+
+      const title = formOptions.modelId ? "Model configuration" : "Model creation"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a form for creating an new model.
 
       this._form = new Form(this._container, {
-        title: "Model creation",
+        title,
         center: true,
         params,
         inputs: [{
@@ -7103,10 +7160,14 @@
       this._container.classList.add("productlist", "component"); // Create a new request object.
 
 
-      this._request = new Request(); // Create a product overview.
+      this._request = new Request(); // Determine the overviews's title.
+
+      const title = "Product overview"; // Use the overview's title as the page title.
+
+      this.pageTitle(title); // Create a product overview.
 
       this._overview = new Overview(this._container, {
-        title: "Product overview",
+        title,
         center: true
       }); // First, request a list of all products. Store the promise.
 
@@ -7286,10 +7347,14 @@
       } // If not, we'll create a new one.
       : {
         post: '/product'
-      }; // Create a form for creating an new product.
+      }; // Determine the form's title.
+
+      const title = formOptions.productId ? "Product configuration" : "Product creation"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a form for creating an new product.
 
       this._form = new Form(this._container, {
-        title: "Product creation",
+        title,
         center: true,
         params,
         inputs: [{
