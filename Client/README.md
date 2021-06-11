@@ -15,6 +15,13 @@ environment variables and initializes the Client class which is found in the
 Client.js file. This class contains all logic for the Node Express server.
 
 
+## Development mode
+When in development mode, the Client will serve CSS and JavaScript files
+unbundled and unminified for an easier time debugging, but in the background it
+also constantly updates the bundled and minified versions that will be used in
+a production environment to reduce the number and size of requests.
+
+
 ## Directory structure
 You'll find two main directories here:
 

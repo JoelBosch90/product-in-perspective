@@ -69,14 +69,9 @@ Docker Compose commands:
 
 
 ### Production environment
-To rebuild the images:
-
-`docker-compose build`
-
-
 To run the environment (detached):
 
-`docker-compose up -d`
+`docker-compose up -d --build`
 
 
 To stop the environment:
@@ -85,19 +80,9 @@ To stop the environment:
 
 
 ### Development environment
-To run the environment:
-
-`docker-compose up -f docker-compose.dev.yml`
-
-
 To rebuild all images and run the environment:
 
-`docker-compose up -f docker-compose.dev.yml --build`
-
-
-To rebuild a container for a specific service (example: client):
-
-`docker-compose -f docker-compose.dev.yml up client`
+`docker-compose -f docker-compose.dev.yml up --build`
 
 
 This is best to run undetached so that you have access to debug information. You
@@ -115,6 +100,10 @@ repository, because it contains things like database passwords. The service
 expects the following environment variables:
 
 
+### JSON Webtoken secret.
+TOKEN_SECRET
+
+
 ### Database credentials.
 DATABASE_NAME
 
@@ -122,16 +111,14 @@ DATABASE_USERNAME
 
 DATABASE_PASSWORD
 
-DATABASE_TOKEN_SECRET
-
 
 ### Object storage credentials.
 STORAGE_ACCESS_KEY
 
 STORAGE_SECRET_KEY
 
-## SSL certificates
 
+## SSL certificates
 You can follow the final part of this tutorial to configure the SSL certificates
 for this setup:
 
