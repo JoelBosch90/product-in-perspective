@@ -9,6 +9,8 @@ require('dotenv').config();
 // Import API.
 const Api = require('./Api.js');
 
+console.log(process.env);
+
 // Start serving the API.
 const api = new Api({
 
@@ -25,7 +27,6 @@ const api = new Api({
 
   // The API will need credentials to connect to the database.
   database: {
-    name:       process.env.DATABASE_NAME,
     user:       process.env.DATABASE_USERNAME,
     password:   process.env.DATABASE_PASSWORD,
 

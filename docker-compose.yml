@@ -139,7 +139,8 @@ services:
     expose:
       - "3000"
 
-    # We can get the environment variables from our environment variables file.
+    # We can get any necessary secrets and credentials from our environment
+    # variables file.
     env_file:
       - .env
 
@@ -179,6 +180,11 @@ services:
     volumes:
       - /data/database:/data/db
 
+    # We want to fire up MongoDB with the proper credentials.
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DATABASE_PASSWORD}
+
     # Only the api needs access to the database, so it does not need to be
     # publicly available. We can add it to the protected network.
     networks:
@@ -208,6 +214,11 @@ services:
     # restarts.
     volumes:
       - /data/storage:/data
+
+    # We want to fire up Minio with with the proper credentials.
+    environment:
+      - MINIO_ROOT_USER=${STORAGE_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${STORAGE_SECRET_KEY}
 
     # We need the reverse proxy to expose the models bucket publicly, so we need
     # to give it access to the storage service.

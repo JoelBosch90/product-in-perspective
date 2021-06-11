@@ -42,7 +42,6 @@ class Api {
    *      @property {number}    port        The API application port.
    *      @property {string}    secret      The secret for creating tokens.
    *    @property {object}    database    The database credentials.
-   *      @property {string}    name        The name of the database.
    *      @property {string}    user        The username for connecting to the
    *                                        database.
    *      @property {string}    password    The password for connecting to the

@@ -22,7 +22,6 @@ class Database {
   /**
    *  Class constructor.
    *  @param    {object}    config      The configuration object.
-   *    @property {string}    name        The name of the database.
    *    @property {string}    user        The username for connecting to the
    *                                      database.
    *    @property {string}    password    The password for connecting to the
