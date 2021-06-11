@@ -602,6 +602,7 @@ label {
 }
 .menu .current {
   filter: brightness(0.5);
+  transition: filter var(--animation-quick);
 }
 .menu .navigation,
 .menu .shortcuts {
