@@ -74,9 +74,10 @@ const view = new View(container, {
   // the next component through the router.
   Widget:     Apology,
   params:     ["Loading..."],
+})
 
-// Listen for any unrecoverable errors and show the message to the user.
-}).on("error", error => void view.install(Apology, error));
+  // Listen for any unrecoverable errors and show the message to the user.
+  .on("error", error => void view.install(Apology, error));
 
 /**
  *  Create a new Router instance. The Router will listen for any changes to the

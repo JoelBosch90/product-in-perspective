@@ -56,9 +56,9 @@ const view = new View(container, {
   // By default, we want to install an apology that indicates that we're loading
   // the next component through the router.
   Widget: Apology,
-  params: ["Loading..."] // Listen for any unrecoverable errors and show the message to the user.
-
-}).on("error", error => void view.install(Apology, error));
+  params: ["Loading..."]
+}) // Listen for any unrecoverable errors and show the message to the user.
+.on("error", error => void view.install(Apology, error));
 /**
  *  Create a new Router instance. The Router will listen for any changes to the
  *  URL, whether manually by the user, or programmatically with the goTo()

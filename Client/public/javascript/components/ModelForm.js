@@ -1,4 +1,5 @@
 // Import dependencies.
+import { ModelList } from "./ModelList.js";
 import { BaseElement } from "../widgets/BaseElement.js";
 import { Request } from "../tools/Request.js";
 import { Form } from "../widgets/Form.js";
@@ -159,7 +160,13 @@ class ModelForm extends BaseElement {
       }]
     }); // When the model was stored successfully, return to the model overview.
 
-    this._form.on("stored", () => void goTo('/admin/models'));
+    this._form.on("stored", () => {
+      // We should clear the cache related to models, as we have probably
+      // changed something.
+      this.trigger("clearCache", [ModelForm, ModelList]); // Return the the model overview.
+
+      goTo('/admin/models');
+    });
   };
   /**
    *  Method to remove this object and clean up after itself. We have to use

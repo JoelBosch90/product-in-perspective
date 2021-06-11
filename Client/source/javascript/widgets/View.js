@@ -89,6 +89,9 @@ class View extends BaseElement {
       // If not, create an instance of this widget.
       const instance = new Widget(this._container, ...params);
 
+      // Remove widgets from the cache if requested.
+      instance.on("clearCache", this._removeWidgets);
+
       // Make sure we propagate all events that this widget triggers.
       instance.bubbleTo(this);
 
@@ -176,6 +179,41 @@ class View extends BaseElement {
     this._widgets.delete(Class);
 
     // Now clean up the widget itself.
+    widget.instance.remove();
+  }
+
+  /**
+   *  Private method to remove multiple specific widgets from the cache.
+   *  @param    {array}     widgets     Classes of the widgets to remove.
+   */
+  _removeWidgets = widgets => {
+
+    // If widgets are not specified, we should clear the entire cache to be sure.
+    if (widgets === undefined) return this.clear();
+
+    // Loop through the widgets to remove each one.
+    for (const Widget of widgets) this._removeWidget(Widget);
+  }
+
+  /**
+   *  Private method to remove a specific widget from the cache.
+   *  @param    {Class}     Widget      Class of the widget to remove.
+   */
+  _removeWidget = Widget => {
+
+    // Cannot remove a widget if it is not provied.
+    if (!Widget) return;
+
+    // First, get the instantiated widget.
+    const widget = this._widgets.get(Widget);
+
+    // No need to remove a widget that is not in cache.
+    if (!widget) return;
+
+    // Remove the widget from our cache.
+    this._widgets.delete(Widget);
+
+    // Clean up the widget itself.
     widget.instance.remove();
   }
 

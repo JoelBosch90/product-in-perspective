@@ -1,4 +1,5 @@
 // Import dependencies.
+import { AppList } from "./AppList.js";
 import { BaseElement } from "../widgets/BaseElement.js";
 import { Form } from "../widgets/Form.js";
 import { goTo } from "../tools/goTo.js";
@@ -6,6 +7,9 @@ import { goTo } from "../tools/goTo.js";
 /**
  *  The definition of the AppForm class component that can be used to load
  *  a form to create a new app.
+ *
+ *  @event      clearCache    Triggered when the form has been stored to prevent
+ *                            displaying old data.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
@@ -181,7 +185,15 @@ class AppForm extends BaseElement {
     });
 
     // When the app was stored successfully, return to the app overview.
-    this._form.on("stored", () => void goTo('/admin/apps'));
+    this._form.on("stored", () => {
+
+      // We should clear the cache related to apps, as we have probably changed
+      // something.
+      this.trigger("clearCache", [AppForm, AppList]);
+
+      // Return the the app overview.
+      goTo('/admin/apps');
+    });
 
     // Add the new element to the parent container.
     parent.appendChild(this._container);

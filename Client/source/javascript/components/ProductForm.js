@@ -1,4 +1,5 @@
 // Import dependencies.
+import { ProductList } from "./ProductList.js";
 import { Request} from "../tools/Request.js";
 import { BaseElement } from "../widgets/BaseElement.js";
 import { Form } from "../widgets/Form.js";
@@ -198,7 +199,15 @@ class ProductForm extends BaseElement {
     });
 
     // When the product was stored successfully, return to the product overview.
-    this._form.on("stored", () => void goTo('/admin/products'));
+    this._form.on("stored", () => {
+
+      // We should clear the cache related to products, as we have probably
+      // changed something.
+      this.trigger("clearCache", [ProductForm, ProductList]);
+
+      // Return the the product overview.
+      goTo('/admin/products');
+    });
   }
 
   /**

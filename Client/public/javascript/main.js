@@ -556,7 +556,9 @@
 
         if (active) active.instance.hide(); // If not, create an instance of this widget.
 
-        const instance = new Widget(this._container, ...params); // Make sure we propagate all events that this widget triggers.
+        const instance = new Widget(this._container, ...params); // Remove widgets from the cache if requested.
+
+        instance.on("clearCache", this._removeWidgets); // Make sure we propagate all events that this widget triggers.
 
         instance.bubbleTo(this); // And add the widget and its parameters to the Map, using the class as a
         // key.
@@ -642,10 +644,40 @@
       widget.instance.remove();
     }
     /**
+     *  Private method to remove multiple specific widgets from the cache.
+     *  @param    {array}     widgets     Classes of the widgets to remove.
+     */
+
+
+    _removeWidgets = widgets => {
+      // If widgets are not specified, we should clear the entire cache to be sure.
+      if (widgets === undefined) return this.clear(); // Loop through the widgets to remove each one.
+
+      for (const Widget of widgets) this._removeWidget(Widget);
+    };
+    /**
+     *  Private method to remove a specific widget from the cache.
+     *  @param    {Class}     Widget      Class of the widget to remove.
+     */
+
+    _removeWidget = Widget => {
+      // Cannot remove a widget if it is not provied.
+      if (!Widget) return; // First, get the instantiated widget.
+
+      const widget = this._widgets.get(Widget); // No need to remove a widget that is not in cache.
+
+
+      if (!widget) return; // Remove the widget from our cache.
+
+      this._widgets.delete(Widget); // Clean up the widget itself.
+
+
+      widget.instance.remove();
+    };
+    /**
      *  Method to clean the view of all installed widgets.
      *  @returns  {View}
      */
-
 
     clear() {
       // Remove all installed widgets.
@@ -6693,6 +6725,9 @@
    *  The definition of the AppForm class component that can be used to load
    *  a form to create a new app.
    *
+   *  @event      clearCache    Triggered when the form has been stored to prevent
+   *                            displaying old data.
+   *
    *  N.B. Note that variables and methods preceeded with '_' should be treated as
    *  private, even though private variables and methods are not yet supported in
    *  Javascript classes.
@@ -6845,7 +6880,13 @@
         }]
       }); // When the app was stored successfully, return to the app overview.
 
-      this._form.on("stored", () => void goTo('/admin/apps')); // Add the new element to the parent container.
+      this._form.on("stored", () => {
+        // We should clear the cache related to apps, as we have probably changed
+        // something.
+        this.trigger("clearCache", [AppForm, AppList]); // Return the the app overview.
+
+        goTo('/admin/apps');
+      }); // Add the new element to the parent container.
 
 
       parent.appendChild(this._container);
@@ -7138,7 +7179,13 @@
         }]
       }); // When the model was stored successfully, return to the model overview.
 
-      this._form.on("stored", () => void goTo('/admin/models'));
+      this._form.on("stored", () => {
+        // We should clear the cache related to models, as we have probably
+        // changed something.
+        this.trigger("clearCache", [ModelForm, ModelList]); // Return the the model overview.
+
+        goTo('/admin/models');
+      });
     };
     /**
      *  Method to remove this object and clean up after itself. We have to use
@@ -7442,7 +7489,13 @@
       }); // When the product was stored successfully, return to the product overview.
 
 
-      this._form.on("stored", () => void goTo('/admin/products'));
+      this._form.on("stored", () => {
+        // We should clear the cache related to products, as we have probably
+        // changed something.
+        this.trigger("clearCache", [ProductForm, ProductList]); // Return the the product overview.
+
+        goTo('/admin/products');
+      });
     };
     /**
      *  Method to remove this object and clean up after itself. We have to use
@@ -7501,9 +7554,9 @@
     // By default, we want to install an apology that indicates that we're loading
     // the next component through the router.
     Widget: Apology,
-    params: ["Loading..."] // Listen for any unrecoverable errors and show the message to the user.
-
-  }).on("error", error => void view.install(Apology, error));
+    params: ["Loading..."]
+  }) // Listen for any unrecoverable errors and show the message to the user.
+  .on("error", error => void view.install(Apology, error));
   /**
    *  Create a new Router instance. The Router will listen for any changes to the
    *  URL, whether manually by the user, or programmatically with the goTo()
