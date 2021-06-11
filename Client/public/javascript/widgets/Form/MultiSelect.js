@@ -47,6 +47,7 @@ class FormMultiSelect extends BaseElement {
    *                                      will be shown to the user.
    *    @property   {string}  placeholder This is the placeholder option that
    *                                      will be shown to the user.
+   *    @property   {string}  tooltip     A short explanation about the input.
    *    @property   {array}   options     An array of options to add to the
    *                                      select element.
    */
@@ -57,7 +58,9 @@ class FormMultiSelect extends BaseElement {
     // elements that may not immediately look like they belong together. We can
     // solve this by wrapping them in a fieldset.
 
-    this._container = document.createElement("fieldset"); // Some browsers will not allow certain styling on fieldsets and we do want
+    this._container = document.createElement("fieldset"); // Set the tooltip if provided.
+
+    if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Some browsers will not allow certain styling on fieldsets and we do want
     // this control. So to fix this, we wrap the input elements in a separate
     // div.
 

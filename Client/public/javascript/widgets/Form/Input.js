@@ -35,6 +35,11 @@ class FormInput extends BaseElement {
    *                                    added.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {string}  step      Applicable to number only: by which
+   *                                    increment should the number increase?
+   *    @property   {boolean} disabled  Should this input be disabled by
+   *                                    default?
+   *    @property   {string}  tooltip   A short explanation about the input.
    *    @property   {array}   options   An array of options to add to the select
    *                                    element. This is only used when the
    *                                    type is 'select'.
@@ -104,17 +109,17 @@ class FormInput extends BaseElement {
    *                                    increment should the number increase?
    *    @property   {boolean} disabled  Should this input be disabled by
    *                                    default?
+   *    @property   {string}  tooltip   A short explanation about the input.
    */
 
   _createInput = (parent, options) => {
     // Create a container for the input element.
     this._container = document.createElement("div");
 
-    this._container.classList.add("input-field"); // Use the label for the on hover title.
+    this._container.classList.add("input-field"); // Set the tooltip if provided.
 
 
-    this._container.setAttribute("title", options.label); // Create the input element.
-
+    if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Create the input element.
 
     this._input = document.createElement("input");
     this._input.id = this._id;
@@ -162,17 +167,17 @@ class FormInput extends BaseElement {
    *                                    will be shown to the user.
    *    @property   {boolean} disabled  Should this input be disabled by
    *                                    default?
+   *    @property   {string}  tooltip   A short explanation about the input.
    */
 
   _createTextarea = (parent, options) => {
     // Create a container for the input element.
     this._container = document.createElement("div");
 
-    this._container.classList.add("input-field"); // Use the label for the on hover title.
+    this._container.classList.add("input-field"); // Set the tooltip if provided.
 
 
-    this._container.setAttribute("title", options.label); // Create the input element.
-
+    if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Create the input element.
 
     this._input = document.createElement("textarea");
     this._input.id = this._id;
@@ -221,14 +226,17 @@ class FormInput extends BaseElement {
    *                                    will be accepted.
    *    @property   {boolean} disabled  Should this button be disabled by
    *                                    default?
+   *    @property   {string}  tooltip   A short explanation about the input.
    */
 
   _createFileButton = (parent, options) => {
     // Create a container for the input element.
     this._container = document.createElement("div");
 
-    this._container.classList.add("file-button"); // Create the input element.
+    this._container.classList.add("file-button"); // Set the tooltip if provided.
 
+
+    if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Create the input element.
 
     this._input = document.createElement("input");
     this._input.id = this._id;
@@ -280,6 +288,7 @@ class FormInput extends BaseElement {
    *                                    element.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {string}  tooltip   A short explanation about the input.
    */
 
   _createSelect = (parent, options) => {
@@ -298,6 +307,7 @@ class FormInput extends BaseElement {
    *                                    multiselect element.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {string}  tooltip   A short explanation about the input.
    */
 
   _createMultiSelect = (parent, options) => {

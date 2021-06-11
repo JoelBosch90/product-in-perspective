@@ -25,6 +25,11 @@ class FormSelect extends BaseElement {
    *                                      should uniquely identify the select.
    *    @property   {string}  placeholder This is the placeholder option that
    *                                      will be shown to the user.
+   *    @property   {string}  tooltip     A short explanation about the input.
+   *    @property   {string}  required    Should this always have a value when
+   *                                      submitting?
+   *    @property   {string}  multiple    Should a user be able to select
+   *                                      multiple options?
    *    @property   {array}   options     An array of options to add to the
    *                                      select element.
    */
@@ -41,7 +46,8 @@ class FormSelect extends BaseElement {
     if (options.name) this._container.name = options.name;
     if (options.required) this._container.setAttribute("required", true);
     if (options.disabled) this.disabled(options.disabled);
-    if (options.multiple) this._container.setAttribute("multiple", true); // Should we set a placeholder?
+    if (options.multiple) this._container.setAttribute("multiple", true);
+    if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Should we set a placeholder?
 
     if (options.placeholder) {
       // Add the placeholder as a disabled option to get a placeholder value.

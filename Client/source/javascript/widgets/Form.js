@@ -181,6 +181,7 @@ class Form extends BaseElement {
    *    @property   {string}  type      This is the type of input element.
    *    @property   {string}  label     This is the label of the element that
    *                                    will be shown to the user.
+   *    @property   {string}  tooltip   A short explanation about the input.
    *  @returns  {FormInput}
    */
   addInput = (name, options = {}) => {
@@ -211,6 +212,7 @@ class Form extends BaseElement {
    *                                    immediately added to the fieldset.
    *    @property   {array}   inputs    Optional array of inputs that are
    *                                    immediately added to the fieldset.
+   *    @property   {string}  tooltip   A short explanation about the input.
    *  @returns  {FormFieldset}
    */
   addFieldset = (name, options = {}) => {

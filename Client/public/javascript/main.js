@@ -1287,6 +1287,11 @@
      *                                      should uniquely identify the select.
      *    @property   {string}  placeholder This is the placeholder option that
      *                                      will be shown to the user.
+     *    @property   {string}  tooltip     A short explanation about the input.
+     *    @property   {string}  required    Should this always have a value when
+     *                                      submitting?
+     *    @property   {string}  multiple    Should a user be able to select
+     *                                      multiple options?
      *    @property   {array}   options     An array of options to add to the
      *                                      select element.
      */
@@ -1303,7 +1308,8 @@
       if (options.name) this._container.name = options.name;
       if (options.required) this._container.setAttribute("required", true);
       if (options.disabled) this.disabled(options.disabled);
-      if (options.multiple) this._container.setAttribute("multiple", true); // Should we set a placeholder?
+      if (options.multiple) this._container.setAttribute("multiple", true);
+      if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Should we set a placeholder?
 
       if (options.placeholder) {
         // Add the placeholder as a disabled option to get a placeholder value.
@@ -1565,6 +1571,7 @@
      *                                      will be shown to the user.
      *    @property   {string}  placeholder This is the placeholder option that
      *                                      will be shown to the user.
+     *    @property   {string}  tooltip     A short explanation about the input.
      *    @property   {array}   options     An array of options to add to the
      *                                      select element.
      */
@@ -1575,7 +1582,9 @@
       // elements that may not immediately look like they belong together. We can
       // solve this by wrapping them in a fieldset.
 
-      this._container = document.createElement("fieldset"); // Some browsers will not allow certain styling on fieldsets and we do want
+      this._container = document.createElement("fieldset"); // Set the tooltip if provided.
+
+      if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Some browsers will not allow certain styling on fieldsets and we do want
       // this control. So to fix this, we wrap the input elements in a separate
       // div.
 
@@ -1941,6 +1950,11 @@
      *                                    added.
      *    @property   {string}  label     This is the label of the element that
      *                                    will be shown to the user.
+     *    @property   {string}  step      Applicable to number only: by which
+     *                                    increment should the number increase?
+     *    @property   {boolean} disabled  Should this input be disabled by
+     *                                    default?
+     *    @property   {string}  tooltip   A short explanation about the input.
      *    @property   {array}   options   An array of options to add to the select
      *                                    element. This is only used when the
      *                                    type is 'select'.
@@ -2010,17 +2024,17 @@
      *                                    increment should the number increase?
      *    @property   {boolean} disabled  Should this input be disabled by
      *                                    default?
+     *    @property   {string}  tooltip   A short explanation about the input.
      */
 
     _createInput = (parent, options) => {
       // Create a container for the input element.
       this._container = document.createElement("div");
 
-      this._container.classList.add("input-field"); // Use the label for the on hover title.
+      this._container.classList.add("input-field"); // Set the tooltip if provided.
 
 
-      this._container.setAttribute("title", options.label); // Create the input element.
-
+      if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Create the input element.
 
       this._input = document.createElement("input");
       this._input.id = this._id;
@@ -2068,17 +2082,17 @@
      *                                    will be shown to the user.
      *    @property   {boolean} disabled  Should this input be disabled by
      *                                    default?
+     *    @property   {string}  tooltip   A short explanation about the input.
      */
 
     _createTextarea = (parent, options) => {
       // Create a container for the input element.
       this._container = document.createElement("div");
 
-      this._container.classList.add("input-field"); // Use the label for the on hover title.
+      this._container.classList.add("input-field"); // Set the tooltip if provided.
 
 
-      this._container.setAttribute("title", options.label); // Create the input element.
-
+      if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Create the input element.
 
       this._input = document.createElement("textarea");
       this._input.id = this._id;
@@ -2127,14 +2141,17 @@
      *                                    will be accepted.
      *    @property   {boolean} disabled  Should this button be disabled by
      *                                    default?
+     *    @property   {string}  tooltip   A short explanation about the input.
      */
 
     _createFileButton = (parent, options) => {
       // Create a container for the input element.
       this._container = document.createElement("div");
 
-      this._container.classList.add("file-button"); // Create the input element.
+      this._container.classList.add("file-button"); // Set the tooltip if provided.
 
+
+      if (options.tooltip) this._container.setAttribute("title", options.tooltip); // Create the input element.
 
       this._input = document.createElement("input");
       this._input.id = this._id;
@@ -2186,6 +2203,7 @@
      *                                    element.
      *    @property   {string}  label     This is the label of the element that
      *                                    will be shown to the user.
+     *    @property   {string}  tooltip   A short explanation about the input.
      */
 
     _createSelect = (parent, options) => {
@@ -2204,6 +2222,7 @@
      *                                    multiselect element.
      *    @property   {string}  label     This is the label of the element that
      *                                    will be shown to the user.
+     *    @property   {string}  tooltip   A short explanation about the input.
      */
 
     _createMultiSelect = (parent, options) => {
@@ -2351,6 +2370,7 @@
      *                                    should uniquely identify the fieldset.
      *    @property   {string}  legend    This is the main label that is added to
      *                                    the fieldset.
+     *    @property   {string}  tooltip   A short explanation about the input.
      *    @property   {array}   buttons   Optional array of buttons that are
      *                                    immediately added to the fieldset.
      *    @property   {array}   inputs    Optional array of inputs that are
@@ -2371,7 +2391,9 @@
       this._container.appendChild(this._inputContainer); // Create the legend element if a text is provided.
 
 
-      if (options.legend) this.legend(options.legend); // We want to prefix the names of all inputs, fieldsets and buttons in this
+      if (options.legend) this.legend(options.legend); // Set the tooltip if provided.
+
+      if (options.tooltip) this._container.setAttribute("title", options.tooltip); // We want to prefix the names of all inputs, fieldsets and buttons in this
       // fieldset with the fieldset's name because these names might not be unique
       // in the larger context of the form.
 
@@ -2857,6 +2879,7 @@
      *    @property   {string}  type      This is the type of input element.
      *    @property   {string}  label     This is the label of the element that
      *                                    will be shown to the user.
+     *    @property   {string}  tooltip   A short explanation about the input.
      *  @returns  {FormInput}
      */
 
@@ -2885,6 +2908,7 @@
      *                                    immediately added to the fieldset.
      *    @property   {array}   inputs    Optional array of inputs that are
      *                                    immediately added to the fieldset.
+     *    @property   {string}  tooltip   A short explanation about the input.
      *  @returns  {FormFieldset}
      */
 
@@ -6726,19 +6750,22 @@
           options: {
             label: "Name",
             type: "text",
+            tooltip: "Give your app a name. This name is also visible to users in the browser tab.",
             required: true
           }
         }, {
           name: "description",
           options: {
             label: "Description",
-            type: "textarea"
+            type: "textarea",
+            tooltip: "Give your app a description. This description is only visible to you."
           }
         }, {
           name: "path",
           options: {
             label: "Path",
             type: "text",
+            tooltip: "Give your app a path. This is the last part of the URL where the app will appear. It has to be unique.",
             required: true
           }
         }, {
@@ -6746,6 +6773,7 @@
           options: {
             label: "Exit button",
             type: "text",
+            tooltip: "In the augmented reality scene, an app always has a button that allows the user to exit the scene. Here you can decide the text for this button.",
             required: true
           }
         }],
@@ -6753,23 +6781,27 @@
           name: "scanning",
           options: {
             legend: "Texts in scanning mode",
+            tooltip: "These are the texts that will appear when a user is scanning a product.",
             inputs: [{
               name: "title",
               options: {
                 label: "Title",
-                type: "text"
+                type: "text",
+                tooltip: "This is the title that will appear when a user is scanning a product."
               }
             }, {
               name: "description",
               options: {
                 label: "Description",
-                type: "textarea"
+                type: "textarea",
+                tooltip: "This is the description that will appear when a user is scanning a product. This is the perfect place to give the user hints for how to scan a product."
               }
             }, {
               name: "button",
               options: {
                 label: "Button",
                 type: "text",
+                tooltip: "This is the text for the button that the user uses to select a product that they have scanned. By clicking this button, the user enters the augmented reality scene.",
                 required: true
               }
             }]
@@ -6778,23 +6810,27 @@
           name: "placing",
           options: {
             legend: "Texts in placing mode",
+            tooltip: "These are the texts that will appear when a user is detecting surfaces on which to place the 3D models.",
             inputs: [{
               name: "title",
               options: {
                 label: "Title",
-                type: "text"
+                type: "text",
+                tooltip: "This is the title that will appear when a user is detecting surfaces on which to place the 3D models."
               }
             }, {
               name: "description",
               options: {
                 label: "Description",
-                type: "textarea"
+                type: "textarea",
+                tooltip: "This is the description that will appear when a user is detecting surfaces on which to place the 3D models. This is the perfect place to give the user hints for how to detect a surface."
               }
             }, {
               name: "button",
               options: {
                 label: "Button",
                 type: "text",
+                tooltip: "This is the text for the button that the user uses to select a surface that they have detected. By clicking this button, the user places the first 3D model.",
                 required: true
               }
             }]
@@ -7035,26 +7071,31 @@
           options: {
             label: "Name",
             type: "text",
+            tooltip: "Give your model a name. This name is only visible to you.",
             required: true
           }
         }, {
           name: "model",
           options: {
             label: "Upload model ...",
-            // accept: ".glTF",
-            type: "file"
+            accept: ".glTF,.zip,.glb",
+            type: "file",
+            tooltip: "Click this button to select the model to upload. This can be a single file with a .glTF or .glb extension, or a .zip directory that contains an FBX, OBJ, or GLTF model and its dependencies."
           }
         }, {
           name: "multiplier",
           options: {
             label: "Multiplier",
-            type: "number"
+            type: "number",
+            tooltip: "You can set a multiplier of 1 or greater. If you select 2 or more, the app will display the 3D model multiple times and try to stack them in a cube-like fashion.",
+            set: 1
           }
         }, {
           name: "scale",
           options: {
             label: "Scale",
             type: "number",
+            tooltip: "You can set a scaling factor for the model here. If set to 1, the app will show the model at its native size. Any values greater than 1 will increase the model's size. Values between 0 and 1 will shrink the model, and values below 0 will turn the model upside down.",
             step: "any"
           }
         }],
@@ -7062,23 +7103,27 @@
           name: "viewing",
           options: {
             legend: "Texts in viewing mode",
+            tooltip: "While this model is being displayed, you can also make texts appear on the page. Here you can determine those texts.",
             inputs: [{
               name: "title",
               options: {
                 label: "Title",
-                type: "text"
+                type: "text",
+                tooltip: "Set the title to show while this model is being displayed."
               }
             }, {
               name: "description",
               options: {
                 label: "Description",
-                type: "textarea"
+                type: "textarea",
+                tooltip: "Set the description to show while this model is being displayed."
               }
             }, {
               name: "button",
               options: {
                 label: "Button",
                 type: "text",
+                tooltip: "Set the text for the button that the user can press to see the next model. If there is no next model, the button press will return the user to the surface detection mode.",
                 required: true
               }
             }]
@@ -7362,6 +7407,7 @@
           options: {
             label: "Name",
             type: "text",
+            tooltip: "Give your product a name. This name is also visible to users who scan this product.",
             required: true
           }
         }, {
@@ -7369,6 +7415,7 @@
           options: {
             label: "Barcode",
             type: "number",
+            tooltip: "Enter the product's barcode. It is important that this is entered accurately, or the user won't be able to scan the product!",
             required: true
           }
         }]
@@ -7378,12 +7425,14 @@
       this._modelsSelect = this._form.addInput("models", {
         label: "Models",
         placeholder: "Select model ...",
+        tooltip: "Select the models to display for this product. You can select multiple models per product. They will appear to the user in the order that is displayed here; the first model you add will be the first model the user sees.",
         type: "multiselect"
       }); // Create the select input for the apps seperately so that we can save a
       // reference that we can load the options to later on.
 
       this._appsSelect = this._form.addInput("app", {
         placeholder: "Select app ..",
+        tooltip: "Select the app to which to add this product. You cannot add more than one product to an app with the same barcode.",
         type: "select"
       }); // We want to add the button at the bottom of the form.
 

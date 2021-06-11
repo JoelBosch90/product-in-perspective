@@ -68,14 +68,16 @@ class AppForm extends BaseElement {
           options: {
             label:    "Name",
             type:     "text",
+            tooltip:  "Give your app a name. This name is also visible to users in the browser tab.",
             required: true,
           },
         },
         {
           name: "description",
           options: {
-            label:  "Description",
-            type:   "textarea",
+            label:    "Description",
+            type:     "textarea",
+            tooltip:  "Give your app a description. This description is only visible to you.",
           },
         },
         {
@@ -83,6 +85,7 @@ class AppForm extends BaseElement {
           options: {
             label:    "Path",
             type:     "text",
+            tooltip:  "Give your app a path. This is the last part of the URL where the app will appear. It has to be unique.",
             required: true,
           },
         },
@@ -91,6 +94,7 @@ class AppForm extends BaseElement {
           options: {
             label:    "Exit button",
             type:     "text",
+            tooltip:  "In the augmented reality scene, an app always has a button that allows the user to exit the scene. Here you can decide the text for this button.",
             required: true,
           },
         },
@@ -99,20 +103,23 @@ class AppForm extends BaseElement {
         {
           name: "scanning",
           options: {
-            legend: "Texts in scanning mode",
+            legend:   "Texts in scanning mode",
+            tooltip:  "These are the texts that will appear when a user is scanning a product.",
             inputs: [
               {
                 name: "title",
                 options: {
-                  label:  "Title",
-                  type:   "text",
+                  label:    "Title",
+                  type:     "text",
+                  tooltip:  "This is the title that will appear when a user is scanning a product.",
                 }
               },
               {
                 name: "description",
                 options: {
-                  label: "Description",
-                  type:  "textarea",
+                  label:    "Description",
+                  type:     "textarea",
+                  tooltip:  "This is the description that will appear when a user is scanning a product. This is the perfect place to give the user hints for how to scan a product.",
                 }
               },
               {
@@ -120,6 +127,7 @@ class AppForm extends BaseElement {
                 options: {
                   label:    "Button",
                   type:     "text",
+                  tooltip:  "This is the text for the button that the user uses to select a product that they have scanned. By clicking this button, the user enters the augmented reality scene.",
                   required: true,
                 }
               },
@@ -130,12 +138,14 @@ class AppForm extends BaseElement {
           name: "placing",
           options: {
             legend: "Texts in placing mode",
+            tooltip:  "These are the texts that will appear when a user is detecting surfaces on which to place the 3D models.",
             inputs: [
               {
                 name: "title",
                 options: {
-                  label:  "Title",
-                  type:   "text",
+                  label:    "Title",
+                  type:     "text",
+                  tooltip:  "This is the title that will appear when a user is detecting surfaces on which to place the 3D models.",
                 },
               },
               {
@@ -143,6 +153,7 @@ class AppForm extends BaseElement {
                 options: {
                   label:  "Description",
                   type:   "textarea",
+                  tooltip:  "This is the description that will appear when a user is detecting surfaces on which to place the 3D models. This is the perfect place to give the user hints for how to detect a surface.",
                 },
               },
               {
@@ -150,6 +161,7 @@ class AppForm extends BaseElement {
                 options: {
                   label:    "Button",
                   type:     "text",
+                  tooltip:  "This is the text for the button that the user uses to select a surface that they have detected. By clicking this button, the user places the first 3D model.",
                   required: true,
                 },
               },

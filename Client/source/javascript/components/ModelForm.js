@@ -98,15 +98,17 @@ class ModelForm extends BaseElement {
           options:  {
             label:    "Name",
             type:     "text",
+            tooltip:  "Give your model a name. This name is only visible to you.",
             required: true,
           },
         },
         {
           name:   "model",
           options:  {
-            label:  "Upload model ...",
-            // accept: ".glTF",
-            type:   "file",
+            label:    "Upload model ...",
+            accept:   ".glTF,.zip,.glb",
+            type:     "file",
+            tooltip:  "Click this button to select the model to upload. This can be a single file with a .glTF or .glb extension, or a .zip directory that contains an FBX, OBJ, or GLTF model and its dependencies.",
           },
         },
         {
@@ -114,6 +116,8 @@ class ModelForm extends BaseElement {
           options:  {
             label:    "Multiplier",
             type:     "number",
+            tooltip:  "You can set a multiplier of 1 or greater. If you select 2 or more, the app will display the 3D model multiple times and try to stack them in a cube-like fashion.",
+            set:      1,
           },
         },
         {
@@ -121,6 +125,7 @@ class ModelForm extends BaseElement {
           options:  {
             label:    "Scale",
             type:     "number",
+            tooltip:  "You can set a scaling factor for the model here. If set to 1, the app will show the model at its native size. Any values greater than 1 will increase the model's size. Values between 0 and 1 will shrink the model, and values below 0 will turn the model upside down.",
             step:     "any",
           },
         },
@@ -129,20 +134,23 @@ class ModelForm extends BaseElement {
         {
           name: "viewing",
           options: {
-            legend: "Texts in viewing mode",
+            legend:   "Texts in viewing mode",
+            tooltip:  "While this model is being displayed, you can also make texts appear on the page. Here you can determine those texts.",
             inputs: [
               {
                 name: "title",
                 options: {
-                  label:  "Title",
-                  type:   "text",
+                  label:    "Title",
+                  type:     "text",
+                  tooltip:  "Set the title to show while this model is being displayed.",
                 },
               },
               {
                 name: "description",
                 options: {
-                  label:  "Description",
-                  type:   "textarea",
+                  label:    "Description",
+                  type:     "textarea",
+                  tooltip:  "Set the description to show while this model is being displayed.",
                 },
               },
               {
@@ -150,6 +158,7 @@ class ModelForm extends BaseElement {
                 options: {
                   label:    "Button",
                   type:     "text",
+                  tooltip:  "Set the text for the button that the user can press to see the next model. If there is no next model, the button press will return the user to the surface detection mode.",
                   required: true,
                 },
               },

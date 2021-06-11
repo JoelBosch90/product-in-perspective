@@ -138,6 +138,7 @@ class ProductForm extends BaseElement {
         options: {
           label: "Name",
           type: "text",
+          tooltip: "Give your product a name. This name is also visible to users who scan this product.",
           required: true
         }
       }, {
@@ -145,6 +146,7 @@ class ProductForm extends BaseElement {
         options: {
           label: "Barcode",
           type: "number",
+          tooltip: "Enter the product's barcode. It is important that this is entered accurately, or the user won't be able to scan the product!",
           required: true
         }
       }]
@@ -154,12 +156,14 @@ class ProductForm extends BaseElement {
     this._modelsSelect = this._form.addInput("models", {
       label: "Models",
       placeholder: "Select model ...",
+      tooltip: "Select the models to display for this product. You can select multiple models per product. They will appear to the user in the order that is displayed here; the first model you add will be the first model the user sees.",
       type: "multiselect"
     }); // Create the select input for the apps seperately so that we can save a
     // reference that we can load the options to later on.
 
     this._appsSelect = this._form.addInput("app", {
       placeholder: "Select app ..",
+      tooltip: "Select the app to which to add this product. You cannot add more than one product to an app with the same barcode.",
       type: "select"
     }); // We want to add the button at the bottom of the form.
 

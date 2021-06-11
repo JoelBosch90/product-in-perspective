@@ -60,6 +60,7 @@ class FormFieldset extends BaseElement {
    *                                    should uniquely identify the fieldset.
    *    @property   {string}  legend    This is the main label that is added to
    *                                    the fieldset.
+   *    @property   {string}  tooltip   A short explanation about the input.
    *    @property   {array}   buttons   Optional array of buttons that are
    *                                    immediately added to the fieldset.
    *    @property   {array}   inputs    Optional array of inputs that are
@@ -80,7 +81,9 @@ class FormFieldset extends BaseElement {
     this._container.appendChild(this._inputContainer); // Create the legend element if a text is provided.
 
 
-    if (options.legend) this.legend(options.legend); // We want to prefix the names of all inputs, fieldsets and buttons in this
+    if (options.legend) this.legend(options.legend); // Set the tooltip if provided.
+
+    if (options.tooltip) this._container.setAttribute("title", options.tooltip); // We want to prefix the names of all inputs, fieldsets and buttons in this
     // fieldset with the fieldset's name because these names might not be unique
     // in the larger context of the form.
 
