@@ -1,6 +1,6 @@
 // Import dependencies
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { goTo } from "/javascript/tools/goTo.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { goTo } from "../tools/goTo.js";
 /**
  *  The definition of the Menu class that can be used to add a menu on top of
  *  another element.

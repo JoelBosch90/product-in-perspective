@@ -1,8 +1,8 @@
 // Import dependencies.
-import { Request} from "/javascript/tools/Request.js";
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Form } from "/javascript/widgets/Form.js";
-import { goTo } from "/javascript/tools/goTo.js";
+import { Request} from "../tools/Request.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { Form } from "../widgets/Form.js";
+import { goTo } from "../tools/goTo.js";
 
 /**
  *  The definition of the ProductForm class component that can be used to load

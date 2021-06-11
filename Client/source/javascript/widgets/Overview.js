@@ -1,8 +1,8 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { OverviewCard } from "/javascript/widgets/Overview/Card.js";
-import { Title } from "/javascript/widgets/Title.js";
-import { ErrorDisplay } from "/javascript/widgets/ErrorDisplay.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { OverviewCard } from "../widgets/Overview/Card.js";
+import { Title } from "../widgets/Title.js";
+import { ErrorDisplay } from "../widgets/ErrorDisplay.js";
 
 /**
  *  The definition of the Overview class that can be used to create a overview

@@ -1,7 +1,7 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { FormSelect } from "/javascript/widgets/Form/Select.js";
-import { FormMultiSelect } from "/javascript/widgets/Form/MultiSelect.js";
+import { BaseElement } from "../BaseElement.js";
+import { FormSelect } from "./Select.js";
+import { FormMultiSelect } from "./MultiSelect.js";
 /**
  *  The definition of the Input class that can be used to create input elements.
  *

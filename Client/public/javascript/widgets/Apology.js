@@ -1,6 +1,6 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { goTo } from "/javascript/tools/goTo.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { goTo } from "../tools/goTo.js";
 /**
  *  The definition of the Apology class that can be used to create an apology
  *  message. This can be used to explain to a user why something cannot be

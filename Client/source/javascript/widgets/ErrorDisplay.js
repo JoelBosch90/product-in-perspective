@@ -1,5 +1,5 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { BaseElement } from "../widgets/BaseElement.js";
 
 /**
  *  The definition of the ErrorDisplay class that can be used to show error

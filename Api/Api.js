@@ -65,9 +65,6 @@ class Api {
     // Store the config for reference.
     this._config = config;
 
-    // We are behind a reverse proxy that we should trust.
-    app.set('trust proxy', true);
-
     // Connect to the database.
     this._connectDatabase(app);
 
@@ -164,6 +161,9 @@ class Api {
 
     // Use the CORS library to manage CORS headers for external connections.
     app.use(cors());
+
+    // We are behind a reverse proxy that we should trust.
+    app.set('trust proxy', true);
 
     // Express allows for files up to 100kb by default. Big models can easily
     // grow larger than that. Even though these files shouldn't be too large as

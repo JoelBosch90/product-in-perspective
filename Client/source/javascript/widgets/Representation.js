@@ -1,12 +1,12 @@
 // Import dependencies
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { BaseElement } from "../widgets/BaseElement.js";
 
 // Import project dependencies.
-import { BarcodeScanner } from "/javascript/widgets/BarcodeScanner.js";
-import { ArScene } from "/javascript/widgets/ArScene.js";
-import { ScriptLoader } from "/javascript/tools/ScriptLoader.js";
-import { Request } from "/javascript/tools/Request.js";
-import { debounce } from "/javascript/tools/debounce.js";
+import { BarcodeScanner } from "../widgets/BarcodeScanner.js";
+import { ArScene } from "../widgets/ArScene.js";
+import { ScriptLoader } from "../tools/ScriptLoader.js";
+import { Request } from "../tools/Request.js";
+import { debounce } from "../tools/debounce.js";
 
 /**
  *  The definition of the Representation class that can be used as to
@@ -112,7 +112,7 @@ class Representation extends BaseElement {
     // We need the Aframe and Quagga libraries for this. We should start loading
     // those libraries immediately.
     const quagga = "/quagga/quagga.min.js";
-    const aframe = "/aframe/aframe.js";
+    const aframe = "/aframe/aframe.min.js";
     this._scriptLoader = new ScriptLoader();
 
     // Get the object to make HTTP requests.

@@ -1,11 +1,11 @@
 // Import dependencies.
-import { Request } from "/javascript/tools/Request.js";
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { FormInput } from "/javascript/widgets/Form/Input.js";
-import { FormFieldset } from "/javascript/widgets/Form/Fieldset.js";
-import { Button } from "/javascript/widgets/Button.js";
-import { Title } from "/javascript/widgets/Title.js";
-import { ErrorDisplay } from "/javascript/widgets/ErrorDisplay.js";
+import { Request } from "../tools/Request.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { FormInput } from "../widgets/Form/Input.js";
+import { FormFieldset } from "../widgets/Form/Fieldset.js";
+import { Button } from "../widgets/Button.js";
+import { Title } from "../widgets/Title.js";
+import { ErrorDisplay } from "../widgets/ErrorDisplay.js";
 
 /**
  *  The definition of the Form class that can be used to create a form element.

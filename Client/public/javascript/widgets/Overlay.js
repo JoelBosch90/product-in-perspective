@@ -1,5 +1,5 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { BaseElement } from "../widgets/BaseElement.js";
 /**
  *  The definition of the Overlay class that can be used to create an overlay
  *  interface for a full screen video format. It can be used to any number of

@@ -1,5 +1,5 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { BaseElement } from "../BaseElement.js";
 /**
  *  The definition of the AnimatedText class that can be used to create a text
  *  element that is animated every time the text is changed.

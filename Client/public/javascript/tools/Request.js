@@ -1,5 +1,5 @@
 // Import dependencies.
-import { getCookies } from "/javascript/tools/getCookies.js";
+import { getCookies } from "../tools/getCookies.js";
 /**
  *  The definition of the Request class that can be used to perform HTTP
  *  requests.

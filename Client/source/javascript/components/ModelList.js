@@ -1,8 +1,8 @@
 // Import dependencies.
-import { Request} from "/javascript/tools/Request.js";
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Overview } from "/javascript/widgets/Overview.js";
-import { goTo } from "/javascript/tools/goTo.js";
+import { Request} from "../tools/Request.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { Overview } from "../widgets/Overview.js";
+import { goTo } from "../tools/goTo.js";
 
 /**
  *  The definition of the ModelList class component that can be used to load

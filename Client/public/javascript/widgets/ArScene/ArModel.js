@@ -1,6 +1,6 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Request } from "/javascript/tools/Request.js";
+import { BaseElement } from "../BaseElement.js";
+import { Request } from "../../tools/Request.js";
 /**
  *  The definition of the ArModel class that can be used as a base for any
  *  class that is based on a DOM element.

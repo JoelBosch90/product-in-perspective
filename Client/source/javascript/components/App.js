@@ -1,6 +1,6 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Representation } from "/javascript/widgets/Representation.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { Representation } from "../widgets/Representation.js";
 
 /**
  *  The definition of the App class component that can be used to load single

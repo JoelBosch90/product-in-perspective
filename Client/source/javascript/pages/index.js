@@ -4,23 +4,23 @@
  */
 
 // Import dependencies.
-import { Menu } from "/javascript/widgets/Menu.js";
-import { View } from "/javascript/widgets/View.js";
-import { Router } from "/javascript/tools/Router.js";
-import { Apology } from "/javascript/widgets/Apology.js";
+import { Menu } from "../widgets/Menu.js";
+import { View } from "../widgets/View.js";
+import { Router } from "../tools/Router.js";
+import { Apology } from "../widgets/Apology.js";
 
 // Import components.
-import { Login } from "/javascript/components/Login.js";
-import { Logout } from "/javascript/components/Logout.js";
-import { Registration } from "/javascript/components/Registration.js";
-import { PasswordForm } from "/javascript/components/PasswordForm.js";
-import { App } from "/javascript/components/App.js";
-import { AppList } from "/javascript/components/AppList.js";
-import { AppForm } from "/javascript/components/AppForm.js";
-import { ModelList } from "/javascript/components/ModelList.js";
-import { ModelForm } from "/javascript/components/ModelForm.js";
-import { ProductList } from "/javascript/components/ProductList.js";
-import { ProductForm } from "/javascript/components/ProductForm.js";
+import { Login } from "../components/Login.js";
+import { Logout } from "../components/Logout.js";
+import { Registration } from "../components/Registration.js";
+import { PasswordForm } from "../components/PasswordForm.js";
+import { App } from "../components/App.js";
+import { AppList } from "../components/AppList.js";
+import { AppForm } from "../components/AppForm.js";
+import { ModelList } from "../components/ModelList.js";
+import { ModelForm } from "../components/ModelForm.js";
+import { ProductList } from "../components/ProductList.js";
+import { ProductForm } from "../components/ProductForm.js";
 
 /**
  *  This is the container for the entire application. Because we want to use the

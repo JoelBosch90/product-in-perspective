@@ -11,8 +11,6 @@ require('dotenv').config();
  */
 module.exports = unauthorize = response => {
 
-  console.trace("unauthorize");
-
   // Set the maximum age of a token.
   const maxAge = 86400;
 

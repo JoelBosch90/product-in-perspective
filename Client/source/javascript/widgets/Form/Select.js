@@ -1,5 +1,5 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { BaseElement } from "../BaseElement.js";
 
 /**
  *  The definition of the Select class that can be used to create select

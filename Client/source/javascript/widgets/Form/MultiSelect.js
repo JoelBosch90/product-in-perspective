@@ -1,7 +1,7 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { FormSelect } from "/javascript/widgets/Form/Select.js";
-import { Button } from "/javascript/widgets/Button.js";
+import { BaseElement } from "../BaseElement.js";
+import { FormSelect } from "./Select.js";
+import { Button } from "../Button.js";
 
 /**
  *  The definition of the MultiSelect class that can be used to create a custom

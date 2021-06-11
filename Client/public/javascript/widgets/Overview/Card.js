@@ -1,8 +1,8 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Title } from "/javascript/widgets/Title.js";
-import { Button } from "/javascript/widgets/Button.js";
-import { Confirmation } from "/javascript/widgets/Confirmation.js";
+import { BaseElement } from "../BaseElement.js";
+import { Title } from "../Title.js";
+import { Button } from "../Button.js";
+import { Confirmation } from "../Confirmation.js";
 /**
  *  The definition of the OverviewCard class that can be used to create card
  *  components to represent an object in an overview.

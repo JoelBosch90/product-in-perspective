@@ -1,11 +1,11 @@
 // Import dependencies
-import { BaseElement } from "/javascript/widgets/BaseElement.js"; // Import project dependencies.
+import { BaseElement } from "../widgets/BaseElement.js"; // Import project dependencies.
 
-import { BarcodeScanner } from "/javascript/widgets/BarcodeScanner.js";
-import { ArScene } from "/javascript/widgets/ArScene.js";
-import { ScriptLoader } from "/javascript/tools/ScriptLoader.js";
-import { Request } from "/javascript/tools/Request.js";
-import { debounce } from "/javascript/tools/debounce.js";
+import { BarcodeScanner } from "../widgets/BarcodeScanner.js";
+import { ArScene } from "../widgets/ArScene.js";
+import { ScriptLoader } from "../tools/ScriptLoader.js";
+import { Request } from "../tools/Request.js";
+import { debounce } from "../tools/debounce.js";
 /**
  *  The definition of the Representation class that can be used as to
  *  scan a product by its barcode and then show a 3D representation of that
@@ -108,7 +108,7 @@ class Representation extends BaseElement {
     // those libraries immediately.
 
     const quagga = "/quagga/quagga.min.js";
-    const aframe = "/aframe/aframe.js";
+    const aframe = "/aframe/aframe.min.js";
     this._scriptLoader = new ScriptLoader(); // Get the object to make HTTP requests.
 
     this._request = new Request(); // Next, start loading products.

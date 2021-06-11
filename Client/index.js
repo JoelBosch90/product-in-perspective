@@ -13,5 +13,6 @@ const Client = require('./Client.js');
 // requests.
 const client = new Client({
   host: process.env.HOST,
-  port: process.env.PORT
+  port: process.env.PORT,
+  mode: process.env.NODE_ENV,
 });

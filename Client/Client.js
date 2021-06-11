@@ -23,36 +23,50 @@ class Client {
    *  @param    {object}    config      The configuration object.
    *    @property {string}    host        The client application host.
    *    @property {number}    port        The client application port.
+   *    @property {string}    mode        The current Node enviroment mode.
    */
   constructor(config = {}) {
 
     // Get the express application object.
     const app = express();
 
-    // We are behind a reverse proxy that we should trust.
-    app.set('trust proxy', true);
-
-    // We want to install protection against DDOS attacks.
-    app.use(rateLimit({
-
-      // Set a limit per minute.
-      windowMs: 60000,
-
-      // Allow a maxium number of requests for a single user.
-      max: 1000,
-    }));
-
     // Store the absolute path to the directory that holds the public files.
     this._publicDir = __dirname  + '/public';
+
+    // First, install the middleware we want to use.
+    this._installMiddleware(app, config.mode);
 
     // Start serving everything that we need to serve the client side
     // application.
     this._serveStaticFiles(app);
     this._serveLibraries(app);
-    this._servePages(app);
+    this._servePages(app, config.mode);
 
     // Start listening for incoming requests.
     this._listen(app, config.host, config.port);
+  }
+
+  /**
+   *  Private method to install the middleware we want to use. These are all
+   *  modifications on request parameters before handling the call.
+   *  @param    {EventEmitter}    app     The express application object.
+   *  @param    {string}          mode    The current Node enviroment mode.
+   */
+  _installMiddleware = (app, mode) => {
+
+    // We are behind a reverse proxy that we should trust.
+    app.set('trust proxy', true);
+
+    // We want to install protection against DDOS attacks if we're not running
+    // in development mode.
+    if (mode != 'development') app.use(rateLimit({
+
+      // Set a limit per minute.
+      windowMs: 60000,
+
+      // Allow a maxium number of requests for a single user.
+      max: 200,
+    }));
   }
 
   /**
@@ -85,16 +99,21 @@ class Client {
   /**
    *  Private method for serving the HTML pages.
    *  @param    {EventEmitter}    app     The express application object.
+   *  @param    {string}          mode    The current Node enviroment mode.
    */
-  _servePages = app => {
+  _servePages = (app, mode) => {
 
     // We want to serve a single page application. This means that we should
     // serve the same index for all pages. Routing can then be solved
     // client-side without hard page reloads.
     app.get('/*', (request, response) => {
 
+      // If we're running in development mode, we want to run the debug index
+      // that loads the unbundled and unminified versions.
+      const index = `/html/index${mode == 'development' ? '-debug': ''}.html`
+
       // Serve the main index file.
-      response.sendFile("/html/index.html", { root: this._publicDir });
+      response.sendFile(index, { root: this._publicDir });
     });
   }
 

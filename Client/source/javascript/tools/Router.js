@@ -1,6 +1,6 @@
 // Import dependencies
-import { EventHandler } from "/javascript/tools/EventHandler.js";
-import { getCookies } from "/javascript/tools/getCookies.js";
+import { EventHandler } from "../tools/EventHandler.js";
+import { getCookies } from "../tools/getCookies.js";
 
 /**
  *  The definition of the Router class that handles all routing in the app. This

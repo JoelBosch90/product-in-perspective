@@ -1,6 +1,6 @@
 // Import dependencies.
-import { HitTest } from "/javascript/widgets/ArScene/HitTest.js";
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
+import { HitTest } from "./HitTest.js";
+import { BaseElement } from "../BaseElement.js";
 
 /**
  *  The definition of the Reticle class that can be used to create a reticle

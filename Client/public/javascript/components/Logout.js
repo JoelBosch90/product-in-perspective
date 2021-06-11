@@ -1,7 +1,7 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Apology } from "/javascript/widgets/Apology.js";
-import { Request } from "/javascript/tools/Request.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { Apology } from "../widgets/Apology.js";
+import { Request } from "../tools/Request.js";
 /**
  *  The definition of the Logout class component that can be used to log out.
  *

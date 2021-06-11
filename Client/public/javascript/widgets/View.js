@@ -1,6 +1,6 @@
 // Import dependencies
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { equal } from "/javascript/tools/equal.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { equal } from "../tools/equal.js";
 /**
  *  The definition of the View class that can be used as a container for other
  *  widgets or components that extend from the BaseElement class. You can a

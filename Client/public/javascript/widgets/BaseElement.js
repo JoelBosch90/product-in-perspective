@@ -1,5 +1,5 @@
 // Import dependencies
-import { EventHandler } from "/javascript/tools/EventHandler.js";
+import { EventHandler } from "../tools/EventHandler.js";
 /**
  *  The definition of the BaseElement class that can be used as a base for any
  *  class that is based on a DOM element.

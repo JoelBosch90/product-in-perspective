@@ -1,7 +1,7 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Form } from "/javascript/widgets/Form.js";
-import { goTo } from "/javascript/tools/goTo.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { Form } from "../widgets/Form.js";
+import { goTo } from "../tools/goTo.js";
 /**
  *  The definition of the Registration class component that can be used to load
  *  a registration form.

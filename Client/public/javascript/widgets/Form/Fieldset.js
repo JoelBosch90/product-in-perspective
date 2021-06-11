@@ -1,7 +1,7 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { FormInput } from "/javascript/widgets/Form/Input.js";
-import { Button } from "/javascript/widgets/Button.js";
+import { BaseElement } from "../BaseElement.js";
+import { FormInput } from "./Input.js";
+import { Button } from "../Button.js";
 /**
  *  The definition of the Fieldset class that can be used to create fieldset
  *  elements for in a form.

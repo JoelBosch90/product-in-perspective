@@ -1,6 +1,6 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Button } from "/javascript/widgets/Button.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { Button } from "../widgets/Button.js";
 
 /**
  *  The definition of the Confirmation class that can be used to create an

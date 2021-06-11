@@ -1,10 +1,10 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Overlay } from "/javascript/widgets/Overlay.js";
-import { Reticle} from "/javascript/widgets/ArScene/Reticle.js";
-import { ArModel} from "/javascript/widgets/ArScene/ArModel.js";
-import { debounce } from "/javascript/tools/debounce.js";
-import { AttributeObserver } from "/javascript/tools/AttributeObserver.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { Overlay } from "../widgets/Overlay.js";
+import { Reticle} from "../widgets/ArScene/Reticle.js";
+import { ArModel} from "../widgets/ArScene/ArModel.js";
+import { debounce } from "../tools/debounce.js";
+import { AttributeObserver } from "../tools/AttributeObserver.js";
 
 /**
  *  The definition of the ArScene class that can be used to create an an

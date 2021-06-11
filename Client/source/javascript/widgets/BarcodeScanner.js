@@ -1,6 +1,6 @@
 // Import dependencies.
-import { BaseElement } from "/javascript/widgets/BaseElement.js";
-import { Overlay } from "/javascript/widgets/Overlay.js";
+import { BaseElement } from "../widgets/BaseElement.js";
+import { Overlay } from "../widgets/Overlay.js";
 
 /**
  *  The definition of the BarcodeScanner class that can be used to scan barcodes
