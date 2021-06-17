@@ -529,6 +529,23 @@ class Storage {
   }
 
   /**
+   *  Helper method to return the path to the tmp directory for temporarily
+   *  storing files. Will also create the directory if it does not exist.
+   *  @returns  {string}
+   */
+  _temporaryDirectory = () => {
+
+    // Create the directory's path.
+    const path = __dirname + '/Storage/tmp/';
+
+    // Check if a directory exists at this path. If not, create it.
+    if (!fs.existsSync(path)) fs.mkdirSync(path);
+
+    // Return the path.
+    return path;
+  }
+
+  /**
    *  A helper method to create a unique file path.
    *  @param    {string}    fileType    An optional file type to add an
    *                                    extension.
@@ -547,7 +564,7 @@ class Storage {
 
     // Create a path to a random file name plus the current time in the
     // temporary directory.
-    return __dirname + '/Storage/tmp/' + random + '-at-' + Date.now() + extension;
+    return this._temporaryDirectory() + random + '-at-' + Date.now() + extension;
   }
 }
 
