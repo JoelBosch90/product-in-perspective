@@ -78,6 +78,10 @@ To stop the environment:
 
 `docker-compose down`
 
+Access at:
+
+`http://localhost:8001`
+
 
 ### Development environment
 To rebuild all images and run the environment:

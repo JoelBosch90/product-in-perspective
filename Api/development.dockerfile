@@ -15,14 +15,14 @@ ENV NODE_ENV development
 # For developer mode, we can use NPMs default install command.
 RUN npm install
 
-# Create a temporary directory for the storage.
-RUN mkdir -p /Storage/tmp/
-
 # Let's not run these commands as the root user.
 USER node
 
 # Copy the application files to the directory.
 COPY --chown=node:node . .
+
+# Create a temporary directory for the storage.
+RUN mkdir -p ./Storage/tmp/
 
 # We want to host the API at port 3000.
 EXPOSE 3000
