@@ -545,8 +545,6 @@ class Storage {
     // dot.
     const extension = fileType ? '.' + fileType : '';
 
-    console.log(fs.existsSync(__dirname + '/Storage/tmp/'))
-
     // Create a path to a random file name plus the current time in the
     // temporary directory.
     return __dirname + '/Storage/tmp/' + random + '-at-' + Date.now() + extension;
