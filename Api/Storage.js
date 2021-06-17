@@ -535,14 +535,20 @@ class Storage {
    */
   _temporaryDirectory = () => {
 
-    // Create the directory's path.
-    const path = __dirname + '/tmp/';
+    // Create the tempory directory's path.
+    const path = '/etc/tmp/';
 
     // Check if a directory exists at this path. If not, create it.
     if (!fs.existsSync(path)) fs.mkdirSync(path);
 
-    // Return the path.
-    return path;
+    // Create our own sub directory in the temporary directory.
+    const subDirectory = path + '/Storage';
+
+    // Check if a directory exists at this path. If not, create it.
+    if (!fs.existsSync(subDirectory)) fs.mkdirSync(subDirectory);
+
+    // Return the sub directory.
+    return subDirectory;
   }
 
   /**
