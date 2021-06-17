@@ -16,7 +16,7 @@ ENV NODE_ENV production
 RUN npm ci --only=production
 
 # Create a temporary directory for the storage.
-RUN mkdir -p ./Storage/tmp/ && chown node ./Storage/tmp/
+RUN mkdir -p ./Storage/tmp/ && chown node ./Storage/tmp/ && chgrp node ./Storage/tmp/
 
 # Let's not run these commands as the root user.
 USER node
