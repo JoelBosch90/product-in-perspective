@@ -59,6 +59,7 @@ class Database {
       // We can safely use the newest MongoDB settings.
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     });
   }
 
