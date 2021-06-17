@@ -7,7 +7,6 @@
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
     "dotenv": "^9.0.1",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
@@ -17,6 +16,7 @@
     "minio": "^7.0.18",
     "mongoose": "^5.12.7",
     "node-stream-zip": "^1.13.4",
+    "npm": "^7.17.0",
     "obj2gltf": "^3.1.0",
     "require": "^0.4.4"
   },

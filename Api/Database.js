@@ -54,7 +54,12 @@ class Database {
       : `mongodb://${this._config.host}:${this._config.port}/node-express-mongodb-server?authSource=admin`;
 
     // Use the URL to connect to the database. Return the connection promise.
-    return mongoose.connect(connectUrl);
+    return mongoose.connect(connectUrl, {
+
+      // We can safely use the newest MongoDB settings.
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
   }
 
   /**

@@ -1,5 +1,5 @@
 # The client was built with Node 16.
-FROM node:16-alpine
+FROM node:16.3-alpine3.13
 
 # Define a working directory for this image.
 WORKDIR /client
