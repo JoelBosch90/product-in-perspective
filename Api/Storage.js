@@ -536,7 +536,7 @@ class Storage {
   _temporaryDirectory = () => {
 
     // Create the directory's path.
-    const path = __dirname + '/Storage/tmp/';
+    const path = __dirname + '/tmp/';
 
     // Check if a directory exists at this path. If not, create it.
     if (!fs.existsSync(path)) fs.mkdirSync(path);
