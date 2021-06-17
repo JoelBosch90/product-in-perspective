@@ -116,8 +116,6 @@ STORAGE_ACCESS_KEY
 STORAGE_SECRET_KEY
 
 
-## SSL certificates
-You can follow the final part of this tutorial to configure the SSL certificates
-for this setup:
-
-https://www.domysee.com/blogposts/reverse-proxy-nginx-docker-compose
+## SSL
+SSL is required to use the WebXR API, so keep that in mind when hosting this
+application.

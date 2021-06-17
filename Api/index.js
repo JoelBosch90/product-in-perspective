@@ -9,8 +9,6 @@ require('dotenv').config();
 // Import API.
 const Api = require('./Api.js');
 
-console.log(process.env);
-
 // Start serving the API.
 const api = new Api({
 
