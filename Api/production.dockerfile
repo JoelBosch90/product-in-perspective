@@ -1,11 +1,11 @@
 # The API was built with Node 16.
 FROM node:16.3-alpine3.13
 
+# Create the working directory and give it to the node user.
+RUN mkdir -p /api && chown -R node:node /api
+
 # Define a working directory for this image.
 WORKDIR /api
-
-# Give the node user control over the working directory.
-RUN chown node /api && chgrp node /api
 
 # We want to use the Node Package Manager to install our dependencies. These
 # dependencies are listed in the package JSON files. We need them in our working

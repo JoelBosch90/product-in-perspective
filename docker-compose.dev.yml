@@ -162,6 +162,12 @@ services:
       - STORAGE_PORT=9000
       - DATABASE_HOST=database
       - DATABASE_PORT=27017
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - STORAGE_ACCESS_KEY=${STORAGE_ACCESS_KEY}
+      - STORAGE_SECRET_KEY=${STORAGE_SECRET_KEY}
+      - TOKEN_SECRET=${TOKEN_SECRET}
+
 
     # We can expose the API service in the container network.
     expose:
@@ -171,10 +177,6 @@ services:
     # we can update the code in real time.
     volumes:
       - ./Api:/api
-
-    # We can get the environment variables from our environment variables file.
-    env_file:
-      - .env
 
     # The API will try to connect to the database and the storage services, so
     # we need to make sure that they are running before we initialize the API.
