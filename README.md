@@ -91,9 +91,10 @@ To rebuild all images and run the environment:
 
 This is best to run undetached so that you have access to debug information. You
 can stop this environment with Ctrl+C in a standard Linux terminal. After the
-`up` command, you'll be able to access the application at `http://localhost` and
-you can simply reload the page after you've saved changes to view them. There
-will be no need to rebuild the containers until you restart them.
+`up` command, you'll be able to access the application at
+`http://localhost:8001` and you can simply reload the page after you've saved
+changes to view them. There will be no need to rebuild the containers until you
+restart them.
 
 
 ## Set up your local environment variables.

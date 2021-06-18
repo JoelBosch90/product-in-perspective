@@ -15,11 +15,11 @@ COPY package*.json ./
 # Indicate that we're running in production.
 ENV NODE_ENV production
 
-# Let's not run these commands as the root user.
-USER node
-
 # We only want to install the libraries that we need for production.
 RUN npm ci --only=production
+
+# Let's not run these commands as the root user.
+USER node
 
 # Copy the application files to the directory.
 COPY --chown=node:node . .

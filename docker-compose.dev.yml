@@ -76,8 +76,7 @@ services:
 
     # We can give Nginx access to the common web ports.
     ports:
-      - 80:80
-      - 443:443
+      - 8001:80
 
     # We can use volumes to copy our reverse proxy configuration into Nginx.
     volumes:

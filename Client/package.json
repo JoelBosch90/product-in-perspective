@@ -35,7 +35,7 @@
     "copy-html": "/bin/cp -rf source/html/* public/html",
     "copy-static": "npm run copy-images & npm run copy-html",
     "build": "npm run build-style & npm run build-js & npm run copy-static",
-    "devStart": "nodemon --ignore public/ -e js,json,html,less -x \"npm run build & npm start\"",
+    "devStart": "npx nodemon --ignore public/ -e js,json,html,less -x \"npm run build & npm start\"",
     "start": "node index.js"
   },
   "repository": {

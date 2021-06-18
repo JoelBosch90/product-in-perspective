@@ -10,7 +10,7 @@
     "dotenv": "^9.0.1",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
-    "fbx2gltf": "^0.9.7",
+    "fbx2gltf": "^0.9.7-p1",
     "gltf-pipeline": "^3.0.2",
     "jsonwebtoken": "^8.5.1",
     "minio": "^7.0.18",
@@ -25,7 +25,7 @@
     "nodemon": "^2.0.7"
   },
   "scripts": {
-    "devStart": "nodemon -e js,json -x \"npm start\"",
+    "devStart": "npx nodemon -e js,json -x \"npm start\"",
     "start": "node index.js"
   },
   "repository": {
