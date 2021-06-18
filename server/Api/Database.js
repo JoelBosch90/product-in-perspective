@@ -52,6 +52,8 @@ class Database {
       // In development, this is not needed. We can load the URL as is.
       : `mongodb://${this._config.url}`
 
+    console.log(connectUrl);
+
     // Use the URL to connect to the database. Return the connection promise.
     return mongoose.connect(connectUrl);
   }
