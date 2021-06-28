@@ -295,7 +295,7 @@ class Storage {
     this._removeTempFile(file);
 
     // Clean up the extraction folder.
-    await fs.rmdir(directoryPath, { recursive: true });
+    await fs.rm(directoryPath, { recursive: true });
 
     // Return the model we found.
     return modelPath;
@@ -458,7 +458,7 @@ class Storage {
     fs.writeFileSync(newPath, glb);
 
     // Remove the old file.
-    await this._removeTempFile(file);;
+    await this._removeTempFile(file);
 
     // And resolve to the path for the new GLB file.
     return newPath;
@@ -475,7 +475,7 @@ class Storage {
     // Get a path with the .glb extension.
     const newPath = this._getFilePath('glb');
 
-    // Convert the OBJ file to GLB.
+    // Convert the FBX file to GLB.
     await fbx2gltf(file, newPath);
 
     // Remove the old file.

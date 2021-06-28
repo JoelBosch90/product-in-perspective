@@ -167,7 +167,6 @@ services:
       - STORAGE_SECRET_KEY=${STORAGE_SECRET_KEY}
       - TOKEN_SECRET=${TOKEN_SECRET}
 
-
     # We can expose the API service in the container network.
     expose:
       - "3000"

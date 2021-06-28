@@ -10,7 +10,7 @@ WORKDIR /client
 # We want to use the Node Package Manager to install our dependencies. These
 # dependencies are listed in the package JSON files. We need them in our working
 # directory.
-COPY package*.json ./
+COPY --chown=node:node package*.json ./
 
 # Indicate that we're in production mode.
 ENV NODE_ENV production
@@ -18,11 +18,11 @@ ENV NODE_ENV production
 # We need to load some dependencies from repositories, so we'll need git.
 RUN apk add git
 
-# We want to install only the libraries that we need for production.
-RUN npm ci --only=production
-
 # Let's not run these commands as the root user.
 USER node
+
+# We want to install only the libraries that we need for production.
+RUN npm ci --only=production
 
 # Copy the application files to the directory.
 COPY --chown=node:node . .
