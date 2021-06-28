@@ -78,6 +78,7 @@ To stop the environment:
 
 `docker-compose down`
 
+
 Access at:
 
 `http://localhost:8001`
@@ -93,7 +94,7 @@ This is best to run undetached so that you have access to debug information. You
 can stop this environment with Ctrl+C in a standard Linux terminal. After the
 `up` command, you'll be able to access the application at
 `http://localhost:8001` and you can simply reload the page after you've saved
-changes to view them. There will be no need to rebuild the containers until you
+changes to view them. There is no need to rebuild the containers until you
 restart them.
 
 
@@ -104,21 +105,42 @@ This file should be in your `.gitignore` because it should not end up in the
 repository, because it contains things like database passwords. The service
 expects the following environment variables:
 
+EXTERNAL_URL
+- The URL at which the website is currently hosted.
 
-### JSON Webtoken secret.
+EMAIL_DOMAIN
+- The email domain that should be used.
+
 TOKEN_SECRET
+- The secret used to generate JSON web tokens.
 
-
-### Database credentials.
 DATABASE_USERNAME
+- The username for the database. The user will be automatically created and
+  subsequently used to connect to the MongoDB database.
 
 DATABASE_PASSWORD
+- The password for the database. The user will be automatically created and
+  subsequently used to connect to the MongoDB database.
 
-
-### Object storage credentials.
 STORAGE_ACCESS_KEY
+- The username for the object storage. The user will be automatically created
+  and subsequently used to connect to the Minio object storage.
 
 STORAGE_SECRET_KEY
+- The password for the object storage. The user will be automatically created
+  and subsequently used to connect to the Minio object storage.
+
+SMTP_HOST
+- The host for the external SMTP host that should be used to send emails.
+
+SMTP_PORT
+- The port for the external SMTP host that should be used to send emails.
+
+SMTP_USERNAME
+- The username for the external SMTP host that should be used to send emails.
+
+SMTP_PASSWORD
+- The password for the external SMTP host that should be used to send emails.
 
 
 ## SSL
