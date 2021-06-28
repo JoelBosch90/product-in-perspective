@@ -1,5 +1,6 @@
 // Import dependencies.
 import { AppList } from "./AppList.js";
+import { ProductForm } from "./ProductForm.js";
 import { BaseElement } from "../widgets/BaseElement.js";
 import { Form } from "../widgets/Form.js";
 import { goTo } from "../tools/goTo.js";
@@ -189,7 +190,7 @@ class AppForm extends BaseElement {
 
       // We should clear the cache related to apps, as we have probably changed
       // something.
-      this.trigger("clearCache", [AppForm, AppList]);
+      this.trigger("clearCache", [AppForm, AppList, ProductForm]);
 
       // Return the the app overview.
       goTo('/admin/apps');

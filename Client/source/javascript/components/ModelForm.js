@@ -1,5 +1,6 @@
 // Import dependencies.
 import { ModelList } from "./ModelList.js";
+import { ProductForm } from "./ProductForm.js";
 import { BaseElement } from "../widgets/BaseElement.js";
 import { Request } from "../tools/Request.js";
 import { Form } from "../widgets/Form.js";
@@ -183,7 +184,7 @@ class ModelForm extends BaseElement {
 
       // We should clear the cache related to models, as we have probably
       // changed something.
-      this.trigger("clearCache", [ModelForm, ModelList]);
+      this.trigger("clearCache", [ModelForm, ModelList, ProductForm]);
 
       // Return the the model overview.
       goTo('/admin/models');

@@ -1,5 +1,6 @@
 // Import dependencies.
 import { Request} from "../tools/Request.js";
+import { ProductForm } from "./ProductForm.js";
 import { BaseElement } from "../widgets/BaseElement.js";
 import { Overview } from "../widgets/Overview.js";
 import { goTo } from "../tools/goTo.js";
@@ -106,9 +107,16 @@ class ModelList extends BaseElement {
               .catch(error => void this._overview.showError(error))
               .then(response => {
 
+                // If it was not removed, we should not change anything yet.
+                if (!response.ok) return;
+
                 // If it was deleted from the database, we should remove it from
                 // the overview as well.
-                if (response.ok) cards[id].remove();
+                cards[id].remove();
+
+                // We should clear the cache for the product form to update the
+                // list of models you can select.
+                this.trigger("clearCache", [ProductForm]);
               });
           });
 

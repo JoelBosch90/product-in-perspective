@@ -6563,611 +6563,6 @@
 
   // Import dependencies.
   /**
-   *  The definition of the AppList class component that can be used to load
-   *  overview of created apps.
-   *
-   *  N.B. Note that variables and methods preceeded with '_' should be treated as
-   *  private, even though private variables and methods are not yet supported in
-   *  Javascript classes.
-   */
-
-  class AppList extends BaseElement {
-    /**
-     *  Private variable that stores a reference to the container element in the
-     *  DOM.
-     *  @var      {Element}
-     */
-    _container = null;
-    /**
-     *  Private variable that stores a reference to the Overview element.
-     *  @var      {Overview}
-     */
-
-    _overview = null;
-    /**
-     *  Reference to the request object.
-     *  @var      {Request}
-     */
-
-    _request = null;
-    /**
-     *  Reference to the API request for the apps.
-     *  @var      {Promise}
-     */
-
-    _requestPromise = null;
-    /**
-     *  Class constructor.
-     *  @param    {Element}   parent      Container to which this component will
-     *                                    be added.
-     */
-
-    constructor(parent) {
-      // Call the base class constructor first.
-      super(); // Create a container for this component.
-
-      this._container = document.createElement("div");
-
-      this._container.classList.add("applist", "component"); // Create a new request object.
-
-
-      this._request = new Request(); // Determine the overviews's title.
-
-      const title = "App overview"; // Use the overview's title as the page title.
-
-      this.pageTitle(title); // Create a app overview.
-
-      this._overview = new Overview(this._container, {
-        title,
-        center: true
-      }); // First, request a list of all apps. Store the promise.
-
-      this._requestPromise = this._request.get('/apps').catch(error => void this._overview.showError(error)).then(response => {
-        // Get access to the JSON object.
-        if (response) return response.json().then(apps => {
-          // Use this component's error handling if an error has occurred with
-          // the HTTP request.
-          if (!response.ok) return this._overview.showError(apps.error); // Create a new cards object.
-
-          const cards = {}; // Create an object to map app ids to their paths for navigation.
-
-          const paths = {}; // Loop through all of the apps.
-
-          for (const app of apps) {
-            // Create a new card for each app.
-            const card = this._overview.addCard({
-              id: app._id,
-              title: app.name,
-              description: app.description,
-              removable: true,
-              editable: true,
-              viewable: true
-            }); // Add the card to our cards dictionary.
-
-
-            cards[app._id] = card; // Remember the path for this app.
-
-            paths[app._id] = app.path;
-          } // Handle remove requests.
-
-
-          this._overview.on('remove', id => {
-            this._request.delete('/app/' + id).catch(error => void this._overview.showError(error)).then(response => {
-              // If it was deleted from the database, we should remove it from
-              // the overview as well.
-              if (response.ok) cards[id].remove();
-            });
-          }); // Link the edit button to the edit form of the appropriate app.
-
-
-          this._overview.on('edit', id => void goTo('/admin/app/' + id)); // Link the view button to the URL of the appropiate app.
-
-
-          this._overview.on('view', id => void goTo('/app/' + paths[id]));
-        });
-      }); // Add the new element to the parent container.
-
-      parent.appendChild(this._container);
-    }
-    /**
-     *  Method to remove this object and clean up after itself. We have to use
-     *  non-arrow function or we'd lose the super context.
-     */
-
-
-    remove() {
-      // Remove the Overview element once the request promise has resolved.
-      if (this._requestPromise) this._requestPromise.then(() => void this._overview.remove()); // Call the BaseElement's remove function.
-
-      super.remove();
-    }
-
-  } // Export the AppList class so it can be imported elsewhere.
-
-  // Import dependencies.
-  /**
-   *  The definition of the AppForm class component that can be used to load
-   *  a form to create a new app.
-   *
-   *  @event      clearCache    Triggered when the form has been stored to prevent
-   *                            displaying old data.
-   *
-   *  N.B. Note that variables and methods preceeded with '_' should be treated as
-   *  private, even though private variables and methods are not yet supported in
-   *  Javascript classes.
-   */
-
-  class AppForm extends BaseElement {
-    /**
-     *  Private variable that stores a reference to the container element in the
-     *  DOM.
-     *  @var      {Element}
-     */
-    _container = null;
-    /**
-     *  Private variable that stores a reference to the Form element.
-     *  @var      {Form}
-     */
-
-    _form = null;
-    /**
-     *  Class constructor.
-     *  @param    {Element}   parent      Container to which this component will
-     *                                    be added.
-     *  @param    {object}    options     Optional parameters.
-     *    @property {string}    appId       ID that identifies an app.
-     */
-
-    constructor(parent, options = {}) {
-      // Call the base class constructor first.
-      super(); // Do we have the ID for a specific app?
-
-      const params = options.appId // If so, we'll try to edit that app.
-      ? {
-        put: '/app/' + options.appId,
-        get: '/app/' + options.appId
-      } // If not, we'll create a new one.
-      : {
-        post: '/app'
-      }; // Create a container for this component.
-
-      this._container = document.createElement("div");
-
-      this._container.classList.add("appform", "component"); // Determine the form's title.
-
-
-      const title = options.appId ? "App configuration" : "App creation"; // Use the form's title as the page title.
-
-      this.pageTitle(title); // Create a form for creating an app.
-
-      this._form = new Form(this._container, {
-        title,
-        center: true,
-        params,
-        inputs: [{
-          name: "name",
-          options: {
-            label: "Name",
-            type: "text",
-            tooltip: "Give your app a name. This name is also visible to users in the browser tab.",
-            required: true
-          }
-        }, {
-          name: "description",
-          options: {
-            label: "Description",
-            type: "textarea",
-            tooltip: "Give your app a description. This description is only visible to you."
-          }
-        }, {
-          name: "path",
-          options: {
-            label: "Path",
-            type: "text",
-            tooltip: "Give your app a path. This is the last part of the URL where the app will appear. It has to be unique.",
-            required: true
-          }
-        }, {
-          name: "exit-button",
-          options: {
-            label: "Exit button",
-            type: "text",
-            tooltip: "In the augmented reality scene, an app always has a button that allows the user to exit the scene. Here you can decide the text for this button.",
-            required: true
-          }
-        }],
-        fieldsets: [{
-          name: "scanning",
-          options: {
-            legend: "Texts in scanning mode",
-            tooltip: "These are the texts that will appear when a user is scanning a product.",
-            inputs: [{
-              name: "title",
-              options: {
-                label: "Title",
-                type: "text",
-                tooltip: "This is the title that will appear when a user is scanning a product."
-              }
-            }, {
-              name: "description",
-              options: {
-                label: "Description",
-                type: "textarea",
-                tooltip: "This is the description that will appear when a user is scanning a product. This is the perfect place to give the user hints for how to scan a product."
-              }
-            }, {
-              name: "button",
-              options: {
-                label: "Button",
-                type: "text",
-                tooltip: "This is the text for the button that the user uses to select a product that they have scanned. By clicking this button, the user enters the augmented reality scene.",
-                required: true
-              }
-            }]
-          }
-        }, {
-          name: "placing",
-          options: {
-            legend: "Texts in placing mode",
-            tooltip: "These are the texts that will appear when a user is detecting surfaces on which to place the 3D models.",
-            inputs: [{
-              name: "title",
-              options: {
-                label: "Title",
-                type: "text",
-                tooltip: "This is the title that will appear when a user is detecting surfaces on which to place the 3D models."
-              }
-            }, {
-              name: "description",
-              options: {
-                label: "Description",
-                type: "textarea",
-                tooltip: "This is the description that will appear when a user is detecting surfaces on which to place the 3D models. This is the perfect place to give the user hints for how to detect a surface."
-              }
-            }, {
-              name: "button",
-              options: {
-                label: "Button",
-                type: "text",
-                tooltip: "This is the text for the button that the user uses to select a surface that they have detected. By clicking this button, the user places the first 3D model.",
-                required: true
-              }
-            }]
-          }
-        }],
-        buttons: [{
-          name: "submit",
-          options: {
-            label: options.appId ? "Edit app" : "Create app",
-            type: "submit"
-          }
-        }]
-      }); // When the app was stored successfully, return to the app overview.
-
-      this._form.on("stored", () => {
-        // We should clear the cache related to apps, as we have probably changed
-        // something.
-        this.trigger("clearCache", [AppForm, AppList]); // Return the the app overview.
-
-        goTo('/admin/apps');
-      }); // Add the new element to the parent container.
-
-
-      parent.appendChild(this._container);
-    }
-    /**
-     *  Method to remove this object and clean up after itself. We have to use
-     *  non-arrow function or we'd lose the super context.
-     */
-
-
-    remove() {
-      // Remove the Form element.
-      this._form.remove(); // Call the BaseElement's remove function.
-
-
-      super.remove();
-    }
-
-  } // Export the AppForm class so it can be imported elsewhere.
-
-  // Import dependencies.
-  /**
-   *  The definition of the ModelList class component that can be used to load
-   *  overview of created models.
-   *
-   *  N.B. Note that variables and methods preceeded with '_' should be treated as
-   *  private, even though private variables and methods are not yet supported in
-   *  Javascript classes.
-   */
-
-  class ModelList extends BaseElement {
-    /**
-     *  Private variable that stores a reference to the container element in the
-     *  DOM.
-     *  @var      {Element}
-     */
-    _container = null;
-    /**
-     *  Private variable that stores a reference to the Overview element.
-     *  @var      {Overview}
-     */
-
-    _overview = null;
-    /**
-     *  Reference to the request object.
-     *  @var      {Request}
-     */
-
-    _request = null;
-    /**
-     *  Reference to the API request for the apps.
-     *  @var      {Promise}
-     */
-
-    _requestPromise = null;
-    /**
-     *  Class constructor.
-     *  @param    {Element}   parent      Container to which this component will
-     *                                    be added.
-     */
-
-    constructor(parent) {
-      // Call the base class constructor first.
-      super(); // Create a container for this component.
-
-      this._container = document.createElement("div");
-
-      this._container.classList.add("modellist", "component"); // Create a new request object.
-
-
-      this._request = new Request(); // Determine the overviews's title.
-
-      const title = "Model overview"; // Use the overview's title as the page title.
-
-      this.pageTitle(title); // Create a model overview.
-
-      this._overview = new Overview(this._container, {
-        title,
-        center: true
-      }); // First, request a list of all models. Store the promise.
-
-      this._requestPromise = this._request.get('/models').catch(error => void this._overview.showError(error)).then(response => {
-        // Get access to the JSON object.
-        if (response) return response.json().then(models => {
-          // Use this component's error handling if an error has occurred with
-          // the HTTP request.
-          if (!response.ok) return this._overview.showError(models.error); // Create a new cards object.
-
-          const cards = {}; // Loop through all of the models.
-
-          for (const model of models) {
-            // Create a new card for each model.
-            const card = this._overview.addCard({
-              id: model._id,
-              title: model.name,
-              description: model.description,
-              removable: true,
-              editable: true,
-              viewable: false
-            }); // Add the card to our cards dictionary.
-
-
-            cards[model._id] = card;
-          } // Handle remove requests.
-
-
-          this._overview.on('remove', id => {
-            this._request.delete('/model/' + id).catch(error => void this._overview.showError(error)).then(response => {
-              // If it was deleted from the database, we should remove it from
-              // the overview as well.
-              if (response.ok) cards[id].remove();
-            });
-          });
-
-          this._overview.on('edit', id => void goTo('/admin/model/' + id));
-        });
-      }); // Add the new element to the parent container.
-
-      parent.appendChild(this._container);
-    }
-    /**
-     *  Method to remove this object and clean up after itself. We have to use
-     *  non-arrow function or we'd lose the super context.
-     */
-
-
-    remove() {
-      // Remove the Overview element once the request promise has resolved.
-      if (this._requestPromise) this._requestPromise.then(() => void this._overview.remove()); // Call the BaseElement's remove function.
-
-      super.remove();
-    }
-
-  } // Export the ModelList class so it can be imported elsewhere.
-
-  // Import dependencies.
-  /**
-   *  The definition of the ModelForm class component that can be used to load
-   *  a form to create a new model.
-   *
-   *  N.B. Note that variables and methods preceeded with '_' should be treated as
-   *  private, even though private variables and methods are not yet supported in
-   *  Javascript classes.
-   */
-
-  class ModelForm extends BaseElement {
-    /**
-     *  Private variable that stores a reference to the container element in the
-     *  DOM.
-     *  @var      {Element}
-     */
-    _container = null;
-    /**
-     *  Private variable that stores a reference to the Form element.
-     *  @var      {Form}
-     */
-
-    _form = null;
-    /**
-     *  Reference to the request object.
-     *  @var      {Request}
-     */
-
-    _request = null;
-    /**
-     *  Reference to the API request for the apps.
-     *  @var      {Promise}
-     */
-
-    _requestPromise = null;
-    /**
-     *  Class constructor.
-     *  @param    {Element}   parent      Container to which this component will
-     *                                    be added.
-     *  @param    {object}    options     Optional parameters.
-     *    @property {string}    modelId       ID that identifies a model.
-     */
-
-    constructor(parent, options = {}) {
-      // Call the base class constructor first.
-      super(); // Create a container for this component.
-
-      this._container = document.createElement("div");
-
-      this._container.classList.add("modelform", "component"); // Create a new request object.
-
-
-      this._request = new Request(); // Create the form.
-
-      this._createForm(options); // Add this componenet to the parent container.
-
-
-      parent.appendChild(this._container);
-    }
-    /**
-     *  Private method to create the form and add it to the container.
-     *  @param    {object}    formOptions   Optional parameters.
-     *    @property {string}    modelId       ID that identifies a model.
-     */
-
-
-    _createForm = formOptions => {
-      // Do we have the ID for a specific model?
-      const params = formOptions.modelId // If so, we'll try to edit that model.
-      ? {
-        put: '/model/' + formOptions.modelId,
-        get: '/model/' + formOptions.modelId
-      } // If not, we'll create a new one.
-      : {
-        post: '/model'
-      }; // Determine the form's title.
-
-      const title = formOptions.modelId ? "Model configuration" : "Model creation"; // Use the form's title as the page title.
-
-      this.pageTitle(title); // Create a form for creating an new model.
-
-      this._form = new Form(this._container, {
-        title,
-        center: true,
-        params,
-        inputs: [{
-          name: "name",
-          options: {
-            label: "Name",
-            type: "text",
-            tooltip: "Give your model a name. This name is only visible to you.",
-            required: true
-          }
-        }, {
-          name: "model",
-          options: {
-            label: "Upload model ...",
-            accept: ".glTF,.zip,.glb",
-            type: "file",
-            tooltip: "Click this button to select the model to upload. This can be a single file with a .glTF or .glb extension, or a .zip directory that contains an FBX, OBJ, or GLTF model and its dependencies."
-          }
-        }, {
-          name: "multiplier",
-          options: {
-            label: "Multiplier",
-            type: "number",
-            tooltip: "You can set a multiplier of 1 or greater. If you select 2 or more, the app will display the 3D model multiple times and try to stack them in a cube-like fashion.",
-            set: 1
-          }
-        }, {
-          name: "scale",
-          options: {
-            label: "Scale",
-            type: "number",
-            tooltip: "You can set a scaling factor for the model here. If set to 1, the app will show the model at its native size. Any values greater than 1 will increase the model's size. Values between 0 and 1 will shrink the model, and values below 0 will turn the model upside down.",
-            step: "any"
-          }
-        }],
-        fieldsets: [{
-          name: "viewing",
-          options: {
-            legend: "Texts in viewing mode",
-            tooltip: "While this model is being displayed, you can also make texts appear on the page. Here you can determine those texts.",
-            inputs: [{
-              name: "title",
-              options: {
-                label: "Title",
-                type: "text",
-                tooltip: "Set the title to show while this model is being displayed."
-              }
-            }, {
-              name: "description",
-              options: {
-                label: "Description",
-                type: "textarea",
-                tooltip: "Set the description to show while this model is being displayed."
-              }
-            }, {
-              name: "button",
-              options: {
-                label: "Button",
-                type: "text",
-                tooltip: "Set the text for the button that the user can press to see the next model. If there is no next model, the button press will return the user to the surface detection mode.",
-                required: true
-              }
-            }]
-          }
-        }],
-        buttons: [{
-          name: "submit",
-          options: {
-            label: formOptions.modelId ? "Edit model" : "Create model",
-            type: "submit"
-          }
-        }]
-      }); // When the model was stored successfully, return to the model overview.
-
-      this._form.on("stored", () => {
-        // We should clear the cache related to models, as we have probably
-        // changed something.
-        this.trigger("clearCache", [ModelForm, ModelList]); // Return the the model overview.
-
-        goTo('/admin/models');
-      });
-    };
-    /**
-     *  Method to remove this object and clean up after itself. We have to use
-     *  non-arrow function or we'd lose the super context.
-     */
-
-    remove() {
-      // Remove the Form element once the request promise has resolved.
-      this._form.remove(); // Call the BaseElement's remove function.
-
-
-      super.remove();
-    }
-
-  } // Export the ModelForm class so it can be imported elsewhere.
-
-  // Import dependencies.
-  /**
    *  The definition of the ProductList class component that can be used to load
    *  overview of created products.
    *
@@ -7476,6 +6871,621 @@
     }
 
   } // Export the ProductForm class so it can be imported elsewhere.
+
+  // Import dependencies.
+  /**
+   *  The definition of the AppList class component that can be used to load
+   *  overview of created apps.
+   *
+   *  N.B. Note that variables and methods preceeded with '_' should be treated as
+   *  private, even though private variables and methods are not yet supported in
+   *  Javascript classes.
+   */
+
+  class AppList extends BaseElement {
+    /**
+     *  Private variable that stores a reference to the container element in the
+     *  DOM.
+     *  @var      {Element}
+     */
+    _container = null;
+    /**
+     *  Private variable that stores a reference to the Overview element.
+     *  @var      {Overview}
+     */
+
+    _overview = null;
+    /**
+     *  Reference to the request object.
+     *  @var      {Request}
+     */
+
+    _request = null;
+    /**
+     *  Reference to the API request for the apps.
+     *  @var      {Promise}
+     */
+
+    _requestPromise = null;
+    /**
+     *  Class constructor.
+     *  @param    {Element}   parent      Container to which this component will
+     *                                    be added.
+     */
+
+    constructor(parent) {
+      // Call the base class constructor first.
+      super(); // Create a container for this component.
+
+      this._container = document.createElement("div");
+
+      this._container.classList.add("applist", "component"); // Create a new request object.
+
+
+      this._request = new Request(); // Determine the overviews's title.
+
+      const title = "App overview"; // Use the overview's title as the page title.
+
+      this.pageTitle(title); // Create a app overview.
+
+      this._overview = new Overview(this._container, {
+        title,
+        center: true
+      }); // First, request a list of all apps. Store the promise.
+
+      this._requestPromise = this._request.get('/apps').catch(error => void this._overview.showError(error)).then(response => {
+        // Get access to the JSON object.
+        if (response) return response.json().then(apps => {
+          // Use this component's error handling if an error has occurred with
+          // the HTTP request.
+          if (!response.ok) return this._overview.showError(apps.error); // Create a new cards object.
+
+          const cards = {}; // Create an object to map app ids to their paths for navigation.
+
+          const paths = {}; // Loop through all of the apps.
+
+          for (const app of apps) {
+            // Create a new card for each app.
+            const card = this._overview.addCard({
+              id: app._id,
+              title: app.name,
+              description: app.description,
+              removable: true,
+              editable: true,
+              viewable: true
+            }); // Add the card to our cards dictionary.
+
+
+            cards[app._id] = card; // Remember the path for this app.
+
+            paths[app._id] = app.path;
+          } // Handle remove requests.
+
+
+          this._overview.on('remove', id => {
+            this._request.delete('/app/' + id).catch(error => void this._overview.showError(error)).then(response => {
+              // If it was not removed, we should not change anything yet.
+              if (!response.ok) return; // If it was deleted from the database, we should remove it from
+              // the overview as well.
+
+              cards[id].remove(); // We should clear the cache for the product form to update the
+              // list of apps you can select.
+
+              this.trigger("clearCache", [ProductForm]);
+            });
+          }); // Link the edit button to the edit form of the appropriate app.
+
+
+          this._overview.on('edit', id => void goTo('/admin/app/' + id)); // Link the view button to the URL of the appropiate app.
+
+
+          this._overview.on('view', id => void goTo('/app/' + paths[id]));
+        });
+      }); // Add the new element to the parent container.
+
+      parent.appendChild(this._container);
+    }
+    /**
+     *  Method to remove this object and clean up after itself. We have to use
+     *  non-arrow function or we'd lose the super context.
+     */
+
+
+    remove() {
+      // Remove the Overview element once the request promise has resolved.
+      if (this._requestPromise) this._requestPromise.then(() => void this._overview.remove()); // Call the BaseElement's remove function.
+
+      super.remove();
+    }
+
+  } // Export the AppList class so it can be imported elsewhere.
+
+  // Import dependencies.
+  /**
+   *  The definition of the AppForm class component that can be used to load
+   *  a form to create a new app.
+   *
+   *  @event      clearCache    Triggered when the form has been stored to prevent
+   *                            displaying old data.
+   *
+   *  N.B. Note that variables and methods preceeded with '_' should be treated as
+   *  private, even though private variables and methods are not yet supported in
+   *  Javascript classes.
+   */
+
+  class AppForm extends BaseElement {
+    /**
+     *  Private variable that stores a reference to the container element in the
+     *  DOM.
+     *  @var      {Element}
+     */
+    _container = null;
+    /**
+     *  Private variable that stores a reference to the Form element.
+     *  @var      {Form}
+     */
+
+    _form = null;
+    /**
+     *  Class constructor.
+     *  @param    {Element}   parent      Container to which this component will
+     *                                    be added.
+     *  @param    {object}    options     Optional parameters.
+     *    @property {string}    appId       ID that identifies an app.
+     */
+
+    constructor(parent, options = {}) {
+      // Call the base class constructor first.
+      super(); // Do we have the ID for a specific app?
+
+      const params = options.appId // If so, we'll try to edit that app.
+      ? {
+        put: '/app/' + options.appId,
+        get: '/app/' + options.appId
+      } // If not, we'll create a new one.
+      : {
+        post: '/app'
+      }; // Create a container for this component.
+
+      this._container = document.createElement("div");
+
+      this._container.classList.add("appform", "component"); // Determine the form's title.
+
+
+      const title = options.appId ? "App configuration" : "App creation"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a form for creating an app.
+
+      this._form = new Form(this._container, {
+        title,
+        center: true,
+        params,
+        inputs: [{
+          name: "name",
+          options: {
+            label: "Name",
+            type: "text",
+            tooltip: "Give your app a name. This name is also visible to users in the browser tab.",
+            required: true
+          }
+        }, {
+          name: "description",
+          options: {
+            label: "Description",
+            type: "textarea",
+            tooltip: "Give your app a description. This description is only visible to you."
+          }
+        }, {
+          name: "path",
+          options: {
+            label: "Path",
+            type: "text",
+            tooltip: "Give your app a path. This is the last part of the URL where the app will appear. It has to be unique.",
+            required: true
+          }
+        }, {
+          name: "exit-button",
+          options: {
+            label: "Exit button",
+            type: "text",
+            tooltip: "In the augmented reality scene, an app always has a button that allows the user to exit the scene. Here you can decide the text for this button.",
+            required: true
+          }
+        }],
+        fieldsets: [{
+          name: "scanning",
+          options: {
+            legend: "Texts in scanning mode",
+            tooltip: "These are the texts that will appear when a user is scanning a product.",
+            inputs: [{
+              name: "title",
+              options: {
+                label: "Title",
+                type: "text",
+                tooltip: "This is the title that will appear when a user is scanning a product."
+              }
+            }, {
+              name: "description",
+              options: {
+                label: "Description",
+                type: "textarea",
+                tooltip: "This is the description that will appear when a user is scanning a product. This is the perfect place to give the user hints for how to scan a product."
+              }
+            }, {
+              name: "button",
+              options: {
+                label: "Button",
+                type: "text",
+                tooltip: "This is the text for the button that the user uses to select a product that they have scanned. By clicking this button, the user enters the augmented reality scene.",
+                required: true
+              }
+            }]
+          }
+        }, {
+          name: "placing",
+          options: {
+            legend: "Texts in placing mode",
+            tooltip: "These are the texts that will appear when a user is detecting surfaces on which to place the 3D models.",
+            inputs: [{
+              name: "title",
+              options: {
+                label: "Title",
+                type: "text",
+                tooltip: "This is the title that will appear when a user is detecting surfaces on which to place the 3D models."
+              }
+            }, {
+              name: "description",
+              options: {
+                label: "Description",
+                type: "textarea",
+                tooltip: "This is the description that will appear when a user is detecting surfaces on which to place the 3D models. This is the perfect place to give the user hints for how to detect a surface."
+              }
+            }, {
+              name: "button",
+              options: {
+                label: "Button",
+                type: "text",
+                tooltip: "This is the text for the button that the user uses to select a surface that they have detected. By clicking this button, the user places the first 3D model.",
+                required: true
+              }
+            }]
+          }
+        }],
+        buttons: [{
+          name: "submit",
+          options: {
+            label: options.appId ? "Edit app" : "Create app",
+            type: "submit"
+          }
+        }]
+      }); // When the app was stored successfully, return to the app overview.
+
+      this._form.on("stored", () => {
+        // We should clear the cache related to apps, as we have probably changed
+        // something.
+        this.trigger("clearCache", [AppForm, AppList, ProductForm]); // Return the the app overview.
+
+        goTo('/admin/apps');
+      }); // Add the new element to the parent container.
+
+
+      parent.appendChild(this._container);
+    }
+    /**
+     *  Method to remove this object and clean up after itself. We have to use
+     *  non-arrow function or we'd lose the super context.
+     */
+
+
+    remove() {
+      // Remove the Form element.
+      this._form.remove(); // Call the BaseElement's remove function.
+
+
+      super.remove();
+    }
+
+  } // Export the AppForm class so it can be imported elsewhere.
+
+  // Import dependencies.
+  /**
+   *  The definition of the ModelList class component that can be used to load
+   *  overview of created models.
+   *
+   *  N.B. Note that variables and methods preceeded with '_' should be treated as
+   *  private, even though private variables and methods are not yet supported in
+   *  Javascript classes.
+   */
+
+  class ModelList extends BaseElement {
+    /**
+     *  Private variable that stores a reference to the container element in the
+     *  DOM.
+     *  @var      {Element}
+     */
+    _container = null;
+    /**
+     *  Private variable that stores a reference to the Overview element.
+     *  @var      {Overview}
+     */
+
+    _overview = null;
+    /**
+     *  Reference to the request object.
+     *  @var      {Request}
+     */
+
+    _request = null;
+    /**
+     *  Reference to the API request for the apps.
+     *  @var      {Promise}
+     */
+
+    _requestPromise = null;
+    /**
+     *  Class constructor.
+     *  @param    {Element}   parent      Container to which this component will
+     *                                    be added.
+     */
+
+    constructor(parent) {
+      // Call the base class constructor first.
+      super(); // Create a container for this component.
+
+      this._container = document.createElement("div");
+
+      this._container.classList.add("modellist", "component"); // Create a new request object.
+
+
+      this._request = new Request(); // Determine the overviews's title.
+
+      const title = "Model overview"; // Use the overview's title as the page title.
+
+      this.pageTitle(title); // Create a model overview.
+
+      this._overview = new Overview(this._container, {
+        title,
+        center: true
+      }); // First, request a list of all models. Store the promise.
+
+      this._requestPromise = this._request.get('/models').catch(error => void this._overview.showError(error)).then(response => {
+        // Get access to the JSON object.
+        if (response) return response.json().then(models => {
+          // Use this component's error handling if an error has occurred with
+          // the HTTP request.
+          if (!response.ok) return this._overview.showError(models.error); // Create a new cards object.
+
+          const cards = {}; // Loop through all of the models.
+
+          for (const model of models) {
+            // Create a new card for each model.
+            const card = this._overview.addCard({
+              id: model._id,
+              title: model.name,
+              description: model.description,
+              removable: true,
+              editable: true,
+              viewable: false
+            }); // Add the card to our cards dictionary.
+
+
+            cards[model._id] = card;
+          } // Handle remove requests.
+
+
+          this._overview.on('remove', id => {
+            this._request.delete('/model/' + id).catch(error => void this._overview.showError(error)).then(response => {
+              // If it was not removed, we should not change anything yet.
+              if (!response.ok) return; // If it was deleted from the database, we should remove it from
+              // the overview as well.
+
+              cards[id].remove(); // We should clear the cache for the product form to update the
+              // list of models you can select.
+
+              this.trigger("clearCache", [ProductForm]);
+            });
+          });
+
+          this._overview.on('edit', id => void goTo('/admin/model/' + id));
+        });
+      }); // Add the new element to the parent container.
+
+      parent.appendChild(this._container);
+    }
+    /**
+     *  Method to remove this object and clean up after itself. We have to use
+     *  non-arrow function or we'd lose the super context.
+     */
+
+
+    remove() {
+      // Remove the Overview element once the request promise has resolved.
+      if (this._requestPromise) this._requestPromise.then(() => void this._overview.remove()); // Call the BaseElement's remove function.
+
+      super.remove();
+    }
+
+  } // Export the ModelList class so it can be imported elsewhere.
+
+  // Import dependencies.
+  /**
+   *  The definition of the ModelForm class component that can be used to load
+   *  a form to create a new model.
+   *
+   *  N.B. Note that variables and methods preceeded with '_' should be treated as
+   *  private, even though private variables and methods are not yet supported in
+   *  Javascript classes.
+   */
+
+  class ModelForm extends BaseElement {
+    /**
+     *  Private variable that stores a reference to the container element in the
+     *  DOM.
+     *  @var      {Element}
+     */
+    _container = null;
+    /**
+     *  Private variable that stores a reference to the Form element.
+     *  @var      {Form}
+     */
+
+    _form = null;
+    /**
+     *  Reference to the request object.
+     *  @var      {Request}
+     */
+
+    _request = null;
+    /**
+     *  Reference to the API request for the apps.
+     *  @var      {Promise}
+     */
+
+    _requestPromise = null;
+    /**
+     *  Class constructor.
+     *  @param    {Element}   parent      Container to which this component will
+     *                                    be added.
+     *  @param    {object}    options     Optional parameters.
+     *    @property {string}    modelId       ID that identifies a model.
+     */
+
+    constructor(parent, options = {}) {
+      // Call the base class constructor first.
+      super(); // Create a container for this component.
+
+      this._container = document.createElement("div");
+
+      this._container.classList.add("modelform", "component"); // Create a new request object.
+
+
+      this._request = new Request(); // Create the form.
+
+      this._createForm(options); // Add this componenet to the parent container.
+
+
+      parent.appendChild(this._container);
+    }
+    /**
+     *  Private method to create the form and add it to the container.
+     *  @param    {object}    formOptions   Optional parameters.
+     *    @property {string}    modelId       ID that identifies a model.
+     */
+
+
+    _createForm = formOptions => {
+      // Do we have the ID for a specific model?
+      const params = formOptions.modelId // If so, we'll try to edit that model.
+      ? {
+        put: '/model/' + formOptions.modelId,
+        get: '/model/' + formOptions.modelId
+      } // If not, we'll create a new one.
+      : {
+        post: '/model'
+      }; // Determine the form's title.
+
+      const title = formOptions.modelId ? "Model configuration" : "Model creation"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a form for creating an new model.
+
+      this._form = new Form(this._container, {
+        title,
+        center: true,
+        params,
+        inputs: [{
+          name: "name",
+          options: {
+            label: "Name",
+            type: "text",
+            tooltip: "Give your model a name. This name is only visible to you.",
+            required: true
+          }
+        }, {
+          name: "model",
+          options: {
+            label: "Upload model ...",
+            accept: ".glTF,.zip,.glb",
+            type: "file",
+            tooltip: "Click this button to select the model to upload. This can be a single file with a .glTF or .glb extension, or a .zip directory that contains an FBX, OBJ, or GLTF model and its dependencies."
+          }
+        }, {
+          name: "multiplier",
+          options: {
+            label: "Multiplier",
+            type: "number",
+            tooltip: "You can set a multiplier of 1 or greater. If you select 2 or more, the app will display the 3D model multiple times and try to stack them in a cube-like fashion.",
+            set: 1
+          }
+        }, {
+          name: "scale",
+          options: {
+            label: "Scale",
+            type: "number",
+            tooltip: "You can set a scaling factor for the model here. If set to 1, the app will show the model at its native size. Any values greater than 1 will increase the model's size. Values between 0 and 1 will shrink the model, and values below 0 will turn the model upside down.",
+            step: "any"
+          }
+        }],
+        fieldsets: [{
+          name: "viewing",
+          options: {
+            legend: "Texts in viewing mode",
+            tooltip: "While this model is being displayed, you can also make texts appear on the page. Here you can determine those texts.",
+            inputs: [{
+              name: "title",
+              options: {
+                label: "Title",
+                type: "text",
+                tooltip: "Set the title to show while this model is being displayed."
+              }
+            }, {
+              name: "description",
+              options: {
+                label: "Description",
+                type: "textarea",
+                tooltip: "Set the description to show while this model is being displayed."
+              }
+            }, {
+              name: "button",
+              options: {
+                label: "Button",
+                type: "text",
+                tooltip: "Set the text for the button that the user can press to see the next model. If there is no next model, the button press will return the user to the surface detection mode.",
+                required: true
+              }
+            }]
+          }
+        }],
+        buttons: [{
+          name: "submit",
+          options: {
+            label: formOptions.modelId ? "Edit model" : "Create model",
+            type: "submit"
+          }
+        }]
+      }); // When the model was stored successfully, return to the model overview.
+
+      this._form.on("stored", () => {
+        // We should clear the cache related to models, as we have probably
+        // changed something.
+        this.trigger("clearCache", [ModelForm, ModelList, ProductForm]); // Return the the model overview.
+
+        goTo('/admin/models');
+      });
+    };
+    /**
+     *  Method to remove this object and clean up after itself. We have to use
+     *  non-arrow function or we'd lose the super context.
+     */
+
+    remove() {
+      // Remove the Form element once the request promise has resolved.
+      this._form.remove(); // Call the BaseElement's remove function.
+
+
+      super.remove();
+    }
+
+  } // Export the ModelForm class so it can be imported elsewhere.
 
   /**
    *  Main file for the augmented reality admin interface. This is the master file

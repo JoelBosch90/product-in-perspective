@@ -38,7 +38,7 @@ module.exports = function(app, path) {
       if (!model) errorResponse(response, 500, "Model could not be created.");
 
       // We want to store the model under the model ID.
-      await request.context.storage.storeModel(request.body.model, model._id);
+      if (request.body.model) await request.context.storage.storeModel(request.body.model, model._id);
 
       // Confirm that the request was successfully processed.
       return response.send(true);
