@@ -11,6 +11,8 @@ import { Apology } from "../widgets/Apology.js";
 
 // Import components.
 import { Login } from "../components/Login.js";
+import { LoginLink } from "../components/LoginLink.js";
+import { InvalidLink } from "../components/InvalidLink.js";
 import { Logout } from "../components/Logout.js";
 import { Registration } from "../components/Registration.js";
 import { PasswordForm } from "../components/PasswordForm.js";
@@ -73,11 +75,11 @@ const view = new View(container, {
   // By default, we want to install an apology that indicates that we're loading
   // the next component through the router.
   Widget:     Apology,
-  params:     ["Loading..."],
+  params:     [{ title: "Loading..." }],
 })
 
   // Listen for any unrecoverable errors and show the message to the user.
-  .on("error", error => void view.install(Apology, error));
+  .on("error", error => void view.install(Apology, { title: error }));
 
 /**
  *  Create a new Router instance. The Router will listen for any changes to the
@@ -93,6 +95,8 @@ const router = new Router(new Map([
   // These routes will serve the admin interface.
   ['/', Login],
   ['/login', Login],
+  ['/login/link', LoginLink],
+  ['/invalid-link', InvalidLink],
   ['/logout', Logout],
   ['/register', Registration],
   ['/admin', AppList],
@@ -116,11 +120,23 @@ const router = new Router(new Map([
   .on("navigate", page => void view.install(page.component, page.options))
 
   // Show an apology if the route could not be found.
-  .on("not-found", () => void view.install(Apology, "This page could not be found.", { text: 'Visit login', location: '/login' }))
+  .on("not-found", () => void view.install(Apology, {
+    title: "This page could not be found.",
+    link: {
+      text: 'Visit login',
+      location: '/login',
+    },
+  }))
 
   // Show an apology if the user is trying to access a protected route they are
   // not allowed to access.
-  .on("not-allowed", () => void view.install(Apology, "You are not allowed to view this page.", { text: 'Visit login', location: '/login' }))
+  .on("not-allowed", () => void view.install(Apology, {
+    title: "You are not allowed to view this page.",
+    link: {
+      text: 'Visit login',
+      location: '/login',
+    },
+  }))
 
   // Make sure we initially honor the current URL request.
   .navigateToCurrent();

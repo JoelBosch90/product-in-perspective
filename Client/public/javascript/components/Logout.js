@@ -45,7 +45,9 @@ class Logout extends BaseElement {
 
     this.pageTitle(title); // Show a brief message that we're logging out.
 
-    this._apology = new Apology(this._container, title); // We need to make an API call to log off so we need the Request object.
+    this._apology = new Apology(this._container, {
+      title: title
+    }); // We need to make an API call to log off so we need the Request object.
 
     this._request = new Request();
 

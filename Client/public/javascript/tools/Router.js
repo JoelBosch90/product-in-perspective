@@ -94,7 +94,8 @@ class Router extends EventHandler {
     // show protected routes. This is not really for security. The API will only
     // ever show data that the user is authorized to receive. Instead, this is
     // for user convenience to show whether he is properly authorized or not.
-    const authorized = this._loggedIn() || true; // If the user is not authorized, see if this path is protected.
+    const authorized = this._loggedIn(); // If the user is not authorized, see if this path is protected.
+
 
     if (!authorized) for (const protectedPath of this._protected) {
       // If the path starts with a protected path, trigger a 'not-allowed'

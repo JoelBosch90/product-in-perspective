@@ -153,19 +153,27 @@ services:
       context: ./Api/
       dockerfile: development.dockerfile
 
-    # The api will need to know where to host.
+    # The api will need to some hosting information. Any hosting information
+    # that originates from outside of the Docker Compose network and all secrets
+    # are expected to be available as environment variables.
     environment:
       - HOST=api
       - PORT=3000
-      - STORAGE_HOST=storage
-      - STORAGE_PORT=9000
+      - EXTERNAL_URL=${EXTERNAL_URL}
+      - EMAIL_DOMAIN=${EMAIL_DOMAIN}
+      - TOKEN_SECRET=${TOKEN_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
       - DATABASE_HOST=database
       - DATABASE_PORT=27017
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - STORAGE_HOST=storage
+      - STORAGE_PORT=9000
       - STORAGE_ACCESS_KEY=${STORAGE_ACCESS_KEY}
       - STORAGE_SECRET_KEY=${STORAGE_SECRET_KEY}
-      - TOKEN_SECRET=${TOKEN_SECRET}
 
     # We can expose the API service in the container network.
     expose:

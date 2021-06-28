@@ -20,15 +20,25 @@ import { goTo } from "../tools/goTo.js";
   _title = null;
 
   /**
+   *  Reference to the text element we are using.
+   *  @var      {Element}
+   */
+  _text = null;
+
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element on which the
    *                                  overlay interface will be installed.
-   *  @param    {string}    message   Message to display to the user.
-   *  @param    {Object}    link      Optional link for navigation.
-   *    @property {string}    text      The text to display for the link.
-   *    @property {string}    location  Where to navigate to.
+   *  @param    {Object}    options   Optional parameters.
+   *    @property {string}    title   Message title to display to the user.
+   *    @property {string}    text    Message content to display to the user.
+   *    @property {Object}    link      Optional link for navigation.
+   *      @property {string}            text      The text to display for the
+   *                                            link.
+   *      @property  {string|Function}  location  The location to which the link
+   *                                            should redirect.
    */
-  constructor(parent, message, link) {
+  constructor(parent, options = {}) {
 
     // Call the base class constructor.
     super();
@@ -37,15 +47,22 @@ import { goTo } from "../tools/goTo.js";
     this._container = document.createElement("div");
     this._container.classList.add("apology");
 
-    // Create the message to display.
-    this._title = document.createElement("h1");
-    this._title.textContent = message;
+    // If a title was provided, add it to the apology.
+    if (options.title) {
+      this._title = document.createElement("h1");
+      this._title.textContent = options.title;
+      this._container.appendChild(this._title);
+    }
 
-    // Add the message.
-    this._container.appendChild(this._title);
+    // If a title was provided, add it to the apology.
+    if (options.text) {
+      this._text = document.createElement("p");
+      this._text.textContent = options.text;
+      this._container.appendChild(this._text);
+    }
 
     // Add the link if requested.
-    if (link) this.addLink(link.text, link.location);
+    if (options.link) this.addLink(options.link.text, options.link.location);
 
     // Add the overlay to the parent container.
     parent.appendChild(this._container);
@@ -67,9 +84,9 @@ import { goTo } from "../tools/goTo.js";
 
   /**
    *  Private method to add anchors to a container.
-   *  @param  {string}      text        The text for the link.
-   *  @param  {string}      location    The location to which the link should
-   *                                    redirect.
+   *  @param  {string}          text        The text for the link.
+   *  @param  {string|Function} location    The location to which the link
+   *                                        should redirect.
    */
   addLink = (text, location) => {
 
@@ -82,7 +99,7 @@ import { goTo } from "../tools/goTo.js";
     // While we will overwrite clicks on the anchor tag, we should still add
     // the href so that it can use all other uses of an anchor tag, like copy
     // link on right click and open in different tab with middle mouse click.
-    anchor.setAttribute("href", location);
+    if (typeof location != 'function') anchor.setAttribute("href", location);
 
     // Add the text.
     anchor.textContent = text;
@@ -94,8 +111,11 @@ import { goTo } from "../tools/goTo.js";
       // navigate, as that will reload the page.
       event.preventDefault();
 
-      // Instead we use our own goTo function to navigate.
-      goTo(location);
+      // Instead we execute the provided callback.
+      if (typeof location == 'function') location();
+
+      // Or we use our own goTo function to navigate.
+      else goTo(location);
     });
 
     // Add the anchor to the navigation menu.
@@ -107,8 +127,9 @@ import { goTo } from "../tools/goTo.js";
    */
   remove() {
 
-    // Remove the title.
+    // Remove the DOM elements.
     if (this._title) this._title.remove();
+    if (this._text) this._text.remove();
 
     // Let the BaseElement remove the container.
     super.remove();

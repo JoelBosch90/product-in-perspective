@@ -90,18 +90,33 @@ class Login extends BaseElement {
       goTo("/admin/apps");
     });
 
-    // Create a new link for navigating the register page.
-    const link = document.createElement('a');
-    link.addEventListener('click', () => void goTo('/register'));
-    link.textContent = "No account? Register one here.";
+    // Add the option to login using an email link.
+    this.addLink("Log in with an email link.", '/login/link');
 
-    // Add the link to a new paragraph and add that paragraph to the container.
-    const paragraph = document.createElement('p');
-    paragraph.appendChild(link);
-    this._container.appendChild(paragraph);
+    // Add the option to register a new account.
+    this.addLink("Register a new account.", '/register');
 
     // Add the new element to the parent container.
     parent.appendChild(this._container);
+  }
+
+  /**
+   *  Helper method to add a link below the form.
+   *  @param  {string}    text    Anchor text.
+   *  @param  {string}    link    Url to navigate to.
+   */
+  addLink(text, link) {
+
+    // Create a new anchor for navigating the register page.
+    const anchor = document.createElement('a');
+    anchor.addEventListener('click', () => void goTo(link));
+    anchor.textContent = text;
+
+    // Add the anchor to a new paragraph and add that paragraph to the
+    // container.
+    const paragraph = document.createElement('p');
+    paragraph.appendChild(anchor);
+    this._container.appendChild(paragraph);
   }
 
   /**

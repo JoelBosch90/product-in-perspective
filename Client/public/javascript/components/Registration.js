@@ -1,6 +1,7 @@
 // Import dependencies.
 import { BaseElement } from "../widgets/BaseElement.js";
 import { Form } from "../widgets/Form.js";
+import { Apology } from "../widgets/Apology.js";
 import { goTo } from "../tools/goTo.js";
 /**
  *  The definition of the Registration class component that can be used to load
@@ -85,20 +86,68 @@ class Registration extends BaseElement {
       }]
     }); // Go to the login page after a successful registration.
 
-    this._form.on("stored", () => void goTo('/login')); // Create a new link for navigating the login page.
+    this._form.on("stored", () => {
+      // Remove all other content as we no longer need it.
+      this.clear(); // Tell the user how to proceed.
+
+      this._apology = new Apology(this._container, {
+        // Explain what the user should expect next.
+        title: "Click the link in your inbox to verify your account.",
+        // Add a link to reload this component.
+        link: {
+          text: "Register a new account.",
+          location: () => {
+            // Clear our own cache.
+            this.trigger("clearCache", [Registration]); // Then revisit this page.
+
+            goTo('/register');
+          }
+        }
+      });
+    }); // Add the option to login using a password.
 
 
-    const link = document.createElement('a');
-    link.addEventListener('click', () => void goTo('/login'));
-    link.textContent = "Already an account? Login here."; // Add the link to a new paragraph and add that paragraph to the container.
+    this.addLink("Log in with a password.", () => void goTo('/login')); // Add the option to login using an email link.
 
-    const paragraph = document.createElement('p');
-    paragraph.appendChild(link);
-
-    this._container.appendChild(paragraph); // Add the new element to the parent container.
-
+    this.addLink("Log in with an email link.", () => void goTo('/login/link')); // Add the new element to the parent container.
 
     parent.appendChild(this._container);
+  }
+  /**
+   *  Helper method to add a link below the form.
+   *  @param  {string}    text      Anchor text.
+   *  @param  {string}    callback  Action to perform.
+   */
+
+
+  addLink(text, callback) {
+    // Create a new anchor for navigating the register page.
+    const anchor = document.createElement('a');
+    anchor.addEventListener('click', callback);
+    anchor.textContent = text; // Add the anchor to a new paragraph and add that paragraph to the
+    // container.
+
+    const paragraph = document.createElement('p');
+    paragraph.appendChild(anchor);
+
+    this._container.appendChild(paragraph);
+  }
+  /**
+   *  Helper method to clear all content of this form.
+   *  @returns  {Registration}
+   */
+
+
+  clear() {
+    // Remove the form if it exists.
+    if (this._form) this._form.remove(); // Remove the apology if it exists.
+
+    if (this._apology) this._apology.remove(); // Remove all other content there may be.
+
+    while (this._container.firstChild) this._container.firstChild.remove(); // Allow chaining.
+
+
+    return this;
   }
   /**
    *  Method to remove this object and clean up after itself. We have to use
@@ -107,9 +156,8 @@ class Registration extends BaseElement {
 
 
   remove() {
-    // Remove the Form element.
-    this._form.remove(); // Call the BaseElement's remove function.
-
+    // Remove all content.
+    this.clear(); // Call the BaseElement's remove function.
 
     super.remove();
   }

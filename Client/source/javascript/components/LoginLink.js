@@ -5,18 +5,14 @@ import { Apology } from "../widgets/Apology.js";
 import { goTo } from "../tools/goTo.js";
 
 /**
- *  The definition of the Registration class component that can be used to load
- *  a registration form.
- *
- *  @event      navigate      Triggered when the this component has finished.
- *                            May contain a suggestion for the component to load
- *                            next.
+ *  The definition of the LoginLink class component that can be used to load a
+ *  form to send a login link to the user.
  *
  *  N.B. Note that variables and methods preceeded with '_' should be treated as
  *  private, even though private variables and methods are not yet supported in
  *  Javascript classes.
  */
-class Registration extends BaseElement {
+class LoginLink extends BaseElement {
 
   /**
    *  Private variable that stores a reference to the container element in the
@@ -44,60 +40,44 @@ class Registration extends BaseElement {
 
     // Create a container for this component.
     this._container = document.createElement("div");
-    this._container.classList.add("registration", "component");
+    this._container.classList.add("login", "component");
 
     // Determine the form's title.
-    const title = "Registration";
+    const title = "Login";
 
     // Use the form's title as the page title.
     this.pageTitle(title);
 
-    // Create a registration form.
+    // Create a login form.
     this._form = new Form(this._container, {
       title,
-      center:     true,
+      center:  true,
       params: {
-        post:       '/user',
+        post: '/login/sendLink',
       },
       inputs: [
         {
-          name:       "email",
+          name: "email",
           options: {
-            label:      "Email address",
-            type:       "email",
-            required:   true,
-          },
-        },
-        {
-          name:       "password",
-          options: {
-            label:      "Password",
-            type:       "password",
-            required:   true,
-          },
-        },
-        {
-          name:       "repeat",
-          options: {
-            label:      "Repeat password",
-            type:       "password",
-            required:   true,
+            label: "Email address",
+            type: "email",
+            required: true,
           },
         },
       ],
       buttons: [
         {
-          name:       "submit",
+          name: "submit",
           options: {
-            label:      "Register",
-            type:       "submit",
+            label: "Send login link",
+            type: "submit",
           },
         },
       ],
     });
 
-    // Go to the login page after a successful registration.
-    this._form.on("stored", () => {
+    // Listen for when the registration was successful.
+    this._form.on("stored", response => {
 
       // Remove all other content as we no longer need it.
       this.clear();
@@ -106,15 +86,15 @@ class Registration extends BaseElement {
       this._apology = new Apology(this._container, {
 
         // Explain what the user should expect next.
-        title: "Click the link in your inbox to verify your account.",
+        title: "Click the link in your inbox to log in.",
 
         // Add a link to reload this component.
         link: {
-          text: "Register a new account.",
+          text: "Retry.",
           location: () => {
 
             // Clear our own cache.
-            this.trigger("clearCache", [Registration]);
+            this.trigger("clearCache", [LoginLink]);
 
             // Then revisit this page.
             goTo('/register');
@@ -127,7 +107,7 @@ class Registration extends BaseElement {
     this.addLink("Log in with a password.", () => void goTo('/login'));
 
     // Add the option to login using an email link.
-    this.addLink("Log in with an email link.", () => void goTo('/login/link'));
+    this.addLink("Register a new account.", () => void goTo('/register'));
 
     // Add the new element to the parent container.
     parent.appendChild(this._container);
@@ -177,7 +157,7 @@ class Registration extends BaseElement {
    */
   remove() {
 
-    // Remove all content.
+    // Clear this component.
     this.clear();
 
     // Call the BaseElement's remove function.
@@ -185,5 +165,5 @@ class Registration extends BaseElement {
   }
 }
 
-// Export the Registration class so it can be imported elsewhere.
-export { Registration };
+// Export the LoginLink class so it can be imported elsewhere.
+export { LoginLink };

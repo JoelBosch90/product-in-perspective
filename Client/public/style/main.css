@@ -482,6 +482,11 @@ label {
 }
 .apology h1 {
   text-align: center;
+  margin-top: 5em;
+}
+.apology a,
+.apology button {
+  margin-top: 2em;
 }
 /**
  *  Main styling for the ArScene class.

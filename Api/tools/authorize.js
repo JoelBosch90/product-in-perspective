@@ -40,17 +40,20 @@ module.exports = authorize = (user, response) => {
   const httpToken = jwt.sign({
 
     // Add the user's ID so that we can use the JWT to identify the user.
-    id:   user._id,
+    id:         user._id,
 
     // Add the XSRF token to the JWT so we can later check it with the XSRF
     // header in the requests.
-    xsrf: xsrfToken,
+    xsrf:       xsrfToken,
 
-  // Create the JWT with the local token secret.
+    // Let's add the type for our own bookkeeping.
+    type:       'httpToken',
+
+  // Create the JWT with the environment token secret.
   }, process.env.TOKEN_SECRET, {
 
     // Let each token expire in 24 hours.
-    expiresIn: maxAge,
+    expiresIn:  maxAge,
   });
 
   // Add the JSON web token as an HTTP only cookie for authentication.

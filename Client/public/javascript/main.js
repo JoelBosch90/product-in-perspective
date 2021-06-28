@@ -852,7 +852,8 @@
       // show protected routes. This is not really for security. The API will only
       // ever show data that the user is authorized to receive. Instead, this is
       // for user convenience to show whether he is properly authorized or not.
-      const authorized = this._loggedIn() || true; // If the user is not authorized, see if this path is protected.
+      const authorized = this._loggedIn(); // If the user is not authorized, see if this path is protected.
+
 
       if (!authorized) for (const protectedPath of this._protected) {
         // If the path starts with a protected path, trigger a 'not-allowed'
@@ -999,31 +1000,51 @@
      */
     _title = null;
     /**
+     *  Reference to the text element we are using.
+     *  @var      {Element}
+     */
+
+    _text = null;
+    /**
      *  Class constructor.
      *  @param    {Element}   parent    The parent element on which the
      *                                  overlay interface will be installed.
-     *  @param    {string}    message   Message to display to the user.
-     *  @param    {Object}    link      Optional link for navigation.
-     *    @property {string}    text      The text to display for the link.
-     *    @property {string}    location  Where to navigate to.
+     *  @param    {Object}    options   Optional parameters.
+     *    @property {string}    title   Message title to display to the user.
+     *    @property {string}    text    Message content to display to the user.
+     *    @property {Object}    link      Optional link for navigation.
+     *      @property {string}            text      The text to display for the
+     *                                            link.
+     *      @property  {string|Function}  location  The location to which the link
+     *                                            should redirect.
      */
 
-    constructor(parent, message, link) {
+    constructor(parent, options = {}) {
       // Call the base class constructor.
       super(); // Create a container for the overlay.
 
       this._container = document.createElement("div");
 
-      this._container.classList.add("apology"); // Create the message to display.
+      this._container.classList.add("apology"); // If a title was provided, add it to the apology.
 
 
-      this._title = document.createElement("h1");
-      this._title.textContent = message; // Add the message.
+      if (options.title) {
+        this._title = document.createElement("h1");
+        this._title.textContent = options.title;
 
-      this._container.appendChild(this._title); // Add the link if requested.
+        this._container.appendChild(this._title);
+      } // If a title was provided, add it to the apology.
 
 
-      if (link) this.addLink(link.text, link.location); // Add the overlay to the parent container.
+      if (options.text) {
+        this._text = document.createElement("p");
+        this._text.textContent = options.text;
+
+        this._container.appendChild(this._text);
+      } // Add the link if requested.
+
+
+      if (options.link) this.addLink(options.link.text, options.link.location); // Add the overlay to the parent container.
 
       parent.appendChild(this._container);
     }
@@ -1042,9 +1063,9 @@
     };
     /**
      *  Private method to add anchors to a container.
-     *  @param  {string}      text        The text for the link.
-     *  @param  {string}      location    The location to which the link should
-     *                                    redirect.
+     *  @param  {string}          text        The text for the link.
+     *  @param  {string|Function} location    The location to which the link
+     *                                        should redirect.
      */
 
     addLink = (text, location) => {
@@ -1055,16 +1076,17 @@
       // the href so that it can use all other uses of an anchor tag, like copy
       // link on right click and open in different tab with middle mouse click.
 
-      anchor.setAttribute("href", location); // Add the text.
+      if (typeof location != 'function') anchor.setAttribute("href", location); // Add the text.
 
       anchor.textContent = text; // Navigate to the right page when this anchor is clicked.
 
       anchor.addEventListener("click", event => {
         // We don't want to use the regular click event on anchor tags to
         // navigate, as that will reload the page.
-        event.preventDefault(); // Instead we use our own goTo function to navigate.
+        event.preventDefault(); // Instead we execute the provided callback.
 
-        goTo(location);
+        if (typeof location == 'function') location(); // Or we use our own goTo function to navigate.
+        else goTo(location);
       }); // Add the anchor to the navigation menu.
 
       this._container.appendChild(anchor);
@@ -1074,8 +1096,9 @@
      */
 
     remove() {
-      // Remove the title.
-      if (this._title) this._title.remove(); // Let the BaseElement remove the container.
+      // Remove the DOM elements.
+      if (this._title) this._title.remove();
+      if (this._text) this._text.remove(); // Let the BaseElement remove the container.
 
       super.remove();
     }
@@ -3160,20 +3183,33 @@
       this._form.on("stored", response => {
         // Move to the list of apps after login.
         goTo("/admin/apps");
-      }); // Create a new link for navigating the register page.
+      }); // Add the option to login using an email link.
 
 
-      const link = document.createElement('a');
-      link.addEventListener('click', () => void goTo('/register'));
-      link.textContent = "No account? Register one here."; // Add the link to a new paragraph and add that paragraph to the container.
+      this.addLink("Log in with an email link.", '/login/link'); // Add the option to register a new account.
 
-      const paragraph = document.createElement('p');
-      paragraph.appendChild(link);
-
-      this._container.appendChild(paragraph); // Add the new element to the parent container.
-
+      this.addLink("Register a new account.", '/register'); // Add the new element to the parent container.
 
       parent.appendChild(this._container);
+    }
+    /**
+     *  Helper method to add a link below the form.
+     *  @param  {string}    text    Anchor text.
+     *  @param  {string}    link    Url to navigate to.
+     */
+
+
+    addLink(text, link) {
+      // Create a new anchor for navigating the register page.
+      const anchor = document.createElement('a');
+      anchor.addEventListener('click', () => void goTo(link));
+      anchor.textContent = text; // Add the anchor to a new paragraph and add that paragraph to the
+      // container.
+
+      const paragraph = document.createElement('p');
+      paragraph.appendChild(anchor);
+
+      this._container.appendChild(paragraph);
     }
     /**
      *  Method to remove this object and clean up after itself. We have to use
@@ -3190,6 +3226,180 @@
     }
 
   } // Export the Login class so it can be imported elsewhere.
+
+  // Import dependencies.
+  /**
+   *  The definition of the LoginLink class component that can be used to load a
+   *  form to send a login link to the user.
+   *
+   *  N.B. Note that variables and methods preceeded with '_' should be treated as
+   *  private, even though private variables and methods are not yet supported in
+   *  Javascript classes.
+   */
+
+  class LoginLink extends BaseElement {
+    /**
+     *  Private variable that stores a reference to the container element in the
+     *  DOM.
+     *  @var      {Element}
+     */
+    _container = null;
+    /**
+     *  Private variable that stores a reference to the Form element.
+     *  @var      {Form}
+     */
+
+    _form = null;
+    /**
+     *  Class constructor.
+     *  @param    {Element}   parent      Container to which this component will
+     *                                    be added.
+     *  @param    {array}     options
+     */
+
+    constructor(parent, options = {}) {
+      // Call the base class constructor first.
+      super(); // Create a container for this component.
+
+      this._container = document.createElement("div");
+
+      this._container.classList.add("login", "component"); // Determine the form's title.
+
+
+      const title = "Login"; // Use the form's title as the page title.
+
+      this.pageTitle(title); // Create a login form.
+
+      this._form = new Form(this._container, {
+        title,
+        center: true,
+        params: {
+          post: '/login/sendLink'
+        },
+        inputs: [{
+          name: "email",
+          options: {
+            label: "Email address",
+            type: "email",
+            required: true
+          }
+        }],
+        buttons: [{
+          name: "submit",
+          options: {
+            label: "Send login link",
+            type: "submit"
+          }
+        }]
+      }); // Listen for when the registration was successful.
+
+      this._form.on("stored", response => {
+        // Remove all other content as we no longer need it.
+        this.clear(); // Tell the user how to proceed.
+
+        this._apology = new Apology(this._container, {
+          // Explain what the user should expect next.
+          title: "Click the link in your inbox to log in.",
+          // Add a link to reload this component.
+          link: {
+            text: "Retry.",
+            location: () => {
+              // Clear our own cache.
+              this.trigger("clearCache", [LoginLink]); // Then revisit this page.
+
+              goTo('/register');
+            }
+          }
+        });
+      }); // Add the option to login using a password.
+
+
+      this.addLink("Log in with a password.", () => void goTo('/login')); // Add the option to login using an email link.
+
+      this.addLink("Register a new account.", () => void goTo('/register')); // Add the new element to the parent container.
+
+      parent.appendChild(this._container);
+    }
+    /**
+     *  Helper method to add a link below the form.
+     *  @param  {string}    text      Anchor text.
+     *  @param  {string}    callback  Action to perform.
+     */
+
+
+    addLink(text, callback) {
+      // Create a new anchor for navigating the register page.
+      const anchor = document.createElement('a');
+      anchor.addEventListener('click', callback);
+      anchor.textContent = text; // Add the anchor to a new paragraph and add that paragraph to the
+      // container.
+
+      const paragraph = document.createElement('p');
+      paragraph.appendChild(anchor);
+
+      this._container.appendChild(paragraph);
+    }
+    /**
+     *  Helper method to clear all content of this form.
+     *  @returns  {Registration}
+     */
+
+
+    clear() {
+      // Remove the form if it exists.
+      if (this._form) this._form.remove(); // Remove the apology if it exists.
+
+      if (this._apology) this._apology.remove(); // Remove all other content there may be.
+
+      while (this._container.firstChild) this._container.firstChild.remove(); // Allow chaining.
+
+
+      return this;
+    }
+    /**
+     *  Method to remove this object and clean up after itself. We have to use
+     *  non-arrow function or we'd lose the super context.
+     */
+
+
+    remove() {
+      // Clear this component.
+      this.clear(); // Call the BaseElement's remove function.
+
+      super.remove();
+    }
+
+  } // Export the LoginLink class so it can be imported elsewhere.
+
+  // Import dependencies.
+  /**
+   *  The definition of the InvalidLink class component that simply tells a user
+   *  that they used an invalid link.
+   *
+   *  N.B. Note that variables and methods preceeded with '_' should be treated as
+   *  private, even though private variables and methods are not yet supported in
+   *  Javascript classes.
+   */
+
+  class InvalidLink extends Apology {
+    /**
+     *  Class constructor.
+     *  @param    {Element}   parent      Container to which this component will
+     *                                    be added.
+     */
+    constructor(parent) {
+      // Call the base class constructor first.
+      super(parent, {
+        title: "This link is invalid.",
+        text: "Note that login links always expire in one hour.",
+        link: {
+          text: 'Get a new link',
+          location: '/login/link'
+        }
+      });
+    }
+
+  } // Export the InvalidLink class so it can be imported elsewhere.
 
   // Import dependencies.
   /**
@@ -3235,7 +3445,9 @@
 
       this.pageTitle(title); // Show a brief message that we're logging out.
 
-      this._apology = new Apology(this._container, title); // We need to make an API call to log off so we need the Request object.
+      this._apology = new Apology(this._container, {
+        title: title
+      }); // We need to make an API call to log off so we need the Request object.
 
       this._request = new Request();
 
@@ -3353,20 +3565,68 @@
         }]
       }); // Go to the login page after a successful registration.
 
-      this._form.on("stored", () => void goTo('/login')); // Create a new link for navigating the login page.
+      this._form.on("stored", () => {
+        // Remove all other content as we no longer need it.
+        this.clear(); // Tell the user how to proceed.
+
+        this._apology = new Apology(this._container, {
+          // Explain what the user should expect next.
+          title: "Click the link in your inbox to verify your account.",
+          // Add a link to reload this component.
+          link: {
+            text: "Register a new account.",
+            location: () => {
+              // Clear our own cache.
+              this.trigger("clearCache", [Registration]); // Then revisit this page.
+
+              goTo('/register');
+            }
+          }
+        });
+      }); // Add the option to login using a password.
 
 
-      const link = document.createElement('a');
-      link.addEventListener('click', () => void goTo('/login'));
-      link.textContent = "Already an account? Login here."; // Add the link to a new paragraph and add that paragraph to the container.
+      this.addLink("Log in with a password.", () => void goTo('/login')); // Add the option to login using an email link.
 
-      const paragraph = document.createElement('p');
-      paragraph.appendChild(link);
-
-      this._container.appendChild(paragraph); // Add the new element to the parent container.
-
+      this.addLink("Log in with an email link.", () => void goTo('/login/link')); // Add the new element to the parent container.
 
       parent.appendChild(this._container);
+    }
+    /**
+     *  Helper method to add a link below the form.
+     *  @param  {string}    text      Anchor text.
+     *  @param  {string}    callback  Action to perform.
+     */
+
+
+    addLink(text, callback) {
+      // Create a new anchor for navigating the register page.
+      const anchor = document.createElement('a');
+      anchor.addEventListener('click', callback);
+      anchor.textContent = text; // Add the anchor to a new paragraph and add that paragraph to the
+      // container.
+
+      const paragraph = document.createElement('p');
+      paragraph.appendChild(anchor);
+
+      this._container.appendChild(paragraph);
+    }
+    /**
+     *  Helper method to clear all content of this form.
+     *  @returns  {Registration}
+     */
+
+
+    clear() {
+      // Remove the form if it exists.
+      if (this._form) this._form.remove(); // Remove the apology if it exists.
+
+      if (this._apology) this._apology.remove(); // Remove all other content there may be.
+
+      while (this._container.firstChild) this._container.firstChild.remove(); // Allow chaining.
+
+
+      return this;
     }
     /**
      *  Method to remove this object and clean up after itself. We have to use
@@ -3375,9 +3635,8 @@
 
 
     remove() {
-      // Remove the Form element.
-      this._form.remove(); // Call the BaseElement's remove function.
-
+      // Remove all content.
+      this.clear(); // Call the BaseElement's remove function.
 
       super.remove();
     }
@@ -7528,9 +7787,13 @@
     // By default, we want to install an apology that indicates that we're loading
     // the next component through the router.
     Widget: Apology,
-    params: ["Loading..."]
+    params: [{
+      title: "Loading..."
+    }]
   }) // Listen for any unrecoverable errors and show the message to the user.
-  .on("error", error => void view.install(Apology, error));
+  .on("error", error => void view.install(Apology, {
+    title: error
+  }));
   /**
    *  Create a new Router instance. The Router will listen for any changes to the
    *  URL, whether manually by the user, or programmatically with the goTo()
@@ -7540,19 +7803,25 @@
 
   new Router(new Map([// This route will serve all apps.
   ['/app/:appPath', App], // These routes will serve the admin interface.
-  ['/', Login], ['/login', Login], ['/logout', Logout], ['/register', Registration], ['/admin', AppList], ['/admin/apps', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/models', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/products', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm], ['/admin/profile', PasswordForm]]), {
+  ['/', Login], ['/login', Login], ['/login/link', LoginLink], ['/invalid-link', InvalidLink], ['/logout', Logout], ['/register', Registration], ['/admin', AppList], ['/admin/apps', AppList], ['/admin/app/new', AppForm], ['/admin/app/:appId', AppForm], ['/admin/models', ModelList], ['/admin/model/new', ModelForm], ['/admin/model/:modelId', ModelForm], ['/admin/products', ProductList], ['/admin/product/new', ProductForm], ['/admin/product/:productId', ProductForm], ['/admin/profile', PasswordForm]]), {
     // Protect the admin routes.
     protected: ['/admin']
   }) // Make sure that we pass on any navigation requests to the View widget.
   .on("navigate", page => void view.install(page.component, page.options)) // Show an apology if the route could not be found.
-  .on("not-found", () => void view.install(Apology, "This page could not be found.", {
-    text: 'Visit login',
-    location: '/login'
+  .on("not-found", () => void view.install(Apology, {
+    title: "This page could not be found.",
+    link: {
+      text: 'Visit login',
+      location: '/login'
+    }
   })) // Show an apology if the user is trying to access a protected route they are
   // not allowed to access.
-  .on("not-allowed", () => void view.install(Apology, "You are not allowed to view this page.", {
-    text: 'Visit login',
-    location: '/login'
+  .on("not-allowed", () => void view.install(Apology, {
+    title: "You are not allowed to view this page.",
+    link: {
+      text: 'Visit login',
+      location: '/login'
+    }
   })) // Make sure we initially honor the current URL request.
   .navigateToCurrent();
 

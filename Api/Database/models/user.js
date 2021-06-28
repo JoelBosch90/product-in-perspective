@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
     password: {
       type:       String,
       required:   [true, "A password is required."],
+    },
+
+    // We need to remember when a user was last verified.
+    verified: {
+      type:       Date,
     }
   },
 

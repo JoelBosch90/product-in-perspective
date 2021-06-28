@@ -16,6 +16,7 @@
     "minio": "^7.0.18",
     "mongoose": "^5.12.7",
     "node-stream-zip": "^1.13.4",
+    "nodemailer": "^6.6.2",
     "npm": "^7.17.0",
     "obj2gltf": "^3.1.0",
     "require": "^0.4.4"
