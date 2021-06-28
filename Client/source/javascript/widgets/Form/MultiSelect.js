@@ -14,10 +14,10 @@ import { Button } from "../Button.js";
 class FormMultiSelect extends BaseElement {
 
   /**
-   *  Hidden select element for keeping track of all selected options.
+   *  Array for keeping track of all selected options.
    *  @var      {array}
    */
-  _hiddenSelect = [];
+  _selected = [];
 
   /**
    *  Array for keeping track of all possible options.
@@ -79,9 +79,6 @@ class FormMultiSelect extends BaseElement {
     // Create a select input element with the options. We don't immediately want
     // to add all options.
     this._select = new FormSelect(inputs, { label:  options.label });
-
-    // Create a hidden select to submit the data.
-    this._createHiddenField(options);
 
     // Instead we use our own method so that we can keep references to the
     // options.
@@ -155,58 +152,6 @@ class FormMultiSelect extends BaseElement {
   }
 
   /**
-   *  Helper method to create a hidden select input that will serve to hold the
-   *  selections are to submit data.
-   *  @param    {object}    options   Optional parameters for the select that
-   *                                  is added to the form.
-   *    @property   {string}  name      Registration name of the select. This
-   *                                    should uniquely identify the select.
-   *    @property   {string}  label     This is the label of the element that
-   *                                    will be shown to the user.
-   *    @property   {array}   options   An array of options to add to the select
-   *                                    element.
-   */
-  _createHiddenField = options => {
-
-    // Create a hidden multiselect field.
-    this._hiddenSelect = document.createElement("select");
-
-    // Make sure it is hidden.
-    this._hiddenSelect.setAttribute('hidden', '');
-
-    // Make sure we can select multiple options.
-    this._hiddenSelect.setAttribute('multiple', true);
-
-    // Add the name for submit events.
-    this._hiddenSelect.name = options.name;
-
-    // Add all options.
-    if (options.options) for (const option of options.options) this._addHiddenOption(option.value, option.label);
-
-    // Add the hidden field to the container.
-    this._container.appendChild(this._hiddenSelect);
-  }
-
-  /**
-   *  Add an option to the hidden field.
-   *  @param    {string}  value       This is the value of the option that is
-   *                                  communicated to the API endpoint.
-   *  @param    {string}  label       This is the label of the options that is
-   *                                  shown to the user.
-   *  @returns  {FormMultiSelect}
-   */
-  _addHiddenOption = (value, label) => {
-
-    // Create the option element.
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = label;
-
-    // Add the option to the hidden select.
-    this._hiddenSelect.appendChild(option);
-  }
-
-  /**
    *  Helper method to check if we should enable the add button.
    *  @returns  {Button}
    */
@@ -272,7 +217,7 @@ class FormMultiSelect extends BaseElement {
   select = (value, label) => {
 
     // Select this value.
-    this._selectHidden(value);
+    this._selected.push(value);
 
     // Check if we should still enable the add state.
     this._checkAddState();
@@ -297,20 +242,6 @@ class FormMultiSelect extends BaseElement {
   }
 
   /**
-   *  Helper method to select a hidden option.
-   *  @param  {string}    value     The value of the option to select.
-   */
-  _selectHidden = value => {
-
-    // Loop through the options to find one to match the value.
-    for (const option of this._hiddenSelect.options) {
-
-      // Select all options that match this value.
-      if (option.value == value) option.setAttribute("selected", true);
-    }
-  }
-
-  /**
    *  Method for getting the current values of this element. Can be used as both
    *  a getter and a setter.
    *
@@ -323,15 +254,8 @@ class FormMultiSelect extends BaseElement {
    */
   value = newValues => {
 
-    // If used as a getter, return the values of the selected options.
-    if (newValues === undefined) {
-
-      // Get the list of options from the hidden select element.
-      const options = [...this._hiddenSelect.selectedOptions];
-
-      // Return an array of values.
-      return options.map(option => option.value);
-    }
+    // If used as a getter, return the selected options.
+    if (newValues === undefined) return this._selected;
 
     // Select all values.
     for (const value of newValues) this.select(value._id, value.name);
@@ -358,7 +282,6 @@ class FormMultiSelect extends BaseElement {
 
     // Set the requested attribute on the fieldset and the hidden select input.
     this._container.disabled = disable;
-    this._hiddenSelect.disabled = disable;
 
     // Set the requested attribute on the buttons.
     this._add.disabled = disable;
@@ -381,9 +304,6 @@ class FormMultiSelect extends BaseElement {
    */
   addOption = (value, label) => {
 
-    // Add the option to our hidden select field.
-    this._addHiddenOption(value, label);
-
     // Add the option to the select input.
     const option = this._select.addOption(value, label);
 
@@ -403,8 +323,8 @@ class FormMultiSelect extends BaseElement {
    */
   clear = () => {
 
-    // Unselect all options.
-    for (const option of this._hiddenSelect.options) option.removeAttribute("selected");
+    // Reset the selected array.
+    this._selected = [];
 
     // When there are no selections, they cannot be cleared.
     this._clear.disabled(true);
@@ -430,9 +350,6 @@ class FormMultiSelect extends BaseElement {
 
     // Remove all widgets we've instantiated.
     if (this._select) this._select.remove();
-
-    // Remove DOM elements.
-    if (this._hiddenSelect) this._hiddenSelect.remove();
 
     // Call the original remove method. This also removes the container.
     super.remove();
