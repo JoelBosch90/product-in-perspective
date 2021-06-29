@@ -108,8 +108,9 @@ expects the following environment variables:
 EXTERNAL_URL
 - The URL at which the website is currently hosted.
 
-EMAIL_DOMAIN
-- The email domain that should be used.
+DOMAIN
+- The domain name that should be used. This is the website's name and used as
+  the email domain as well.
 
 TOKEN_SECRET
 - The secret used to generate JSON web tokens.

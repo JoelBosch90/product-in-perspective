@@ -1,6 +1,7 @@
 // Import dependencies.
 const errorResponse = require("../tools/errorResponse");
 const authorize = require("../tools/authorize");
+const sendLoginMail = require("../tools/sendLoginMail");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
@@ -36,8 +37,6 @@ module.exports = function(app, path) {
 
       // If we couldn't find the user, we want to throw an error.
       if (!user) throw new Error("This user does not exist.");
-
-      console.log(user);
 
       // We want each user to confirm their email address first.
       if (!user.verified) throw new Error("Please confirm your email address by logging in via email link first.");
@@ -93,7 +92,7 @@ module.exports = function(app, path) {
       if (!user) throw new Error("This user does not exist.");
 
       // Send the email verification email.
-      await sendVerificationMail(user);
+      await sendLoginMail(user);
 
       // Let the user know that the email was sent.
       response.send(true);

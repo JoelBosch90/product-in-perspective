@@ -132,7 +132,7 @@ services:
       - HOST=api
       - PORT=3000
       - EXTERNAL_URL=${EXTERNAL_URL}
-      - EMAIL_DOMAIN=${EMAIL_DOMAIN}
+      - DOMAIN=${DOMAIN}
       - TOKEN_SECRET=${TOKEN_SECRET}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}

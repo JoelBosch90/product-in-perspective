@@ -3307,7 +3307,7 @@
               // Clear our own cache.
               this.trigger("clearCache", [LoginLink]); // Then revisit this page.
 
-              goTo('/register');
+              goTo('/login/link');
             }
           }
         });

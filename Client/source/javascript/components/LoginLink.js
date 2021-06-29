@@ -97,7 +97,7 @@ class LoginLink extends BaseElement {
             this.trigger("clearCache", [LoginLink]);
 
             // Then revisit this page.
-            goTo('/register');
+            goTo('/login/link');
           },
         },
       });
