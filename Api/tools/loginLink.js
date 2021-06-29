@@ -7,7 +7,7 @@ require('dotenv').config();
  *  @param    {Object}          user      The user to authorize.
  *  @returns  {Promise}
  */
-module.exports = createLoginLink = user => {
+module.exports = loginLink = user => {
 
   // Let login tokens expire in 1 hour.
   const maxAge = 3600;
