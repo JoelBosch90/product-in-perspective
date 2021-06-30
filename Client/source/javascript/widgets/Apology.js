@@ -93,8 +93,9 @@ import { goTo } from "../tools/goTo.js";
     // Create the anchor.
     const anchor = document.createElement("a");
 
-    // Make the anchor tag look like a button.
+    // Make the anchor tag look like a ghost button.
     anchor.classList.add("button");
+    anchor.classList.add("ghost");
 
     // While we will overwrite clicks on the anchor tag, we should still add
     // the href so that it can use all other uses of an anchor tag, like copy

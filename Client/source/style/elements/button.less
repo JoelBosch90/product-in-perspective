@@ -77,9 +77,12 @@ input[type="file"] + label {
   // Make sure we use the default text font.
   font-family: var(--text-font);
 
+  // We want to use a CSS variable to set the functionaly colour of the button.
+  --button-function-color: var(--information-color);
+
   // Install the information colour as the default background colour for the
   // button.
-  background-color: var(--information-color);
+  background-color: var(--button-function-color);
 
   // Give the button some padding to increase the clickable area.
   padding: .25em .75em;
@@ -110,19 +113,32 @@ input[type="file"] + label {
     margin-bottom: .5em;
   }
 
+  // Sometimes we want a button to stand out less. In that case we can use the
+  // ghost class which makes the button transparent.
+  &.ghost {
+
+    // Make the background transparent.
+    background-color: transparent;
+
+    // Since we don't have a background colour to convey the button's function,
+    // we should do so through a border and the text colour.
+    color: var(--button-function-color);
+    border: 0.1em solid var(--button-function-color);
+  }
+
   // Buttons can be used to submit, confirm or save current settings.
   &[type="confirm"], &[type="submit"] {
 
     // Use the confirmation colour to show users that this button is used to
     // confirm something. It should stand out in the interface.
-    background-color: var(--confirmation-color);
+    --button-function-color: var(--confirmation-color);
   }
 
   // Buttons can be used to remove or undo something.
   &[type="remove"] {
 
     // Warn the user of the risk inherent in using this button.
-    background-color: var(--danger-color);
+    --button-function-color: var(--danger-color);
   }
 
   // Buttons can be used to cancel current unsaved settings.
@@ -130,7 +146,7 @@ input[type="file"] + label {
 
     // This button should have a fairly neutral colour and not draw too much
     // attention.
-    background-color: var(--border-color);
+    --button-function-color: var(--border-color);
   }
 
   // Show the user when this button is disabled.
@@ -154,11 +170,7 @@ input[type="file"] + label {
   &:focus {
 
     // Show that this is the active element with the background-color.
-    background-color: var(--active-background);
-
-    // Use a transition effect to give the focus effect a quick and smooth
-    // animation.
-    transition: background-color var(--animation-quick);
+    --button-function-color: var(--active-background);
 
     // We are using our own clear way to show focus so we don't need the browser
     // default.
@@ -175,5 +187,14 @@ input[type="file"] + label {
     // Use a transition effect to give the focus effect a quick and smooth
     // animation.
     transition: brightness var(--animation-quick);
+
+    // Target hover effects for ghost buttons specifically.
+    &.ghost {
+
+      // For ghost buttons we only light up the text and the borders. To make
+      // sure the hover effect is not too subtle, we can up the brightness for
+      // these.
+      filter: brightness(150%);
+    }
   }
 }

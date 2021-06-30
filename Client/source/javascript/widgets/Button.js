@@ -26,6 +26,8 @@ class Button extends BaseElement {
    *                                    will be shown to the user.
    *    @property   {boolean} disabled  Should this button be disabled by
    *                                    default?
+   *    @property   {array}  classes    Optional array of classes to install on
+   *                                    the button.
    */
   constructor(parent, options = {}) {
 
@@ -37,6 +39,7 @@ class Button extends BaseElement {
     if (options.type) this._container.setAttribute("type", options.type);
     if (options.label) this._container.textContent = options.label;
     if (options.disabled) this.disabled(options.disabled);
+    if (options.classes) for (const newClass of options.classes) this.addClass(newClass);
 
     // Add the event listener to the button.
     this._container.addEventListener("click", this._onClick);
@@ -53,6 +56,34 @@ class Button extends BaseElement {
 
     // Trigger the event handler to bubble this event.
     this.trigger("click", event);
+  }
+
+  /**
+   *  Method to add a class to the button.
+   *  @param    {string}    newClass  The new class to add to the button.
+   *  @returns  {Button}
+   */
+  addClass = newClass => {
+
+    // Add the class to the button.
+    this._container.classList.add(newClass);
+
+    // Allow chaining.
+    return this;
+  }
+
+  /**
+   *  Method to remove a class to the button.
+   *  @param    {string}    newClass  The new class to remove to the button.
+   *  @returns  {Button}
+   */
+  removeClass = newClass => {
+
+    // Remove the class to the button.
+    this._container.classList.remove(newClass);
+
+    // Allow chaining.
+    return this;
   }
 
   /**

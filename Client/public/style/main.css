@@ -165,7 +165,8 @@ input[type="file"] + label {
   font-size: 1.25em;
   color: var(--color);
   font-family: var(--text-font);
-  background-color: var(--information-color);
+  --button-function-color: var(--information-color);
+  background-color: var(--button-function-color);
   padding: 0.25em 0.75em;
   border: none;
   border-radius: 0.25em;
@@ -180,6 +181,14 @@ input[type="file"] + label.block {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
+button.ghost,
+a.button.ghost,
+input[type="submit"].ghost,
+input[type="file"] + label.ghost {
+  background-color: transparent;
+  color: var(--button-function-color);
+  border: 0.1em solid var(--button-function-color);
+}
 button[type="confirm"],
 a.button[type="confirm"],
 input[type="submit"][type="confirm"],
@@ -188,13 +197,13 @@ button[type="submit"],
 a.button[type="submit"],
 input[type="submit"][type="submit"],
 input[type="file"] + label[type="submit"] {
-  background-color: var(--confirmation-color);
+  --button-function-color: var(--confirmation-color);
 }
 button[type="remove"],
 a.button[type="remove"],
 input[type="submit"][type="remove"],
 input[type="file"] + label[type="remove"] {
-  background-color: var(--danger-color);
+  --button-function-color: var(--danger-color);
 }
 button[type="cancel"],
 a.button[type="cancel"],
@@ -204,7 +213,7 @@ button[type="reset"],
 a.button[type="reset"],
 input[type="submit"][type="reset"],
 input[type="file"] + label[type="reset"] {
-  background-color: var(--border-color);
+  --button-function-color: var(--border-color);
 }
 button:disabled,
 a.button:disabled,
@@ -218,8 +227,7 @@ button:focus,
 a.button:focus,
 input[type="submit"]:focus,
 input[type="file"] + label:focus {
-  background-color: var(--active-background);
-  transition: background-color var(--animation-quick);
+  --button-function-color: var(--active-background);
   outline: none;
 }
 button:not(:disabled):hover,
@@ -228,6 +236,12 @@ input[type="submit"]:not(:disabled):hover,
 input[type="file"] + label:not(:disabled):hover {
   filter: brightness(125%);
   transition: brightness var(--animation-quick);
+}
+button:not(:disabled):hover.ghost,
+a.button:not(:disabled):hover.ghost,
+input[type="submit"]:not(:disabled):hover.ghost,
+input[type="file"] + label:not(:disabled):hover.ghost {
+  filter: brightness(150%);
 }
 /**
  *  Fieldset
@@ -603,35 +617,30 @@ label {
  *  Main styling for the Menu class.
  */
 .menu {
-  display: contents;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-wrap: wrap;
   margin-bottom: 1.5em;
-}
-.menu .current {
-  filter: brightness(0.5);
-  transition: filter var(--animation-quick);
-}
-.menu .navigation {
   margin-top: 0;
   margin-left: auto;
   margin-right: auto;
   max-width: var(--max-width);
   z-index: 1;
-}
-.menu .navigation {
-  position: sticky;
-  top: 0;
-  display: flex;
-  flex-wrap: wrap;
   gap: 0.25em;
   border-bottom-left-radius: 2em;
   border-bottom-right-radius: 2em;
   overflow: hidden;
 }
-.menu .navigation > * {
+.menu > * {
   flex-grow: 1;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   white-space: nowrap;
+}
+.menu .current {
+  filter: brightness(0.5);
+  transition: filter var(--animation-quick);
 }
 /**
  *  Main styling for the Overlay class.

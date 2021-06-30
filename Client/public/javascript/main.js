@@ -280,22 +280,16 @@
 
       this._container = document.createElement("div");
 
-      this._container.classList.add("menu"); // Create a container for the fixed menu.
+      this._container.classList.add("menu"); // Store the pages.
 
-
-      const navigation = document.createElement("nav");
-      navigation.classList.add("navigation"); // Store the pages.
 
       this._pages = options.pages; // Add the menu anchors to the right parts of the menu.
 
-      if (options.navigation) this._addAnchors(navigation, options.navigation); // Start listening for URL changes.
+      if (options.navigation) this._addAnchors(options.navigation); // Start listening for URL changes.
 
       window.addEventListener('popstate', this._processPathChange); // Process the initital path.
 
-      this._processPathChange(); // App both menu components to the container.
-
-
-      this._container.appendChild(navigation); // Add both containers to the top of the parent element.
+      this._processPathChange(); // Add both containers to the top of the parent element.
 
 
       parent.prepend(this._container);
@@ -344,12 +338,11 @@
     };
     /**
      *  Private method to add anchors to a container.
-     *  @param  {Element}     parent      Container to which to add the anchors.
      *  @param  {Map}         entries     Map of anchor text, to navigation
      *                                    location for the anchors to add.
      */
 
-    _addAnchors = (parent, entries) => {
+    _addAnchors = entries => {
       // Loop through the navigation anchors.
       for (const [text, location] of entries) {
         // Create the anchor.
@@ -374,7 +367,7 @@
         this._locations.set(location, anchor); // Add the anchor to the navigation menu.
 
 
-        parent.append(anchor);
+        this._container.append(anchor);
       }
     };
     /**
@@ -1060,9 +1053,10 @@
 
     addLink = (text, location) => {
       // Create the anchor.
-      const anchor = document.createElement("a"); // Make the anchor tag look like a button.
+      const anchor = document.createElement("a"); // Make the anchor tag look like a ghost button.
 
-      anchor.classList.add("button"); // While we will overwrite clicks on the anchor tag, we should still add
+      anchor.classList.add("button");
+      anchor.classList.add("ghost"); // While we will overwrite clicks on the anchor tag, we should still add
       // the href so that it can use all other uses of an anchor tag, like copy
       // link on right click and open in different tab with middle mouse click.
 
@@ -1550,6 +1544,8 @@
      *                                    will be shown to the user.
      *    @property   {boolean} disabled  Should this button be disabled by
      *                                    default?
+     *    @property   {array}  classes    Optional array of classes to install on
+     *                                    the button.
      */
     constructor(parent, options = {}) {
       // First call the constructor of the base class.
@@ -1558,7 +1554,8 @@
       this._container = document.createElement("button");
       if (options.type) this._container.setAttribute("type", options.type);
       if (options.label) this._container.textContent = options.label;
-      if (options.disabled) this.disabled(options.disabled); // Add the event listener to the button.
+      if (options.disabled) this.disabled(options.disabled);
+      if (options.classes) for (const newClass of options.classes) this.addClass(newClass); // Add the event listener to the button.
 
       this._container.addEventListener("click", this._onClick); // Add the button element to the parent element.
 
@@ -1574,6 +1571,32 @@
     _onClick = event => {
       // Trigger the event handler to bubble this event.
       this.trigger("click", event);
+    };
+    /**
+     *  Method to add a class to the button.
+     *  @param    {string}    newClass  The new class to add to the button.
+     *  @returns  {Button}
+     */
+
+    addClass = newClass => {
+      // Add the class to the button.
+      this._container.classList.add(newClass); // Allow chaining.
+
+
+      return this;
+    };
+    /**
+     *  Method to remove a class to the button.
+     *  @param    {string}    newClass  The new class to remove to the button.
+     *  @returns  {Button}
+     */
+
+    removeClass = newClass => {
+      // Remove the class to the button.
+      this._container.classList.remove(newClass); // Allow chaining.
+
+
+      return this;
     };
     /**
      *  Method for disabling/enabling this element. Can be used as both a getter
@@ -6843,16 +6866,18 @@
      *    @property   {string}    type      Button type.
      *    @property   {string}    label     Button text.
      *    @property   {boolean}   disabled  Is this button disabled?
-     *    @property   {Function}  callback  The function that will called on
+     *    @property   {Function}  onclick   The function that will called on
      *                                      click.
      *  @returns  {Button}
      */
 
     addButton = (options = {}) => {
-      // Create a button element.
-      const button = new Button(this._buttonContainer, options); // Install the callback as an on click event if provided.
+      // Create a button element and make it a ghost button.
+      const button = new Button(this._buttonContainer, { ...options,
+        classes: ['ghost']
+      }); // Install the callback as an on click event if provided.
 
-      if (options.callback) button.on('click', options.callback); // Add the button to the array.
+      if (options.onclick) button.on('click', options.onclick); // Add the button to the array.
 
       this._buttons.push(button); // Propagate all of the button's events.
 
@@ -6969,7 +6994,7 @@
         center: true,
         buttons: [{
           label: 'Add product',
-          callback: () => void goTo('/admin/product/new')
+          onclick: () => void goTo('/admin/product/new')
         }]
       }); // First, request a list of all products. Store the promise.
 
@@ -7284,7 +7309,7 @@
         center: true,
         buttons: [{
           label: 'Add app',
-          callback: () => void goTo('/admin/app/new')
+          onclick: () => void goTo('/admin/app/new')
         }]
       }); // First, request a list of all apps. Store the promise.
 
@@ -7609,7 +7634,7 @@
         center: true,
         buttons: [{
           label: 'Add model',
-          callback: () => void goTo('/admin/model/new')
+          onclick: () => void goTo('/admin/model/new')
         }]
       }); // First, request a list of all models. Store the promise.
 

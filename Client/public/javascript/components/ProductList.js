@@ -69,7 +69,7 @@ class ProductList extends BaseElement {
       center: true,
       buttons: [{
         label: 'Add product',
-        callback: () => void goTo('/admin/product/new')
+        onclick: () => void goTo('/admin/product/new')
       }]
     }); // First, request a list of all products. Store the promise.
 

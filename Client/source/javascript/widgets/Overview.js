@@ -193,17 +193,17 @@ class Overview extends BaseElement {
    *    @property   {string}    type      Button type.
    *    @property   {string}    label     Button text.
    *    @property   {boolean}   disabled  Is this button disabled?
-   *    @property   {Function}  callback  The function that will called on
+   *    @property   {Function}  onclick   The function that will called on
    *                                      click.
    *  @returns  {Button}
    */
   addButton = (options = {}) => {
 
-    // Create a button element.
-    const button = new Button(this._buttonContainer, options);
+    // Create a button element and make it a ghost button.
+    const button = new Button(this._buttonContainer, { ...options, classes: ['ghost'], });
 
     // Install the callback as an on click event if provided.
-    if (options.callback) button.on('click', options.callback);
+    if (options.onclick) button.on('click', options.onclick);
 
     // Add the button to the array.
     this._buttons.push(button);

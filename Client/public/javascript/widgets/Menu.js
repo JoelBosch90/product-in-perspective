@@ -43,22 +43,16 @@ class Menu extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("menu"); // Create a container for the fixed menu.
+    this._container.classList.add("menu"); // Store the pages.
 
-
-    const navigation = document.createElement("nav");
-    navigation.classList.add("navigation"); // Store the pages.
 
     this._pages = options.pages; // Add the menu anchors to the right parts of the menu.
 
-    if (options.navigation) this._addAnchors(navigation, options.navigation); // Start listening for URL changes.
+    if (options.navigation) this._addAnchors(options.navigation); // Start listening for URL changes.
 
     window.addEventListener('popstate', this._processPathChange); // Process the initital path.
 
-    this._processPathChange(); // App both menu components to the container.
-
-
-    this._container.appendChild(navigation); // Add both containers to the top of the parent element.
+    this._processPathChange(); // Add both containers to the top of the parent element.
 
 
     parent.prepend(this._container);
@@ -107,12 +101,11 @@ class Menu extends BaseElement {
   };
   /**
    *  Private method to add anchors to a container.
-   *  @param  {Element}     parent      Container to which to add the anchors.
    *  @param  {Map}         entries     Map of anchor text, to navigation
    *                                    location for the anchors to add.
    */
 
-  _addAnchors = (parent, entries) => {
+  _addAnchors = entries => {
     // Loop through the navigation anchors.
     for (const [text, location] of entries) {
       // Create the anchor.
@@ -137,7 +130,7 @@ class Menu extends BaseElement {
       this._locations.set(location, anchor); // Add the anchor to the navigation menu.
 
 
-      parent.append(anchor);
+      this._container.append(anchor);
     }
   };
   /**

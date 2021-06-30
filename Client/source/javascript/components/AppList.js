@@ -69,7 +69,7 @@ class AppList extends BaseElement {
       center: true,
       buttons: [{
         label:    'Add app',
-        callback: () => void goTo('/admin/app/new'),
+        onclick:  () => void goTo('/admin/app/new'),
       }],
     });
 
