@@ -68,7 +68,6 @@ class ProductList extends BaseElement {
       title,
       center: true,
       buttons: [{
-        type: 'add',
         label: 'Add product',
         callback: () => void goTo('/admin/product/new')
       }]

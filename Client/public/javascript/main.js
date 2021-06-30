@@ -6968,7 +6968,6 @@
         title,
         center: true,
         buttons: [{
-          type: 'add',
           label: 'Add product',
           callback: () => void goTo('/admin/product/new')
         }]
@@ -7284,7 +7283,6 @@
         title,
         center: true,
         buttons: [{
-          type: 'add',
           label: 'Add app',
           callback: () => void goTo('/admin/app/new')
         }]
@@ -7610,7 +7608,6 @@
         title,
         center: true,
         buttons: [{
-          type: 'add',
           label: 'Add model',
           callback: () => void goTo('/admin/model/new')
         }]
@@ -7876,13 +7873,7 @@
     pages: ['/admin'],
     // Wen want to help the user easily navigate to all overviews, and to the
     // profile page to edit his account information.
-    navigation: new Map([['Apps', '/admin/apps'], ['Products', '/admin/products'], ['Models', '/admin/models'], ['Profile', '/admin/profile'], ['Log out', '/logout']]) // Add quick shortcuts to allow the users to quickly create new objects.
-    // shortcuts: new Map([
-    //   ['Add app', '/admin/app/new'],
-    //   ['Add product', '/admin/product/new'],
-    //   ['Add model', '/admin/model/new'],
-    // ]),
-
+    navigation: new Map([['Apps', '/admin/apps'], ['Products', '/admin/products'], ['Models', '/admin/models'], ['Profile', '/admin/profile'], ['Log out', '/logout']])
   });
   /**
    *  Create a new View instance to show components. The View will automatically

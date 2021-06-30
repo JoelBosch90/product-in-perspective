@@ -69,7 +69,6 @@ class ModelList extends BaseElement {
       title,
       center: true,
       buttons: [{
-        type: 'add',
         label: 'Add model',
         callback: () => void goTo('/admin/model/new')
       }]
