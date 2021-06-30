@@ -6,6 +6,9 @@
   // This is a container only, it should not affect the document flow.
   display: contents;
 
+  // Keep some distance with the next elements on the page.
+  margin-bottom: 1.5em;
+
   // Select the link for the current page.
   .current
   {
@@ -17,7 +20,7 @@
   }
 
   // Target both parts of the menu.
-  .navigation, .shortcuts
+  .navigation
   {
     // Stick the menu to the top of the screen.
     margin-top: 0;
@@ -25,9 +28,6 @@
     // Center the menu horizontally.
     margin-left: auto;
     margin-right: auto;
-
-    // Keep some distance with the next elements on the page.
-    margin-bottom: 1.5em;
 
     // Very wide menus are hard to use, so we don't want this to grow too wide.
     max-width: var(--max-width);
@@ -75,25 +75,5 @@
       // Stick to one row.
       white-space: nowrap;
     }
-  }
-
-  // Target only the shortcuts underneath the navigation menu.
-  .shortcuts
-  {
-    // We don't want these buttons to touch the sides of the screen.
-    padding-left: 2em;
-    padding-right: 2em;
-
-    // Use Flexbox to create a layout.
-    display: flex;
-
-    // Make sure we can always display the full navigation.
-    flex-wrap: wrap;
-
-    // Keep some distance between the shortcut buttons.
-    gap: 0.25em;
-
-    // Spread out the shortcut buttons.
-    justify-content: space-around;
   }
 }

@@ -14,4 +14,19 @@
   // Use collapsing margins to keep horizontal distance with other elements.
   margin-top: 2em;
   margin-bottom: 2em;
+
+  // Target the buttons container.
+  > .buttons {
+
+    // Use Flexbox to align button to right right.
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  // Target the cards container.
+  > .cards {
+
+    // We want grid to position all cards.
+    display: contents;
+  }
 }

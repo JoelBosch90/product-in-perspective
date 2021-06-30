@@ -38,6 +38,12 @@ class ProductList extends BaseElement {
 
   _requestPromise = null;
   /**
+   *  Reference to the button for adding a new product.
+   *  @var      {Button}
+   */
+
+  _addButton = null;
+  /**
    *  Class constructor.
    *  @param    {Element}   parent      Container to which this component will
    *                                    be added.
@@ -60,7 +66,12 @@ class ProductList extends BaseElement {
 
     this._overview = new Overview(this._container, {
       title,
-      center: true
+      center: true,
+      buttons: [{
+        type: 'add',
+        label: 'Add product',
+        callback: () => void goTo('/admin/product/new')
+      }]
     }); // First, request a list of all products. Store the promise.
 
     this._requestPromise = this._request.get('/products').catch(error => void this._overview.showError(error)).then(response => {

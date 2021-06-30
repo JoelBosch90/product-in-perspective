@@ -37,8 +37,6 @@ class Menu extends BaseElement {
    *                                      display this menu.
    *    @property   {Map}     navigation  These are the navigation anchors that
    *                                      will be added to the menu.
-   *    @property   {Map}     shortcuts   These are the shortcut anchors that
-   *                                      will be added underneath the menu.
    */
   constructor(parent, options = {}) {
 
@@ -53,16 +51,11 @@ class Menu extends BaseElement {
     const navigation = document.createElement("nav");
     navigation.classList.add("navigation");
 
-    // Create a container for the shortcut menu.
-    const shortcuts = document.createElement("div");
-    shortcuts.classList.add("shortcuts");
-
     // Store the pages.
     this._pages = options.pages;
 
     // Add the menu anchors to the right parts of the menu.
-    this._addAnchors(navigation, options.navigation);
-    this._addAnchors(shortcuts, options.shortcuts);
+    if (options.navigation) this._addAnchors(navigation, options.navigation);
 
     // Start listening for URL changes.
     window.addEventListener('popstate', this._processPathChange);
@@ -72,7 +65,6 @@ class Menu extends BaseElement {
 
     // App both menu components to the container.
     this._container.appendChild(navigation);
-    this._container.appendChild(shortcuts);
 
     // Add both containers to the top of the parent element.
     parent.prepend(this._container);

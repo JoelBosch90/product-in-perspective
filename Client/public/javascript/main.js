@@ -272,8 +272,6 @@
      *                                      display this menu.
      *    @property   {Map}     navigation  These are the navigation anchors that
      *                                      will be added to the menu.
-     *    @property   {Map}     shortcuts   These are the shortcut anchors that
-     *                                      will be added underneath the menu.
      */
 
     constructor(parent, options = {}) {
@@ -286,26 +284,18 @@
 
 
       const navigation = document.createElement("nav");
-      navigation.classList.add("navigation"); // Create a container for the shortcut menu.
-
-      const shortcuts = document.createElement("div");
-      shortcuts.classList.add("shortcuts"); // Store the pages.
+      navigation.classList.add("navigation"); // Store the pages.
 
       this._pages = options.pages; // Add the menu anchors to the right parts of the menu.
 
-      this._addAnchors(navigation, options.navigation);
-
-      this._addAnchors(shortcuts, options.shortcuts); // Start listening for URL changes.
-
+      if (options.navigation) this._addAnchors(navigation, options.navigation); // Start listening for URL changes.
 
       window.addEventListener('popstate', this._processPathChange); // Process the initital path.
 
       this._processPathChange(); // App both menu components to the container.
 
 
-      this._container.appendChild(navigation);
-
-      this._container.appendChild(shortcuts); // Add both containers to the top of the parent element.
+      this._container.appendChild(navigation); // Add both containers to the top of the parent element.
 
 
       parent.prepend(this._container);
@@ -6681,10 +6671,34 @@
 
   class Overview extends BaseElement {
     /**
+     *  Private variable that stores a reference to the title container.
+     *  @var      {Element}
+     */
+    _titleContainer = null;
+    /**
+     *  Private variable that stores a reference to the error container.
+     *  @var      {Element}
+     */
+
+    _errorContainer = null;
+    /**
+     *  Private variable that stores a reference to the buttons container.
+     *  @var      {Element}
+     */
+
+    _buttonContainer = null;
+    /**
+     *  Private variable that stores a reference to the cards container.
+     *  @var      {Element}
+     */
+
+    _cardContainer = null;
+    /**
      *  Private variable that stores a reference to the Title element if a
      *  title was added to the form.
      *  @var      {Title}
      */
+
     _title = null;
     /**
      *  Element that displays error messages.
@@ -6699,12 +6713,20 @@
 
     _cards = [];
     /**
+     *  Array of all the buttons that are listed in the overview.
+     *  @var      {array}
+     */
+
+    _buttons = [];
+    /**
      *  Class constructor.
      *  @param    {Element}   parent    The parent element to which the overview
      *                                  will be added.
      *  @param    {object}    options   Optional parameters for instantiating the
      *                                  overview.
      *    @property   {array}   cards     Optional array of cards that are
+     *                                    immediately added to the overview.
+     *    @property   {array}   buttons   Optional array of buttons that are
      *                                    immediately added to the overview.
      *    @property   {string}  title     Optional string for a title to add to
      *                                    the overview.
@@ -6719,14 +6741,42 @@
 
       this._container = document.createElement("div");
 
-      this._container.classList.add("overview"); // Add the title if requested.
+      this._container.classList.add("overview"); // Create separate containers for all elements.
+
+
+      this._titleContainer = document.createElement("div");
+
+      this._titleContainer.classList.add("title");
+
+      this._errorContainer = document.createElement("div");
+
+      this._errorContainer.classList.add("errors");
+
+      this._buttonContainer = document.createElement("div");
+
+      this._buttonContainer.classList.add("buttons");
+
+      this._cardContainer = document.createElement("div");
+
+      this._cardContainer.classList.add("cards"); // Add the element containers to the component container.
+
+
+      this._container.appendChild(this._titleContainer);
+
+      this._container.appendChild(this._errorContainer);
+
+      this._container.appendChild(this._buttonContainer);
+
+      this._container.appendChild(this._cardContainer); // Add the title if requested.
 
 
       if (options.title) this.title(options.title); // Add an ErrorDisplay under the main title.
 
-      this._errorDisplay = new ErrorDisplay(this._container); // Add the center class to the overview if requested.
+      this._errorDisplay = new ErrorDisplay(this._errorContainer); // Add the center class to the overview if requested.
 
-      if (options.center) this._container.classList.add("center"); // Add all provided cards to the overview.
+      if (options.center) this._container.classList.add("center"); // Add all provided buttons to the overview.
+
+      if (options.buttons) for (const button of options.buttons) this.addButton(button); // Add all provided cards to the overview.
 
       if (options.cards) for (const card of options.cards) this.addCard(card); // Add the overview to the parent element.
 
@@ -6749,7 +6799,7 @@
         else this._title.remove(); // Is there no title component yet?
       } else {
         // If a new title was provided, we should create the title component.
-        if (newTitle) this._title = new Title(this._container, {
+        if (newTitle) this._title = new Title(this._titleContainer, {
           title: newTitle
         });
       } // Use the overview's title as the page title.
@@ -6777,7 +6827,7 @@
 
     addCard = (options = {}) => {
       // Create a card element.
-      const card = new OverviewCard(this._container, options); // Add the card to the array.
+      const card = new OverviewCard(this._cardContainer, options); // Add the card to the array.
 
       this._cards.push(card); // Propagate all of the card's events.
 
@@ -6785,6 +6835,31 @@
       card.bubbleTo(this); // Expose the card object.
 
       return card;
+    };
+    /**
+     *  Method for adding a button element to the overview.
+     *  @param    {object}    options   Optional parameters for the button that
+     *                                  is added to the overview.
+     *    @property   {string}    type      Button type.
+     *    @property   {string}    label     Button text.
+     *    @property   {boolean}   disabled  Is this button disabled?
+     *    @property   {Function}  callback  The function that will called on
+     *                                      click.
+     *  @returns  {Button}
+     */
+
+    addButton = (options = {}) => {
+      // Create a button element.
+      const button = new Button(this._buttonContainer, options); // Install the callback as an on click event if provided.
+
+      if (options.callback) button.on('click', options.callback); // Add the button to the array.
+
+      this._buttons.push(button); // Propagate all of the button's events.
+
+
+      button.bubbleTo(this); // Expose the button object.
+
+      return button;
     };
     /**
      *  Method for showing errors.
@@ -6809,10 +6884,17 @@
     remove() {
       // Remove class objects we used.
       if (this._title) this._title.remove();
-      if (this._cards) for (const card of this._cards) card.remove(); // Remove all references.
+      if (this._cards.length) for (const card of this._cards) card.remove();
+      if (this._buttons.length) for (const button of this._buttons) button.remove(); // Remove all references.
 
       this._title = null;
-      this._cards = []; // Call the remove function for the base class. This will also remove the
+      this._cards = [];
+      this._buttons = []; // Remove the DOM elements that we referenced.
+
+      if (this._titleContainer) this._titleContainer.remove();
+      if (this._errorContainer) this._errorContainer.remove();
+      if (this._buttonContainer) this._buttonContainer.remove();
+      if (this._cardContainer) this._cardContainer.remove(); // Call the remove function for the base class. This will also remove the
       // container.
 
       super.remove();
@@ -6856,6 +6938,12 @@
 
     _requestPromise = null;
     /**
+     *  Reference to the button for adding a new product.
+     *  @var      {Button}
+     */
+
+    _addButton = null;
+    /**
      *  Class constructor.
      *  @param    {Element}   parent      Container to which this component will
      *                                    be added.
@@ -6878,7 +6966,12 @@
 
       this._overview = new Overview(this._container, {
         title,
-        center: true
+        center: true,
+        buttons: [{
+          type: 'add',
+          label: 'Add product',
+          callback: () => void goTo('/admin/product/new')
+        }]
       }); // First, request a list of all products. Store the promise.
 
       this._requestPromise = this._request.get('/products').catch(error => void this._overview.showError(error)).then(response => {
@@ -7189,7 +7282,12 @@
 
       this._overview = new Overview(this._container, {
         title,
-        center: true
+        center: true,
+        buttons: [{
+          type: 'add',
+          label: 'Add app',
+          callback: () => void goTo('/admin/app/new')
+        }]
       }); // First, request a list of all apps. Store the promise.
 
       this._requestPromise = this._request.get('/apps').catch(error => void this._overview.showError(error)).then(response => {
@@ -7482,6 +7580,12 @@
 
     _requestPromise = null;
     /**
+     *  Reference to the button for adding a new model.
+     *  @var      {Button}
+     */
+
+    _addButton = null;
+    /**
      *  Class constructor.
      *  @param    {Element}   parent      Container to which this component will
      *                                    be added.
@@ -7504,7 +7608,12 @@
 
       this._overview = new Overview(this._container, {
         title,
-        center: true
+        center: true,
+        buttons: [{
+          type: 'add',
+          label: 'Add model',
+          callback: () => void goTo('/admin/model/new')
+        }]
       }); // First, request a list of all models. Store the promise.
 
       this._requestPromise = this._request.get('/models').catch(error => void this._overview.showError(error)).then(response => {
@@ -7767,9 +7876,13 @@
     pages: ['/admin'],
     // Wen want to help the user easily navigate to all overviews, and to the
     // profile page to edit his account information.
-    navigation: new Map([['Apps', '/admin/apps'], ['Products', '/admin/products'], ['Models', '/admin/models'], ['Profile', '/admin/profile'], ['Log out', '/logout']]),
-    // Add quick shortcuts to allow the users to quickly create new objects.
-    shortcuts: new Map([['Add app', '/admin/app/new'], ['Add product', '/admin/product/new'], ['Add model', '/admin/model/new']])
+    navigation: new Map([['Apps', '/admin/apps'], ['Products', '/admin/products'], ['Models', '/admin/models'], ['Profile', '/admin/profile'], ['Log out', '/logout']]) // Add quick shortcuts to allow the users to quickly create new objects.
+    // shortcuts: new Map([
+    //   ['Add app', '/admin/app/new'],
+    //   ['Add product', '/admin/product/new'],
+    //   ['Add model', '/admin/model/new'],
+    // ]),
+
   });
   /**
    *  Create a new View instance to show components. The View will automatically

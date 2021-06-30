@@ -1,8 +1,9 @@
 // Import dependencies.
-import { BaseElement } from "../widgets/BaseElement.js";
-import { OverviewCard } from "../widgets/Overview/Card.js";
-import { Title } from "../widgets/Title.js";
-import { ErrorDisplay } from "../widgets/ErrorDisplay.js";
+import { BaseElement } from "./BaseElement.js";
+import { OverviewCard } from "./Overview/Card.js";
+import { Title } from "./Title.js";
+import { ErrorDisplay } from "./ErrorDisplay.js";
+import { Button } from "./Button.js";
 /**
  *  The definition of the Overview class that can be used to create a overview
  *  element.
@@ -14,10 +15,34 @@ import { ErrorDisplay } from "../widgets/ErrorDisplay.js";
 
 class Overview extends BaseElement {
   /**
+   *  Private variable that stores a reference to the title container.
+   *  @var      {Element}
+   */
+  _titleContainer = null;
+  /**
+   *  Private variable that stores a reference to the error container.
+   *  @var      {Element}
+   */
+
+  _errorContainer = null;
+  /**
+   *  Private variable that stores a reference to the buttons container.
+   *  @var      {Element}
+   */
+
+  _buttonContainer = null;
+  /**
+   *  Private variable that stores a reference to the cards container.
+   *  @var      {Element}
+   */
+
+  _cardContainer = null;
+  /**
    *  Private variable that stores a reference to the Title element if a
    *  title was added to the form.
    *  @var      {Title}
    */
+
   _title = null;
   /**
    *  Element that displays error messages.
@@ -32,12 +57,20 @@ class Overview extends BaseElement {
 
   _cards = [];
   /**
+   *  Array of all the buttons that are listed in the overview.
+   *  @var      {array}
+   */
+
+  _buttons = [];
+  /**
    *  Class constructor.
    *  @param    {Element}   parent    The parent element to which the overview
    *                                  will be added.
    *  @param    {object}    options   Optional parameters for instantiating the
    *                                  overview.
    *    @property   {array}   cards     Optional array of cards that are
+   *                                    immediately added to the overview.
+   *    @property   {array}   buttons   Optional array of buttons that are
    *                                    immediately added to the overview.
    *    @property   {string}  title     Optional string for a title to add to
    *                                    the overview.
@@ -52,14 +85,42 @@ class Overview extends BaseElement {
 
     this._container = document.createElement("div");
 
-    this._container.classList.add("overview"); // Add the title if requested.
+    this._container.classList.add("overview"); // Create separate containers for all elements.
+
+
+    this._titleContainer = document.createElement("div");
+
+    this._titleContainer.classList.add("title");
+
+    this._errorContainer = document.createElement("div");
+
+    this._errorContainer.classList.add("errors");
+
+    this._buttonContainer = document.createElement("div");
+
+    this._buttonContainer.classList.add("buttons");
+
+    this._cardContainer = document.createElement("div");
+
+    this._cardContainer.classList.add("cards"); // Add the element containers to the component container.
+
+
+    this._container.appendChild(this._titleContainer);
+
+    this._container.appendChild(this._errorContainer);
+
+    this._container.appendChild(this._buttonContainer);
+
+    this._container.appendChild(this._cardContainer); // Add the title if requested.
 
 
     if (options.title) this.title(options.title); // Add an ErrorDisplay under the main title.
 
-    this._errorDisplay = new ErrorDisplay(this._container); // Add the center class to the overview if requested.
+    this._errorDisplay = new ErrorDisplay(this._errorContainer); // Add the center class to the overview if requested.
 
-    if (options.center) this._container.classList.add("center"); // Add all provided cards to the overview.
+    if (options.center) this._container.classList.add("center"); // Add all provided buttons to the overview.
+
+    if (options.buttons) for (const button of options.buttons) this.addButton(button); // Add all provided cards to the overview.
 
     if (options.cards) for (const card of options.cards) this.addCard(card); // Add the overview to the parent element.
 
@@ -82,7 +143,7 @@ class Overview extends BaseElement {
       else this._title.remove(); // Is there no title component yet?
     } else {
       // If a new title was provided, we should create the title component.
-      if (newTitle) this._title = new Title(this._container, {
+      if (newTitle) this._title = new Title(this._titleContainer, {
         title: newTitle
       });
     } // Use the overview's title as the page title.
@@ -110,7 +171,7 @@ class Overview extends BaseElement {
 
   addCard = (options = {}) => {
     // Create a card element.
-    const card = new OverviewCard(this._container, options); // Add the card to the array.
+    const card = new OverviewCard(this._cardContainer, options); // Add the card to the array.
 
     this._cards.push(card); // Propagate all of the card's events.
 
@@ -118,6 +179,31 @@ class Overview extends BaseElement {
     card.bubbleTo(this); // Expose the card object.
 
     return card;
+  };
+  /**
+   *  Method for adding a button element to the overview.
+   *  @param    {object}    options   Optional parameters for the button that
+   *                                  is added to the overview.
+   *    @property   {string}    type      Button type.
+   *    @property   {string}    label     Button text.
+   *    @property   {boolean}   disabled  Is this button disabled?
+   *    @property   {Function}  callback  The function that will called on
+   *                                      click.
+   *  @returns  {Button}
+   */
+
+  addButton = (options = {}) => {
+    // Create a button element.
+    const button = new Button(this._buttonContainer, options); // Install the callback as an on click event if provided.
+
+    if (options.callback) button.on('click', options.callback); // Add the button to the array.
+
+    this._buttons.push(button); // Propagate all of the button's events.
+
+
+    button.bubbleTo(this); // Expose the button object.
+
+    return button;
   };
   /**
    *  Method for showing errors.
@@ -142,10 +228,17 @@ class Overview extends BaseElement {
   remove() {
     // Remove class objects we used.
     if (this._title) this._title.remove();
-    if (this._cards) for (const card of this._cards) card.remove(); // Remove all references.
+    if (this._cards.length) for (const card of this._cards) card.remove();
+    if (this._buttons.length) for (const button of this._buttons) button.remove(); // Remove all references.
 
     this._title = null;
-    this._cards = []; // Call the remove function for the base class. This will also remove the
+    this._cards = [];
+    this._buttons = []; // Remove the DOM elements that we referenced.
+
+    if (this._titleContainer) this._titleContainer.remove();
+    if (this._errorContainer) this._errorContainer.remove();
+    if (this._buttonContainer) this._buttonContainer.remove();
+    if (this._cardContainer) this._cardContainer.remove(); // Call the remove function for the base class. This will also remove the
     // container.
 
     super.remove();

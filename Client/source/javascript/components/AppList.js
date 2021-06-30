@@ -67,6 +67,11 @@ class AppList extends BaseElement {
     this._overview = new Overview(this._container, {
       title,
       center: true,
+      buttons: [{
+        type:     'add',
+        label:    'Add app',
+        callback: () => void goTo('/admin/app/new'),
+      }],
     });
 
     // First, request a list of all apps. Store the promise.

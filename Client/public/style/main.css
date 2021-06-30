@@ -604,17 +604,16 @@ label {
  */
 .menu {
   display: contents;
+  margin-bottom: 1.5em;
 }
 .menu .current {
   filter: brightness(0.5);
   transition: filter var(--animation-quick);
 }
-.menu .navigation,
-.menu .shortcuts {
+.menu .navigation {
   margin-top: 0;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 1.5em;
   max-width: var(--max-width);
   z-index: 1;
 }
@@ -633,14 +632,6 @@ label {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   white-space: nowrap;
-}
-.menu .shortcuts {
-  padding-left: 2em;
-  padding-right: 2em;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25em;
-  justify-content: space-around;
 }
 /**
  *  Main styling for the Overlay class.
@@ -698,6 +689,13 @@ label {
   gap: 1.25em;
   margin-top: 2em;
   margin-bottom: 2em;
+}
+.overview > .buttons {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.overview > .cards {
+  display: contents;
 }
 /**
  *  Card
@@ -772,4 +770,5 @@ label {
   max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
+  position: relative;
 }

@@ -51,11 +51,11 @@ const menu = new Menu(container, {
   ]),
 
   // Add quick shortcuts to allow the users to quickly create new objects.
-  shortcuts: new Map([
-    ['Add app', '/admin/app/new'],
-    ['Add product', '/admin/product/new'],
-    ['Add model', '/admin/model/new'],
-  ]),
+  // shortcuts: new Map([
+  //   ['Add app', '/admin/app/new'],
+  //   ['Add product', '/admin/product/new'],
+  //   ['Add model', '/admin/model/new'],
+  // ]),
 });
 
 /**
