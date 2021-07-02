@@ -32,7 +32,7 @@ module.exports = sendVerificationMail = async user => {
   return sendMail({
 
     // Send from the common email domain.
-    from:     `verification@${process.env.DOMAIN}`,
+    from:     `noreply@${process.env.DOMAIN}`,
 
     // Send to the user's email address.
     to:       user.email,

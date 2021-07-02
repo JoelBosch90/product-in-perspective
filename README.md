@@ -111,7 +111,9 @@ EXTERNAL_URL
 
 DOMAIN
 - The domain name that should be used. This is used as the website's name and
-  as the email domain as well.
+  as the email domain as well. Transactional emails are sent from
+  `noreply@DOMAIN` so this address should be verified for sending from the SMTP
+  server.
 
 TOKEN_SECRET
 - The secret used to generate JSON web tokens.
