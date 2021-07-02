@@ -1,0 +1,187 @@
+<!-- Inspired by Tutsplus.com: Build an HTML Email Template From Scratch by Nicole Merlin -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!--
+
+    Color Scheme
+      background:   #080708
+      header:       #3B60E4
+      button:       #3B60E4
+      button-hover: #4A78FF
+      text:         #FFFFFF
+
+  -->
+
+  <style type="text/css">
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/nunito/v16/XRXV3I6Li01BKofINeaB.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+    @font-face {
+      font-family: 'Roboto Slab';
+      font-style: normal;
+      font-weight: 300;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/robotoslab/v13/BngbUXZYTXPIvIBgJJSb6s3BzlRRfKOFbvjo0oSmb2Rj.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+    html, body {
+      width: 100%;
+      font-family: 'Nunito', sans-serif;
+      font-size: 22px;
+      color: #333333;
+    }
+
+    table {
+      border-spacing: 0;
+    }
+
+    table td {
+      border-collapse: collapse;
+    }
+
+    img {
+      display: block !important;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+    }
+
+    td[class="button"]:hover {
+      background: #4A78FF;
+    }
+
+    @media all and (max-width: 600px) {
+      img[class="image_fullwidth"], table[class="container_600px"], table[class="container_560px"], table[class="container_520px"] {
+        width: 100%;
+      }
+
+      table[class="container_600px"], table[class="container_560px"] {
+        padding: 0 20px 0 20px;
+      }
+
+      table[class="container_520px"] {
+        padding: 0 40px 0 40px;
+      }
+    }
+
+    @media all and (max-width: 480px) {
+      table[class="container_600px"] {
+        padding: 0 10px 0 10px;
+      }
+
+      table[class="container_560px"], table[class="container_520px"] {
+        padding: 0 0 0 0;
+      }
+
+      td[class="borders_600px"] {
+        border: none !important;
+      }
+    }
+
+    @media all and (max-width: 320px) {
+      table[class="container_600px"] {
+        padding: 0 5px 0 5px;
+      }
+    }
+  </style>
+
+  <title>{{title}}</title>
+</head>
+
+<body style="margin: 0; padding: 0; background-color: #080708;" bgcolor="#080708">
+  <!-- START outer container -->
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>
+        <!-- START static width container-->
+        <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;" class="container_600px">
+          <!-- START header container -->
+          <tr>
+            <td>
+              <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="600" class="container_600px">
+                <tr>
+                  <td>
+                    <!-- START header side padding -->
+                    <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="560" class="container_560px">
+                      <tr>
+                        <td style="display: none !important; visibility: hidden; mso-hide: all; font-size: 1px; color: #ffffff;
+                        line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+                          {{preheader}}
+                        </td>
+                      </tr>
+                    </table>
+                    <!-- END header side padding -->
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- END header container -->
+          <!-- START story container -->
+          <tr>
+            <td>
+              <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="600" class="container_600px">
+                <tr>
+                  <td class="borders_600px" style="padding: 0 24px 0 24px;">
+                    <a name="story01"></a>
+                    <!-- START story side padding -->
+                    <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="560" class="container_560px">
+                      <!-- START story title -->
+                      <tr>
+                        <td style="padding: 48px 0 32px 0;">
+                          <span style="color: #3B60E4; text-decoration: none; font-size: 40px; font-family: 'Roboto Slab', sans-serif; font-weight:300;">{{title}}</span>
+                        </td>
+                      </tr>
+                      <!-- END story title -->
+                      <!-- START story content -->
+                      <tr>
+                        <td style="color:#FFFFFF; font-family: 'Nunito', sans-serif; font-size: 16px;">
+                          {{body}}
+                        </td>
+                      </tr>
+                      <!-- END story content -->
+                      <!-- START story button -->
+                      <tr>
+                        <td style="padding: 32px 0 48px 0;">
+                          <!-- START button -->
+                          <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td align="center" style="border-radius: 5px;" bgcolor="#3B60E4" class="button">
+                                <a href="{{link}}" target="_blank" style="font-size: 20px; color: #FFFFFF; text-decoration: none; border-radius: 5px; padding: 5px 15px 5px 15px; display: inline-block; font-family: 'Nunito', sans-serif;">
+                                  {{button}}
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- END button -->
+                        </td>
+                      </tr>
+                      <!-- END story button -->
+                    </table>
+                    <!-- END story side padding -->
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- END story container -->
+        </table>
+        <!-- END static width container-->
+      </td>
+    </tr>
+  </table>
+  <!-- END outer container -->
+</body>
+</html>

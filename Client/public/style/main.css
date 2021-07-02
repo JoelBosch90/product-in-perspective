@@ -1,0 +1,782 @@
+/**
+ *  Main import file to gather the styles of all different categories.
+ */
+/**
+ *  Main import file to gather the styles of all properties.
+ */
+/**
+ *  Animations
+ *    This file holds default variables for animations and transitions.
+ */
+:root {
+  --animation-effect-default: ease-in-out;
+  --animation-speed-quick: 100ms;
+  --animation-speed-slow: 400ms;
+  --animation-quick: var(--animation-effect-default) var(--animation-speed-quick);
+  --animation-slow: var(--animation-effect-default) var(--animation-speed-slow);
+}
+/**
+ *  Colours
+ *    This file contains the base of all the colours that are used throughout
+ *    the application. They are declared as CSS variables on the root of the
+ *    document so that they can be used and overwritten on every single element
+ *    or class.
+ */
+:root {
+  --background: #080708;
+  --color: #FFFFFF;
+  --alternate-background: #444444;
+  --primary-accent: #3B60E4;
+  --secondary-accent: #EA526F;
+  --border-color: #888888;
+  --information-color: var(--primary-accent);
+  --confirmation-color: #06A77D;
+  --danger-color: #AF1B3F;
+  --active-color: #E09F3E;
+  --active-background: #C98F37;
+}
+/**
+ *  Fonts
+ *    This file contains the base of all the fonts that are used throughout
+ *    the application. They are declared as CSS variables on the root of the
+ *    document so that they can be used and overwritten on every single element
+ *    or class.
+ */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAnsSkZg.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/nunito/v16/XRXV3I6Li01BKof4Mg.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAjsOkZg.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoslab/v13/BngbUXZYTXPIvIBgJJSb6s3BzlRRfKOFbvjo0oSWaA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoslab/v13/BngbUXZYTXPIvIBgJJSb6s3BzlRRfKOFbvjojISWaA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoslab/v13/BngbUXZYTXPIvIBgJJSb6s3BzlRRfKOFbvjoa4OWaA.ttf) format('truetype');
+}
+:root {
+  --text-font: 'Nunito', sans-serif;
+  --header-font: 'Roboto Slab', sans-serif;
+  --line-height: 1.75em;
+  --max-width: min(100%, 32em);
+}
+/**
+ *  Extra treatment for the hidden attribute.
+ */
+[hidden] {
+  display: none !important;
+}
+/**
+ *  Main import file to gather the styles of all elements.
+ */
+/**
+ *  Anchors
+ *    This file installs some basic styling on all anchors in the general
+ *    application.
+ */
+a {
+  color: var(--information-color);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--animation-quick), color var(--animation-quick);
+}
+a:focus {
+  color: var(--active-color);
+  transition: color var(--animation-quick);
+  outline: none;
+}
+a:hover {
+  filter: brightness(125%);
+  transition: brightness var(--animation-quick);
+}
+/**
+ *  Body
+ *    Main styling for the body element.
+ */
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-color: var(--background);
+}
+/**
+ *  Button
+ *    This file installs some basic styling on all buttons in the general
+ *    application.
+ */
+.file-button {
+  display: inline-block;
+}
+.file-button input[type="file"] {
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+  position: absolute;
+}
+.file-button input[type="file"] + label {
+  display: block;
+  text-align: center;
+}
+.file-button input[type="file"]:focus + label {
+  background-color: var(--active-background);
+  transition: background-color var(--animation-quick);
+}
+a.button {
+  text-align: center;
+  font-weight: normal;
+}
+button,
+a.button,
+input[type="submit"],
+input[type="file"] + label {
+  display: inline-block;
+  font-size: 1.25em;
+  color: var(--color);
+  font-family: var(--text-font);
+  --button-function-color: var(--information-color);
+  background-color: var(--button-function-color);
+  padding: 0.25em 0.75em;
+  border: none;
+  border-radius: 0.25em;
+  cursor: pointer;
+  transition: filter var(--animation-quick), background-color var(--animation-quick);
+}
+button.block,
+a.button.block,
+input[type="submit"].block,
+input[type="file"] + label.block {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+button.ghost,
+a.button.ghost,
+input[type="submit"].ghost,
+input[type="file"] + label.ghost {
+  background-color: transparent;
+  color: var(--button-function-color);
+  border: 0.1em solid var(--button-function-color);
+}
+button[type="confirm"],
+a.button[type="confirm"],
+input[type="submit"][type="confirm"],
+input[type="file"] + label[type="confirm"],
+button[type="submit"],
+a.button[type="submit"],
+input[type="submit"][type="submit"],
+input[type="file"] + label[type="submit"] {
+  --button-function-color: var(--confirmation-color);
+}
+button[type="remove"],
+a.button[type="remove"],
+input[type="submit"][type="remove"],
+input[type="file"] + label[type="remove"] {
+  --button-function-color: var(--danger-color);
+}
+button[type="cancel"],
+a.button[type="cancel"],
+input[type="submit"][type="cancel"],
+input[type="file"] + label[type="cancel"],
+button[type="reset"],
+a.button[type="reset"],
+input[type="submit"][type="reset"],
+input[type="file"] + label[type="reset"] {
+  --button-function-color: var(--border-color);
+}
+button:disabled,
+a.button:disabled,
+input[type="submit"]:disabled,
+input[type="file"] + label:disabled {
+  filter: opacity(30%);
+  cursor: not-allowed;
+  transition: filter var(--animation-quick);
+}
+button:focus,
+a.button:focus,
+input[type="submit"]:focus,
+input[type="file"] + label:focus {
+  --button-function-color: var(--active-background);
+  outline: none;
+}
+button:not(:disabled):hover,
+a.button:not(:disabled):hover,
+input[type="submit"]:not(:disabled):hover,
+input[type="file"] + label:not(:disabled):hover {
+  filter: brightness(125%);
+  transition: brightness var(--animation-quick);
+}
+button:not(:disabled):hover.ghost,
+a.button:not(:disabled):hover.ghost,
+input[type="submit"]:not(:disabled):hover.ghost,
+input[type="file"] + label:not(:disabled):hover.ghost {
+  filter: brightness(150%);
+}
+/**
+ *  Fieldset
+ *    This file contains the base styling for a fieldset.
+ */
+fieldset {
+  padding: 1em;
+  border-color: var(--border-color);
+  border-radius: 0.25em;
+}
+fieldset legend {
+  background-color: var(--background);
+  line-height: 1em;
+  color: var(--text-font);
+  border-radius: 0.25em;
+  padding: 0.15em 0.45em;
+  margin: 0.1em 0.3em;
+}
+fieldset .fieldset-inputs {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 1.25em;
+}
+fieldset .input-field + button,
+fieldset input + button {
+  margin-top: 1em;
+}
+/**
+ *  Form
+ *    This file contains the base styling for a form.
+ */
+form {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 1.25em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+/**
+ *  Header
+ *    This file installs some basic styling on all headers in the general
+ *    application.
+ */
+h1,
+h2,
+h3,
+h4 {
+  margin-top: 0.6em;
+  margin-bottom: 0.3em;
+  line-height: 1em;
+  font-family: var(--text-font);
+  font-weight: 300;
+  color: var(--color);
+}
+h1 {
+  font-family: var(--header-font);
+  color: var(--primary-accent);
+  font-size: 2.5em;
+}
+h2 {
+  font-family: var(--header-font);
+  color: var(--secondary-accent);
+  font-size: 1.75em;
+}
+h3 {
+  font-size: 1.25em;
+  font-weight: 700;
+}
+h4 {
+  font-size: 1.15em;
+  font-weight: 700;
+}
+/**
+ *  Input
+ *    This file installs some basic styling on all inputs in the general
+ *    application.
+ */
+input,
+select,
+textarea {
+  font-family: var(--text-font);
+  font-size: 1em;
+  color: var(--color);
+  background-color: var(--alternate-background);
+  line-height: var(--line-height);
+  padding: 0.25em 0.75em;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25em;
+  transition: border-color var(--animation-quick);
+  box-sizing: border-box;
+}
+input.block,
+select.block,
+textarea.block {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+input:not(select):not(:disabled):hover,
+select:not(select):not(:disabled):hover,
+textarea:not(select):not(:disabled):hover {
+  filter: brightness(125%);
+  transition: brightness var(--animation-quick);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--active-color);
+  transition: border-color var(--animation-quick);
+  outline: none;
+}
+input:disabled,
+select:disabled,
+textarea:disabled {
+  filter: opacity(30%);
+  background-color: transparent;
+  cursor: not-allowed;
+  transition: filter var(--animation-quick);
+}
+select {
+  height: calc(var(--line-height) + 0.5em + 2px);
+}
+.input-field {
+  width: 100%;
+  position: relative;
+}
+.input-field input[type="text"],
+.input-field input[type="password"],
+.input-field input[type="email"],
+.input-field input[type="number"],
+.input-field textarea {
+  width: 100%;
+  padding: 0.25em 0.75em;
+  border-width: 1px;
+}
+.input-field input[type="text"]::placeholder,
+.input-field input[type="password"]::placeholder,
+.input-field input[type="email"]::placeholder,
+.input-field input[type="number"]::placeholder,
+.input-field textarea::placeholder {
+  color: transparent;
+}
+.input-field input[type="text"] + label,
+.input-field input[type="password"] + label,
+.input-field input[type="email"] + label,
+.input-field input[type="number"] + label,
+.input-field textarea + label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--alternate-color);
+  opacity: 0.55;
+  user-select: none;
+  cursor: text;
+  border-color: transparent;
+  border-width: 1px;
+  padding: 0.15em 0.45em;
+  margin: 0.1em 0.3em;
+  background-color: transparent;
+  border-radius: 0.25em;
+  transform-origin: 0 0;
+  transition: color var(--animation-quick), transform var(--animation-quick), background-color var(--animation-quick), line-height var(--animation-quick), opacity var(--animation-quick);
+}
+.input-field input[type="text"]:focus + label,
+.input-field input[type="password"]:focus + label,
+.input-field input[type="email"]:focus + label,
+.input-field input[type="number"]:focus + label,
+.input-field textarea:focus + label,
+.input-field input[type="text"]:not(:placeholder-shown) + label,
+.input-field input[type="password"]:not(:placeholder-shown) + label,
+.input-field input[type="email"]:not(:placeholder-shown) + label,
+.input-field input[type="number"]:not(:placeholder-shown) + label,
+.input-field textarea:not(:placeholder-shown) + label {
+  transform: translate(0, -60%) scale(0.8);
+  background-color: var(--alternate-background);
+  opacity: 1;
+  line-height: 1em;
+  transition: transform var(--animation-quick), line-height var(--animation-quick), background-color var(--animation-quick);
+}
+.input-field input[type="text"]:focus + label span,
+.input-field input[type="password"]:focus + label span,
+.input-field input[type="email"]:focus + label span,
+.input-field input[type="number"]:focus + label span,
+.input-field textarea:focus + label span,
+.input-field input[type="text"]:not(:placeholder-shown) + label span,
+.input-field input[type="password"]:not(:placeholder-shown) + label span,
+.input-field input[type="email"]:not(:placeholder-shown) + label span,
+.input-field input[type="number"]:not(:placeholder-shown) + label span,
+.input-field textarea:not(:placeholder-shown) + label span {
+  opacity: 1;
+  color: var(--border-color);
+  transition: color var(--animation-quick), opacity var(--animation-quick);
+}
+.input-field input[type="text"]:focus + label span,
+.input-field input[type="password"]:focus + label span,
+.input-field input[type="email"]:focus + label span,
+.input-field input[type="number"]:focus + label span,
+.input-field textarea:focus + label span {
+  color: var(--active-color);
+}
+.input-field input[type="text"]:not(:disabled):hover + label,
+.input-field input[type="password"]:not(:disabled):hover + label,
+.input-field input[type="email"]:not(:disabled):hover + label,
+.input-field input[type="number"]:not(:disabled):hover + label,
+.input-field textarea:not(:disabled):hover + label {
+  filter: brightness(125%);
+  transition: brightness var(--animation-quick);
+}
+.input-field input[type="text"]:disabled + label span,
+.input-field input[type="password"]:disabled + label span,
+.input-field input[type="email"]:disabled + label span,
+.input-field input[type="number"]:disabled + label span,
+.input-field textarea:disabled + label span {
+  cursor: not-allowed;
+  opacity: 0.25;
+  transition: opacity var(--animation-quick);
+}
+.input-field textarea {
+  resize: vertical;
+  display: block;
+}
+/**
+ *  Text
+ *    This file installs some basic styling on text in the general application.
+ */
+:root {
+  font-family: var(--text-font);
+  color: var(--color);
+  line-height: var(--line-height);
+  font-size: 1em;
+}
+p,
+span,
+label {
+  color: var(--color);
+  word-break: break-word;
+  hyphens: auto;
+}
+/**
+ *  This is the main import file to gather the styles for all classes.
+ */
+/**
+ *  Main styling for the Apology class.
+ */
+.apology {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.apology h1 {
+  text-align: center;
+  margin-top: 5em;
+}
+.apology a,
+.apology button {
+  margin-top: 2em;
+}
+/**
+ *  Main styling for the ArScene class.
+ */
+.arscene {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.arscene .arscene-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  pointer-events: none;
+}
+.arscene .arscene-overlay button {
+  pointer-events: auto;
+}
+/**
+ *  Main styling for the BarcodeScanner class.
+ */
+.barcodescanner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.barcodescanner .barcodescanner-video {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.barcodescanner .barcodescanner-video > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.barcodescanner .barcodescanner-video > canvas {
+  display: none;
+}
+.barcodescanner .barcodescanner-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+/**
+ *  Main styling for the Confirmation class.
+ */
+.confirmation {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.confirmation .message {
+  text-align: center;
+}
+.confirmation .message .buttons {
+  margin-top: 1em;
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+/**
+ *  ErrorDisplay
+ *    This file installs styling for the ErrorDisplay widget.
+ */
+.error-display p {
+  color: var(--danger-color);
+}
+.error-display:empty {
+  display: none;
+}
+/**
+ *  MultiSelect
+ *    This file installs the styling for our custom MultiSelect class.
+ */
+.multiselect {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "select       add" "selections   selections" "buttons      buttons";
+  gap: 1.25em;
+}
+.multiselect select {
+  grid-area: select;
+}
+.multiselect .selections {
+  grid-area: selections;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+.multiselect .selections .selection {
+  background-color: var(--alternate-background);
+  padding: 0.25em 0.75em;
+  border-radius: 0.25em;
+  margin: 0;
+}
+.multiselect button:first-of-type {
+  grid-area: add;
+}
+.multiselect button:not(:first-of-type) {
+  grid-area: buttons;
+}
+/**
+ *  Main styling for the Menu class.
+ */
+.menu {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1.5em;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--max-width);
+  z-index: 1;
+  gap: 0.25em;
+  border-bottom-left-radius: 2em;
+  border-bottom-right-radius: 2em;
+  overflow: hidden;
+}
+.menu > * {
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  white-space: nowrap;
+}
+.menu .current {
+  filter: brightness(0.5);
+  transition: filter var(--animation-quick);
+}
+/**
+ *  Main styling for the Overlay class.
+ */
+.overlay {
+  --background: rgba(8, 7, 8, 0.4);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.overlay .overlay-top,
+.overlay .overlay-bottom {
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  background-color: var(--background);
+}
+.overlay .overlay-top > :empty,
+.overlay .overlay-bottom > :empty {
+  display: none;
+}
+.overlay .overlay-top button,
+.overlay .overlay-bottom button {
+  margin: 0.25em;
+}
+.overlay .overlay-top > .animated,
+.overlay .overlay-bottom > .animated {
+  background-color: transparent;
+  overflow: hidden;
+  transition: background-color var(--animation-quick), filter var(--animation-slow);
+}
+.overlay .overlay-top > .animated:empty,
+.overlay .overlay-bottom > .animated:empty {
+  display: revert;
+  background-color: var(--active-background);
+  filter: opacity(20%);
+}
+*:fullscreen,
+*:-webkit-full-screen,
+*:-moz-full-screen {
+  background-color: transparent;
+}
+/**
+ *  Overview
+ *    This file installs styling for the Overview widget.
+ */
+.overview {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 1.25em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.overview > .buttons {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.overview > .cards {
+  display: contents;
+}
+/**
+ *  Card
+ *    This file installs styling for the Card widget.
+ */
+.card {
+  background: var(--alternate-background);
+  display: grid;
+  gap: 1.5em;
+  padding: 1em;
+  border: 2px solid var(--border-color);
+  border-radius: 0.25em;
+}
+.card h2,
+.card p,
+.card .buttons {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card h2:empty,
+.card p:empty,
+.card .buttons:empty {
+  display: none;
+}
+.card h2 {
+  line-height: 2em;
+  white-space: nowrap;
+}
+.card .buttons {
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+}
+/**
+ *  Main styling for the Representation class.
+ */
+.representation {
+  width: 100%;
+  height: 100%;
+}
+.fullscreen {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+/**
+ *  View
+ *    Main styling for the View class.
+ */
+.view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.view > * {
+  flex: 1;
+}
+/**
+ *  This is the main import file to gather the styles for all components.
+ */
+/**
+ *  Default styling for all components.
+ */
+.component {
+  width: 100%;
+  height: 100%;
+  padding: 0 2em;
+  box-sizing: border-box;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+}

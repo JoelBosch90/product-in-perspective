@@ -1,0 +1,80 @@
+/**
+ *  MultiSelect
+ *    This file installs the styling for our custom MultiSelect class.
+ */
+
+// Target the container inside the fieldset.
+.multiselect
+{
+  // Use grid to create a layout.
+  display: grid;
+
+  // Let items on the right take up as much space as they need and give the rest
+  // to the items on the left.
+  grid-template-rows: 1fr auto;
+
+  // Show the select input and the add button on top, with the display beneath
+  // in full width and end with the reset button.
+  grid-template-areas:
+    "select       add"
+    "selections   selections"
+    "buttons      buttons";
+
+  // Keep some distance between different elements.
+  gap: 1.25em;
+
+  // Target the select element.
+  select
+  {
+    // Occupy the select area.
+    grid-area: select;
+  }
+
+  // Target the selections display container.
+  .selections
+  {
+    // Occupy the selection area.
+    grid-area: selections;
+
+    // Use Flexbox to create a simple single column layout.
+    display: flex;
+    flex-direction: column;
+
+    // Keep a little bit of distance between different selection boxes.
+    gap: .75em;
+
+    // Target individual selections.
+    .selection
+    {
+      // Make these selection stand out a little as form elements.
+      background-color: var(--alternate-background);
+
+      // Make sure the text doesn't hit the edges.
+      padding: .25em .75em;
+
+      // Rounded edges appear friendlier.
+      border-radius: .25em;
+
+      // Make sure we don't mess with any margins here.
+      margin: 0;
+    }
+  }
+
+  // Target all buttons.
+  button
+  {
+    // Target the first button. We assume this is the add button.
+    &:first-of-type
+    {
+      // Occupy the add button area.
+      grid-area: add;
+    }
+
+    // Target all other buttons.
+    &:not(:first-of-type)
+    {
+      // Occupy the buttons area.
+      grid-area: buttons;
+    }
+  }
+}

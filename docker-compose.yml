@@ -1,0 +1,275 @@
+################################################################################
+#
+# Product in Perspective
+#   This is the Docker Compose file that spawns all different services that are
+#   involved with this app. The app was built specifically to have separate
+#   microservices to make scaling relatively easy if traffic picks up.
+#
+#   It currently features the following services:
+#     proxy       - The reverse proxy that will expose the services.
+#     client      - The service that serves all client-side files.
+#     api         - The REST API service that communicates directly with the
+#                   clients.
+#     database    - The service that the API uses for basic persistent storage.
+#     storage     - The service that the API uses to store 3D models. We don't
+#                   serve these models statically for easier scaling later. This
+#                   storage should also be publicly accessible by the client for
+#                   easier hosting.
+#
+################################################################################
+
+# Use the latest version of Docker Compose.
+version: "3.5"
+
+# Not all of our services need to be able to talk to each other. It is best to
+# keep them separated where we can.
+networks:
+
+  # We want to configure one network for all of the services that need to
+  # communicate with the reverse proxy. The reverse proxy then decides how those
+  # services can be accessed, but this is the network for all services that get
+  # exposed publicly.
+  proxied:
+
+  # Then there are those services that don't need to be publicly accessible and
+  # only communicate with other services. They go into the protected network.
+  protected:
+
+# We want to spawn several separate services from Docker images and manage all
+# of them from this file.
+services:
+
+  ##############################################################################
+  #
+  # Proxy
+  #   We use Nginx as a reverse proxy to direct requests to the ports of the
+  #   correct services. This way we can hide the application's inner network.
+  #
+  ##############################################################################
+  proxy:
+    container_name: proxy.prod
+
+    # We can use the latest version of Nginx.
+    image: nginx:latest
+
+    # We can give Nginx access to the common web ports.
+    ports:
+      - 8001:80
+
+    # We can use volumes to copy our reverse proxy configuration into Nginx.
+    volumes:
+      # Use the production configuration to expose only what's necessary.
+      - ./Proxy/production.conf:/etc/nginx/nginx.conf
+      - ./Proxy/error.log:/etc/nginx/error_log.log
+
+    # The proxy needs access to the client, the API and the storage.
+    depends_on:
+      - client
+      - api
+      - storage
+
+    # We need access to all the services that should be exposed (partly)
+    # publicly.
+    networks:
+      - proxied
+
+  ##############################################################################
+  #
+  # Client
+  #   This is the service that serves all client-side files. It is written in a
+  #   custom vanilla Javascript framework hosted with Node Express.
+  #
+  ##############################################################################
+  client:
+    container_name: client.prod
+
+    # We always want to restart when things go wrong.
+    restart: always
+
+    # We want to build from the production dockerfile in the Client directory.
+    build:
+      context: ./Client/
+      dockerfile: production.dockerfile
+
+    # The client will need to know where to host.
+    environment:
+      - HOST=client
+      - PORT=8000
+
+    # We can expose the client service in the container network.
+    expose:
+      - "8000"
+
+    # We need the reverse proxy to expose the client publicly, so we need to
+    # give it access to the client service.
+    networks:
+      - proxied
+
+  ##############################################################################
+  #
+  # API
+  #   This a Node REST API that that connects to the Database and Storage
+  #   containers. This API also includes the configurations for both of those
+  #   services, so they are not independent, but because they're hosted as
+  #   separate containers should help them scale independently nonetheless.
+  #
+  ##############################################################################
+  api:
+    container_name: api.prod
+
+    # We always want to restart when things go wrong.
+    restart: always
+
+    # We want to build from the production dockerfile in the Api directory.
+    build:
+      context: ./Api/
+      dockerfile: production.dockerfile
+
+    # The api will need to some hosting information. Any hosting information
+    # that originates from outside of the Docker Compose network and all secrets
+    # are expected to be available as environment variables.
+    environment:
+      - HOST=api
+      - PORT=3000
+      - EXTERNAL_URL=${EXTERNAL_URL}
+      - DOMAIN=${DOMAIN}
+      - TOKEN_SECRET=${TOKEN_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - DATABASE_HOST=database
+      - DATABASE_PORT=27017
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - STORAGE_HOST=storage
+      - STORAGE_PORT=9000
+      - STORAGE_ACCESS_KEY=${STORAGE_ACCESS_KEY}
+      - STORAGE_SECRET_KEY=${STORAGE_SECRET_KEY}
+
+    # We can expose the API service in the container network.
+    expose:
+      - "3000"
+
+    # The API will try to connect to the database and the storage services, so
+    # we need to make sure that they are running before we initialize the API.
+    depends_on:
+      storage:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+
+    # We need the reverse proxy to expose the api publicly, so we need to
+    # give it access to the api service.
+    networks:
+      - proxied
+      - protected
+
+  ##############################################################################
+  #
+  # Database
+  #   This is a NoSQL MongoDB database that we can use for scalable persistent
+  #   data. MongoDB will store any document, but we can configure specific
+  #   models and schemas in the API.
+  #
+  ##############################################################################
+  database:
+    container_name: database.prod
+
+    # We can pull the latest MongoDB version.
+    image: mongo:4.4
+
+    # We can expose the default MongoDB port database service in the proxy
+    # network.
+    expose:
+      - "27017"
+
+    # We need to designate a volume on physical disk to persist data between
+    # restarts.
+    volumes:
+      - /data/database:/data/db
+
+    # We want to fire up MongoDB with the proper credentials.
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DATABASE_PASSWORD}
+
+    # We need a health check to see if the database is running correctly to make
+    # sure that we can restart the api to reconnect if any issues occur.
+    healthcheck:
+
+      # The health check command to run.
+      test: echo 'db.runCommand("ping").ok' | mongo database:27017/test --quiet
+
+      # The interval with which to perform the health check.
+      interval: 15s
+
+      # If a check takes longer than 10 seconds, we consider it failed.
+      timeout: 10s
+
+      # We retry the health check 3 times before we declare it unhealthy.
+      retries: 3
+
+      # We give the database 30 seconds to start up on initialization before we
+      # start declaring it unhealthy if checks fail.
+      start_period: 30s
+
+    # Only the api needs access to the database, so it does not need to be
+    # publicly available. We can add it to the protected network.
+    networks:
+      - protected
+
+  ##############################################################################
+  #
+  # Storage
+  #   This is a Minio object storage that we can use as a scalable solution for
+  #   hosting the 3D models. We can configure buckets from the API.
+  #
+  ##############################################################################
+  storage:
+    container_name: storage.prod
+
+    # We can pull the Minio version of a Minio server, and we want to designate
+    # a data directory to persist data between restarts.
+    image: minio/minio
+    command: server /data
+
+    # We can expose the default Minio port for the storage service in the proxy
+    # network.
+    expose:
+      - "9000"
+
+    # We need to designate a volume on physical disk to persist data between
+    # restarts.
+    volumes:
+      - /data/storage:/data
+
+    # We want to fire up Minio with with the proper credentials.
+    environment:
+      - MINIO_ROOT_USER=${STORAGE_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${STORAGE_SECRET_KEY}
+
+    # We need a health check to see if the storage is running correctly to make
+    # sure that we can restart the api to reconnect if any issues occur.
+    healthcheck:
+
+      # The health check command to run.
+      test: ["CMD", "curl", "-f", "http://storage:9000/minio/health/live"]
+
+      # The interval with which to perform the health check.
+      interval: 15s
+
+      # If a check takes longer than 10 seconds, we consider it failed.
+      timeout: 10s
+
+      # We retry the health check 3 times before we declare it unhealthy.
+      retries: 3
+
+      # We give the storage 30 seconds to start up on initialization before we
+      # start declaring it unhealthy if checks fail.
+      start_period: 30s
+
+    # We need the reverse proxy to expose the models bucket publicly, so we need
+    # to give it access to the storage service.
+    networks:
+      - proxied

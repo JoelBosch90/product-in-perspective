@@ -1,0 +1,42 @@
+{
+  "name": "product-in-perspective",
+  "version": "1.1.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^9.0.1",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.2.6",
+    "fbx2gltf": "^0.9.7-p1",
+    "gltf-pipeline": "^3.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "minio": "^7.0.18",
+    "mongoose": "^5.12.7",
+    "node-stream-zip": "^1.13.4",
+    "nodemailer": "^6.6.2",
+    "npm": "^7.17.0",
+    "obj2gltf": "^3.1.0",
+    "require": "^0.4.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "nodemon": "^2.0.7"
+  },
+  "scripts": {
+    "devStart": "npx nodemon -e js,json -x \"npm start\"",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoelBosch90/product-in-perspective.git"
+  },
+  "author": "Joël Bosch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoelBosch90/product-in-perspective/issues"
+  },
+  "homepage": "https://github.com/JoelBosch90/product-in-perspective#readme"
+}

@@ -1,0 +1,68 @@
+/**
+ *  Main styling for the Menu class.
+ */
+.menu
+{
+  // Keep it stuck to the top of the page.
+  position: sticky;
+
+  // Center the navigation menu.
+  top: 0;
+
+  // Use Flexbox to create a layout.
+  display: flex;
+
+  // Make sure we can always display the full navigation.
+  flex-wrap: wrap;
+
+  // Keep some distance with the next elements on the page.
+  margin-bottom: 1.5em;
+
+  // Stick the menu to the top of the screen.
+  margin-top: 0;
+
+  // Center the menu horizontally.
+  margin-left: auto;
+  margin-right: auto;
+
+  // Very wide menus are hard to use, so we don't want this to grow too wide.
+  max-width: var(--max-width);
+
+  // We want to always display this navigation menu overtop all standard
+  // elements on the page.
+  z-index: 1;
+
+  // Keep some distance between the navigation elements.
+  gap: 0.25em;
+
+  // Add rounded corners to the menu.
+  border-bottom-left-radius: 2em;
+  border-bottom-right-radius: 2em;
+
+  // Hide the overflow of any navigation elements.
+  overflow: hidden;
+
+  // Target all direct children.
+  > * {
+
+    // Divide up space equally among the navigation elements.
+    flex-grow: 1;
+
+    // Make sure they don't use any border-radius at the top.
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    // Stick to one row.
+    white-space: nowrap;
+  }
+
+  // Select the link for the current page.
+  .current
+  {
+    // Make it darker so that it appears to be pressed.
+    filter: brightness(.5);
+
+    // Add a subtle animation to this filter.
+    transition: filter var(--animation-quick);
+  }
+}

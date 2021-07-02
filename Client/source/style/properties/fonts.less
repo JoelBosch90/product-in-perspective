@@ -1,0 +1,30 @@
+/**
+ *  Fonts
+ *    This file contains the base of all the fonts that are used throughout
+ *    the application. They are declared as CSS variables on the root of the
+ *    document so that they can be used and overwritten on every single element
+ *    or class.
+ */
+
+// Import the fonts that we use.
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700&display=swap');
+
+// Declaring these CSS variables on the root of the document guarantees access
+// throughout the application.
+:root {
+  // The base font for text should be a font that is suitable for both short and
+  // long paragraphs of text.
+  --text-font: 'Nunito', sans-serif;
+
+  // The header font can be a more playful font that grabs attention.
+  --header-font: 'Roboto Slab', sans-serif;
+
+  // Our default line-height should provide ample room between lines, which
+  // makes text easier to read.
+  --line-height: 1.75em;
+
+  // Sentences that are too wide are harder to read. We should stick to a
+  // maximum.
+  --max-width:  min(100%, 32em);
+}

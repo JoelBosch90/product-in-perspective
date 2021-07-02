@@ -1,0 +1,67 @@
+/**
+ *  Fieldset
+ *    This file contains the base styling for a fieldset.
+ */
+
+// Target all fieldsets.
+fieldset {
+
+  // Keep some white space around the elements.
+  padding: 1em;
+
+  // Install the default border colour.
+  border-color: var(--border-color);
+
+  // The fieldset will look friendlier with rounded edges.
+  border-radius: 0.25em;
+
+  // Target the fieldset legend. It should be styled similarly to an input
+  // label.
+  legend {
+
+    // We want the legend to sit on top of the border, but we don't want the
+    // border to run through it, so the legend needs a background colour.
+    background-color: var(--background);
+
+    // We don't need too much background for this legend.
+    line-height: 1em;
+
+    // We are placing the legend on top of the input border. In order for the
+    // the legend to blend in with the border, it should have the same
+    // colour.
+    color: var(--text-font);
+
+    // The legend will look friendlier with rounded edges.
+    border-radius: 0.25em;
+
+    // We want to match the paddings of the input element exactly. However,
+    // this would give the label too big a padding for our animation effect.
+    // To remedy this, we move some of the padding into a margin for the
+    // label.
+    padding: 0.15em 0.45em;
+    margin: 0.1em 0.3em;
+  }
+
+  // In some browsers, we cannot use grid on a fieldset element. As a
+  // workaround, we can simply wrap the inputs in a div container.
+  .fieldset-inputs {
+
+    // Use grid to create a one column layout by default.
+    display: grid;
+    grid-template-columns: auto;
+
+    // Keep some distance between the fieldset elements.
+    gap: 1.25em;
+  }
+
+  // Targets input elements.
+  .input-field, input {
+
+    // Target buttons that immediately follow input elements.
+    & + button {
+
+      // Give them some extra margin at the top.
+      margin-top: 1em;
+    }
+  }
+}

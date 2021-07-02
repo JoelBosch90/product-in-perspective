@@ -1,0 +1,34 @@
+/**
+ *  Main styling for the Apology class.
+ */
+.apology
+{
+  // Use Flexbox to make sure we always align content to the center of the
+  // parent container.
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  // Occupy all available space.
+  width: 100%;
+  height: 100%;
+
+  // Target the title container.
+  h1
+  {
+    // Make sure we show the text in the center of the parent container.
+    text-align: center;
+
+    // Create some extra vertical space so that the apology does not look too
+    // cramped.
+    margin-top: 5em;
+  }
+
+  // Target links and buttons.
+  a, button
+  {
+    // Make sure we keep some distance between buttons and text.
+    margin-top: 2em;
+  }
+}
