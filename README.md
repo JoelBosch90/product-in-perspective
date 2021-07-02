@@ -100,9 +100,10 @@ restart them.
 
 ## Set up your local environment variables.
 The server side of this service will require a few environment variables to be
-set with local access credentials. You can set these settings in a `.env` file.
-This file should be in your `.gitignore` because it should not end up in the
-repository, because it contains things like database passwords. The service
+set with local access credentials. You should set these settings in a `.env`
+file in the main project directory (the one that has the docker-compose.yml
+files). This file should be in your `.gitignore` because it should not end up in
+the repository, because it contains things like database passwords. The service
 expects the following environment variables:
 
 EXTERNAL_URL
