@@ -90,7 +90,7 @@ class LoginLink extends BaseElement {
 
         // Add a link to reload this component.
         link: {
-          text: "Retry.",
+          text: "Retry",
           location: () => {
 
             // Clear our own cache.

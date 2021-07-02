@@ -110,7 +110,7 @@ class Registration extends BaseElement {
 
         // Add a link to reload this component.
         link: {
-          text: "Register a new account.",
+          text: "Register new account",
           location: () => {
 
             // Clear our own cache.

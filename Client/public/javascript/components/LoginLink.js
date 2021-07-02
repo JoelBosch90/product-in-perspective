@@ -77,7 +77,7 @@ class LoginLink extends BaseElement {
         title: "Click the link in your inbox to log in.",
         // Add a link to reload this component.
         link: {
-          text: "Retry.",
+          text: "Retry",
           location: () => {
             // Clear our own cache.
             this.trigger("clearCache", [LoginLink]); // Then revisit this page.

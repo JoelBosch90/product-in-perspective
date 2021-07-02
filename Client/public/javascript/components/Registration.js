@@ -95,7 +95,7 @@ class Registration extends BaseElement {
         title: "Click the link in your inbox to verify your account.",
         // Add a link to reload this component.
         link: {
-          text: "Register a new account.",
+          text: "Register new account",
           location: () => {
             // Clear our own cache.
             this.trigger("clearCache", [Registration]); // Then revisit this page.
