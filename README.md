@@ -106,11 +106,12 @@ repository, because it contains things like database passwords. The service
 expects the following environment variables:
 
 EXTERNAL_URL
-- The URL at which the website is currently hosted.
+- The URL at which the website is currently hosted. This is used to create links
+  in emails.
 
 DOMAIN
-- The domain name that should be used. This is the website's name and used as
-  the email domain as well.
+- The domain name that should be used. This is used as the website's name and
+  as the email domain as well.
 
 TOKEN_SECRET
 - The secret used to generate JSON web tokens.

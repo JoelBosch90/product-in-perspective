@@ -16,7 +16,7 @@ module.exports = unauthorize = response => {
 
   // Remove the JWT token cookie. It is important that we provide the exact
   // same options when setting the cookie or browsers will not remove it.
-  response.clearCookie("httpToken", {
+  if (response.cookies && response.cookies.httpToken) response.clearCookie("httpToken", {
 
     // Let this cookie expire in 24 hours, just like the token. Remember
     // that this is set in milliseconds.
@@ -34,7 +34,7 @@ module.exports = unauthorize = response => {
   });
 
   // Also clear the convenience active session cookie.
-  response.clearCookie("xsrfToken", {
+  if (response.cookies && response.cookies.xsrfToken) response.clearCookie("xsrfToken", {
 
     // Let this cookie expire in 24 hours, just like the token. Remember
     // that this is set in milliseconds.

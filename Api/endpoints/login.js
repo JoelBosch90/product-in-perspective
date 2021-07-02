@@ -155,13 +155,13 @@ module.exports = function(app, path) {
       authorize(user, response);
 
       // Send the user to the apps overview.
-      return response.redirect(`${process.env.EXTERNAL_URL}/admin/apps`);
+      return response.redirect(`/admin/apps`);
 
      // Listen for any errors that the database might throw.
     } catch (error) {
 
       // Return the error to the client.
-      return response.redirect(`${process.env.EXTERNAL_URL}/invalid-link`);
+      return response.redirect(`/invalid-link`);
     }
   });
 }
