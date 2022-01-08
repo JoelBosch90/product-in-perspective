@@ -20,7 +20,7 @@ facing interface at a new URL, with new products, models and texts.
 
 ## Demo
 A demo for this website is hosted at
-[https://product-in-perspective.com/](https://product-in-perspective.com/) that 
+[product-in-perspective.com](https://product-in-perspective.com/) that 
 includes [a demo](https://product-in-perspective.com/app/plastic-waste?product=5000112646115).
 This demo brings you to a page that lets you scan a product and preloads a
 product, acting like you've just scanned it. This allows you to immediately
@@ -43,8 +43,8 @@ have both Docker and Docker Compose installed on your machine before you can run
 either environment.
 
 You can find instructions to install them here:
-Docker:           https://docs.docker.com/get-docker/
-Docker Compose:   https://docs.docker.com/compose/install/
+- [Docker](https://docs.docker.com/get-docker/)           
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
 ## Microservices
 For this website, we run 5 different microservices:
