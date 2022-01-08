@@ -18,6 +18,19 @@ interface that lets the user scan a product and then shows a 3D representation,
 and an admin interface that lets a user create new instances of the consumer
 facing interface at a new URL, with new products, models and texts.
 
+## Demo
+A demo for this website is hosted at
+[https://product-in-perspective.com/](https://product-in-perspective.com/) that 
+includes [a demo](https://product-in-perspective.com/app/plastic-waste?product=5000112646115).
+This demo brings you to a page that lets you scan a product and preloads a
+product, acting like you've just scanned it. This allows you to immediately
+click the 'Select product' button to try out the augmented reality mode for
+this product.
+
+It is important to note that this app relies on the WebXR API. At the time this
+app was developed, this was only supported on Android phones using Chrome or
+Samsung Galaxy Internet Beta.
+
 ## Requirements
 The entire website consists of various seperate microservices that all work
 together. This gives the website the potential for separately scaling individual
