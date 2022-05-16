@@ -52,6 +52,9 @@ services:
     # We can use the latest version of Nginx.
     image: nginx:latest
 
+    # We always want to restart when things go wrong.
+    restart: always
+
     # We can give Nginx access to the common web ports.
     ports:
       - 8001:80
@@ -213,6 +216,9 @@ services:
       # We give the database 30 seconds to start up on initialization before we
       # start declaring it unhealthy if checks fail.
       start_period: 30s
+    
+    # We always want to restart when things go wrong.
+    restart: always
 
     # Only the api needs access to the database, so it does not need to be
     # publicly available. We can add it to the protected network.
@@ -269,6 +275,9 @@ services:
       # start declaring it unhealthy if checks fail.
       start_period: 30s
 
+    # We always want to restart when things go wrong.
+    restart: always
+    
     # We need the reverse proxy to expose the models bucket publicly, so we need
     # to give it access to the storage service.
     networks:

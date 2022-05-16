@@ -106,9 +106,6 @@ services:
   client:
     container_name: client.dev
 
-    # We always want to restart when things go wrong.
-    restart: always
-
     # We want to build from the development dockerfile in the Client directory.
     build:
       context: ./Client/
@@ -144,9 +141,6 @@ services:
   ##############################################################################
   api:
     container_name: api.dev
-
-    # We always want to restart when things go wrong.
-    restart: always
 
     # We want to build from the development dockerfile in the Api directory.
     build:
@@ -246,9 +240,6 @@ services:
       # We give the database 30 seconds to start up on initialization before we
       # start declaring it un
 
-    # We want to try and restart the database if any issues arise.
-    restart: unless-stopped
-
     # Only the api needs access to the database, so it does not need to be
     # publicly available. We can add it to the protected network.
     networks:
@@ -303,9 +294,6 @@ services:
       # We give the storage 30 seconds to start up on initialization before we
       # start declaring it unhealthy if checks fail.
       start_period: 30s
-
-    # We want to try and restart the storage if any issues arise.
-    restart: unless-stopped
 
     # We need the reverse proxy to expose the models bucket publicly, so we need
     # to give it access to the storage service.
